@@ -1,0 +1,3009 @@
+{% extends "libraries.html" %}
+{%load static%}
+<!DOCTYPE html>
+<html lang="fr">
+   <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title></title>
+   <style>
+      #map{
+         margin: auto;
+         height: 500px;
+         width:100%;
+      }
+   </style>
+</head>
+{% block content %}
+<body data-spy="scroll" data-target=".sidebar-detached" class="has-detached-right">
+   <!-- Page container -->
+   <div class="page-container" id="page-content">
+      <!-- Page content -->
+      <div class="page-content">
+         <!-- Main content -->
+         <div class="content" >
+            <!-- Page header -->
+            <!-- /page header -->
+            <!-- Content area -->
+            <div class="container-detached">
+               <div class="content-detached">
+                  <div class="panel panel-flat">
+                     <div class="panel-heading">
+                        {% if user.type_map == "Google"%}
+                           <h5 class="panel-title">My map (Google Map)</h5>
+                        {% else %}
+                           <h5 class="panel-title">My map (Leaflet Map)</h5>
+                        {% endif %}
+                        <div class="heading-elements">
+                           <ul class="icons-list">
+                              <li><a data-action="collapse"></a></li>
+                           </ul>
+                        </div>
+                     </div>
+                     <div class="panel-body" id="page-content">
+                        {% if user.type_map == "Google"%}
+                           <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                        {% endif %}
+                        <div class="map-container" id="map"></div>
+                     </div>
+                  </div>
+                  <!-- Course overview -->
+                  <div class="panel panel-white" id="content" style="display: none">
+                     <div class="panel-heading">
+                        <h6 class="panel-title text-semibold">Informations</h6>
+                        <div class="heading-elements">
+                           <ul class="list-inline list-inline-separate heading-text">
+                              <li>Réf : <span class="label_info"></span></li>
+                           </ul>
+                           <ul class="icons-list">
+                              <li><a data-action="collapse"></a></li>
+                           </ul>
+                        </div>
+                     </div>
+                     <ul class="nav nav-lg nav-tabs nav-tabs-bottom nav-tabs-toolbar no-margin">
+                        <li class="active"><a href="#course-overview" data-toggle="tab"><i class="icon-menu7 position-left"></i> Bien</a></li>
+                        <li><a href="#notesList" data-toggle="tab"><i class="icon-notebook position-left"></i> Notes (<span class="Notes_lenght"></span>)</a></li>
+                        <li><a href="#docs" data-toggle="tab"><i class=" icon-files-empty position-left"></i> Documents du bien (<span class="Docs_lenght"></span>)</a></li>
+                     </ul>
+                     <!--Unchecked switch--------------------------------------> 
+                     <div class="tab-content">
+                        <div class="tab-pane fade in active" id="course-overview">
+                           <div class="panel-body">
+                              <!--status reference-->
+										<div {% if user.permission != 'validateur' and user.userType != 'principal' %} class="checkbox checkbox-right checkbox-switchery disabled" {% else %} class="checkbox checkbox-right checkbox-switchery" {% endif %}>
+											<label class="display-block">
+                                    <input type="checkbox" class="switchery" id="mySwitchCheck" {% if user.permission != 'validateur' and user.userType != 'principal' %} disabled {% endif %}>
+                                      <!--Unchecked switch--> 
+                                 </label>
+                              </div>
+                              <!--/status reference-->
+                              <div class="col-sm-6">
+                                 <div class="content-group-lg">
+                                    <h6 class="text-semibold">Information sur le bien : <span class="label_info"></span>&nbsp;<span class="from-mobile" style="display: none;"><i class="icon-mobile" style="color: #95B9C7;"></i></span></h6>
+                                    <ul class="media-list">
+                                       <li class="media">
+                                          <div class="media-left">
+                                             <img id="created_by" class="img-circle img-xs" alt="" loading="lazy">
+                                          </div>
+                                          <div class="media-body">
+                                             <a id="created_by_name">
+                                                James Alexander
+                                             </a>
+                                             <span class="media-annotation pull-right" id="created_date">14:58</span>
+                                             <span class="display-block text-muted">createur de la reference</span>
+                                          </div>
+                                       </li>
+                                    </ul>
+                                    <ul>
+                                    </ul>
+                                    <br>
+                                    <div style="display : none; padding: 5px;" class="is_localized"><i class="icon-pin is_localized_info" style="color: #95B9C7;">&nbsp;Réference localisé</i></div>
+                                    <ul>
+                                       <li class="typedebien" style="display : none">Type de bien : <span class="typedebien_info"></span></li>
+                                       <li class="typederef" style="display : none">Type de réference : <span class="typederef_info"></span></li>
+                                       <li class="ville" style="display : none">Ville : <span class="ville_info"></span></li>
+                                       <li class="adresse" style="display : none">Adresse : <span class="adresse_info"></span></li>
+                                       <li class="rue" style="display : none">Rue : <span class="rue_info"></span></li>
+                                       <li class="description" style="display : none">Description : <span class="description_info"></span></li>
+                                       <li class="surface_" style="display : none">Surface : <span class="surface_info"></span> m²</li>
+                                       <li class="prixunit" style="display : none"><span class="prixunitLabel">Prix unitaire :</span> <span class="prixunit_info"></span> DH/m²</li>
+                                       <li class="prixtotal" style="display : none"><span class="prixtotalLabel">Prix total : </span><span class="prixtotal_info"></span> DH</li>
+                                       <li class="contact" style="display : none">Contact : <span class="contact_info"></span></li>
+                                       <li class="chuteFonc" style="display : none">Quote-part terrain (éstimée) : <span class="chute_fonciere_info"></span> Dh/m²</li>
+                                       <li class="tags" style="display : none;">tags:
+                                          <br>
+                                          <input type="text" id="tags_info" class="form-control tokenfield-teal" readonly = "readonly"/>
+                                       </li>
+                                    </ul>
+                                 </div>
+                              </div>
+                              <div class="col-sm-6">
+                                 <div class="content-group-lg">
+                                    <h6 class="text-semibold"><span><i class="icon-pin"></i></span> Situation</h6>
+                                    <div class="panel-body">
+                                       <div id="map_focus" class="map-container"></div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-sm-8" id="actualisation-li">
+                                 <ul>
+                                    <li>
+                                       Actualisation :
+                                       <table id="actualisation">
+                                          <thead>
+                                             <tr>
+                                                <th>Date</th>
+                                                <th>Prix unitaire</th>
+                                                <th>Surface</th>
+                                                <th>Prix total</th>
+                                                <th>Action</th>
+                                             </tr>
+                                          </thead>
+                                          <tbody></tbody>
+                                       </table>
+                                       <div><a id="new_actualisation" class="pull-right" ><i class="fa fa-plus" style="color:blue"></i>&nbsp; Ajouter une actualisation</a></div>
+                                    </li>
+                                 </ul>
+                              </div>
+                              <!-- editer par and valider par-->
+                              <div class="col-sm-4">
+                                 <div class="content-group-lg">
+                                    <div class="panel-body">
+                                       <ul class="media-list">
+                                          <li class="media" id="validateur" style="display: none;">
+                                             <div class="media-left">
+                                                <img id="validated_by" class="img-circle img-xs" alt="" loading="lazy">
+                                             </div>
+                                             <div class="media-body">
+                                                <a id="validated_by_name">
+                                                   James Alexander
+                                                </a>
+                                                <span class="display-block text-muted">validateur de la reference</span>
+                                             </div>
+                                          </li>
+                                          <li class="media" id="editeur" style="display: none;">
+                                             <div class="media-left">
+                                                <img id="edit_by" class="img-circle img-xs" alt="" loading="lazy">
+                                             </div>
+                                             <div class="media-body">
+                                                <a id="edit_by_name">
+                                                   James Alexander
+                                                </a>
+                                                <span class="display-block text-muted">editeur de la reference</span>
+                                             </div>
+                                          </li>
+                                       </ul>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="panel-body" id="Photographies">
+                              <div class="col-sm-12">
+                                 <div class="content-group-lg">
+                                    <h6 class="text-semibold"><span><i class="icon-images3"></i></span> Photographies (<span class="photographies_lenght"></span>)</h6>
+                                       <div id="ajouter-photos" data-nbrPhotos='0'>
+                                          <a href="#" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal_photographies"><i class="fa fa-plus"></i>&nbsp;Ajouter d'autres photos</a>
+                                       </div>
+                                       <br/>
+                                       <br/>
+                                       <!-- -->
+                                       <div class="content"  style="display:none" id="content-photographies">
+                                          <div class="row" id="PhotographiesDiv"></div>
+                                       </div>
+                                       <!---->								
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- document -->
+                        <div class="tab-pane fade" id="docs">
+                           <div class="panel-body">
+                              <ul id="ajouterDocs" >
+                                 <a href="#" class="btn btn-default btn-sm pull-right" data-toggle='modal' data-target='#modal_doc'>
+                                    <i class="fa fa-plus"></i>&nbsp;Ajouter des documents
+                                 </a>
+                              </ul>
+                              <table class="table table-striped media-library table-lg" id="ul-docs" style="display:none">
+                                 <thead>
+                                       <tr>
+                                          <th>type de document</th>
+                                          <th>username</th>
+                                          <th>fichier pdf</th>
+                                          <th>Actions</th>
+                                       </tr>
+                                 </thead>
+                                 <tbody>
+                                 </tbody>
+                              </table>
+                           </div>
+                        </div>
+                        <!-- /document -->
+                        <div class="tab-pane fade" id="notesList">
+                           <div class="panel-body">
+                              <ul id="ajouterNoteLink" style="display:none"><a href="#" class="btn btn-default btn-sm pull-right" data-toggle='modal' data-target='#modal_note'><i class="fa fa-plus"></i>&nbsp;ajouter note<span class="note_info"></span></a></ul>
+                              <ul class="media-list stack-media-on-mobile" id="ul-Notes">
+                                 <!-- get all notes-->
+                                 <!-- /get all notes -->
+                              </ul>
+                           </div>
+                        </div>
+                     </div>
+                     <!-- /course overview -->
+                  </div>
+                  <!-- Course overview -->
+					   <!-- References non validees -->
+					   <div class="panel panel-white" style="display:none" id="ref-nonValide">
+						   <div class="panel-heading">
+							   <h6 class="panel-title text-semibold">References non validees</h6>
+							   <div class="heading-elements">
+								   <ul class="icons-list">
+			                		<li><a data-action="collapse"></a></li>
+			                	</ul>
+		                	</div>
+                     </div>
+                     <table class="table table-striped media-library table-lg" id="ul-pins">
+                        <thead>
+                           <tr style="border:0px;display:none;" id="gestion-par-lots">
+                              <th style="border-style: none;"></th>
+                              <th style="border-style: none;"></th>
+                              <th style="border-style: none;"></th>
+                              <th style="border-style: none;"></th>
+                              <th style="border-style: none;"></th>
+                              <th style="border-style: none;"></th>
+                              <th style="border-style: none;">
+                                 <button type="button" class="btn btn-info btn-rounded btn-xs" id = "tous_valides">tous validés</button>
+                              </th>
+                           </tr>
+                           <tr>
+                           <th><input type="checkbox" class="styled" id="checkbox_pin_all_invalide" autocomplete="off"/></th>
+                              <th>type de bien</th>
+                              <th>type de reference</th>
+                              <th>ville</th>
+                              <th>username</th>
+                              <th>Status</th>
+                              <th>Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                     </table>
+                  </div>
+                  <!-- /References non validees -->
+               </div>
+            </div>
+            <!-- /footer -->
+            <!-- /content area -->
+            <!-- Detached sidebar -->
+            <div class="sidebar-detached">
+               <div class="sidebar sidebar-default sidebar-separate">
+                  <div class="sidebar-content">
+                     <!-- Filter -->
+                     <div class="sidebar-category">
+                        <div class="category-title">
+                           <span>Filtre DataImmo</span>
+                           <ul class="icons-list">
+                              <li><a href="#" data-action="collapse"></a></li>
+                           </ul>
+                        </div>
+                        <div class="category-content">
+                           <form id="filterForm" method="POST">
+                              {% csrf_token %}
+                              <div class="form-group" id="DivVilles">
+                                 <legend class="text-size-mini text-muted no-border no-padding">Région</legend>
+                                 <select data-placeholder="Selectionner votre région" class="select-size-lg " name="region" id="IdRegion">
+                                    <option></option>
+                                    <optgroup>
+                                       <option value="1">Tanger-Tétouan-Al Hoceïma (1)</option>
+                                       <option value="2">l'Oriental (2)</option>
+                                       <option value="3">Fès-Meknès (3)</option>
+                                       <option value="4">Rabat-Salé-Kénitra (4)</option>
+                                       <option value="5">Béni Mellal-Khénifra (5)</option>
+                                       <option value="6">Casablanca-Settats (6)</option>
+                                       <option value="7">Marrakech-Safi (7)</option>
+                                       <option value="8">Drâa-Tafilalet (8)</option>
+                                       <option value="9">Souss-Massa (9)</option>
+                                       <option value="10">Guelmim-Oued Noun (10)</option>
+                                       <option value="11">Laâyoune-Sakia El Hamra (11)</option>
+                                       <option value="12">Dakhla-Oued Ed Dahab (12)</option>
+                                    </optgroup>
+                                 </select>
+                              </div>
+                              <div class="form-group" id="DivTypeDeBien1">
+                                 <legend class="text-size-mini text-muted no-border no-padding">Type de bien</legend>
+                                 <select data-placeholder="Selectionner le type de bien" class="select-size-lg" name="type_de_bien" id="IdTypeBien">
+                                    <option></option>
+                                    <optgroup label="Types">
+                                       <option value="1">Residentiel</option>
+                                       <option value="2">Villa</option>
+                                       <option value="3">Maison</option>
+                                       <option value="4">Professionnel</option>
+                                       <option value="5">Commercial</option>
+                                       <option value="6">Industriel</option>
+                                       <option value="7">Terrain villa</option>
+                                       <option value="8">Terrain industriel</option>
+                                       <option value="9">Terrain urbain</option>
+                                       <option value="10">Terrain agricole</option>
+                                    </optgroup>
+                                 </select>
+                              </div>
+                              <div class="form-group">
+                                <legend class="text-size-mini text-muted no-border no-padding">Type de référence</legend>
+                                <div class="checkbox-inline">
+                                  <input type="checkbox" class="styled"  name="type_reference_vente" value="1" id="vente" autocomplete="off"/>
+                                  <label for="vente">Vente</label>	
+                                </div>
+                                <br>
+                                <div class="checkbox-inline">
+                                  <input type="checkbox" class="styled"  name="type_reference_location" value="2" id="location" autocomplete="off"/>
+                                  <label for="location">Location</label>	
+                                </div>
+                                <br>
+                                <div class="checkbox-inline">
+                                  <input type="checkbox" class="styled"  name="type_reference_rapport" value="3" id="rapport" autocomplete="off"/>
+                                  <label for="rapport">Rapport</label>	
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <legend class="text-size-mini text-muted no-border no-padding">Type de validation</legend>
+                                <div class="checkbox-inline">
+                                  <input type="checkbox" class="styled"  name="type_validation_ok" value="1" id="type_validation_ok"/>
+                                  <label for="type_validation_ok">Reférences validées</label>	
+                                </div>
+                                <br>
+                                <div class="checkbox-inline">
+                                  <input type="checkbox" class="styled"  name="type_validation_non" value="2" id="type_validation_non"/>
+                                  <label for="type_validation_non">Reférences non validées</label>	
+                                </div>
+                                <br>
+                                <div class="checkbox-inline">
+                                  <input type="checkbox" class="styled"  name="type_validation_mobile" value="3" id="type_validation_mobile"/>
+                                  <label for="type_validation_mobile">Application mobile</label>	
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                 <legend class="text-size-mini text-muted no-border no-padding">Chercher dans notes <span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></legend>
+                                 <div class="has-feedback has-feedback-left form-group">
+                                 <input type="search" class="form-control" placeholder="Search..." name="note">
+                                 <div class="form-control-feedback">
+                                    <i class="icon-search4 text-size-small text-muted"></i>
+                                 </div>
+                                 </div>
+                              </div>
+                              <div class="form-group">
+                                 <legend class="text-size-mini text-muted no-border no-padding">Chercher dans tags <span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></legend>
+                                 <div class="has-feedback has-feedback-left form-group">
+                                    <input type="text" name="tags" id="tag-search" class="tags-input" placeholder="#" />
+                                 </div>
+                              </div>
+                              <button type="submit" class="btn bg-blue btn-block">Filter</button>
+                           </form>
+                        </div>
+                     </div>
+                     <!------------------------------------------------------------------------------------------------>
+                     <div class="sidebar-category">
+                        <div class="category-title">
+                           <span>Filtrer par Types de validation</span>
+                           <ul class="icons-list">
+                              <li><a href="#" data-action="collapse"></a></li>
+                           </ul>
+                        </div>
+                        <div class="category-content">
+                           <form id="filterFormV_NV">
+                              <div class="form-group">
+                                <legend class="text-size-mini text-muted no-border no-padding">Type de validation</legend>
+                                <div class="checkbox-inline">
+                                  <label for="valide">
+                                    <input type="checkbox" class="styled"  name="type_valide_nonValid_Mobile" value="pins-list-2" id="valide" autocomplete="off" checked/>Reférences validées</label>	
+                                </div>
+                                <br>
+                                <div class="checkbox-inline">
+                                  <label for="nonValide">
+                                    <input type="checkbox" class="styled"  name="type_valide_nonValid_Mobile" value="list-pin-non-valider" autocomplete="off" id="nonValide"/>Reférences non validées</label>	
+                                </div>
+                                <br>
+                                <div class="checkbox-inline">
+                                  <label for="nonValideMobile">
+                                    <input type="checkbox" class="styled"  name="type_valide_nonValid_Mobile" value="list-pin-non-valider-mobile" autocomplete="off" id="nonValideMobile"/>Application mobile non validés</label>	
+                                </div>
+                              </div>
+                              <!--button type="submit" class="btn bg-blue btn-block">Filter</button-->
+                           </form>
+                        </div>
+                     </div>
+                     <!------------------------------------------------------------------------------------------------>
+                     {% if user.permission == 'validateur' or user.userType == 'principal' %}
+                     <div class="panel panel-flat">
+                        <div class="panel-heading">
+                           <h6 class="panel-title"><b>Ajouter plusieurs pins</b></h6>
+                        </div>
+                        <div class="list-group no-border no-padding-top">
+                           <a class="list-group-item" data-toggle='modal' data-target='#modalCSV'><i class="icon-import"></i>Importer un fichier CSV</a>						
+                        </div>
+                     </div>
+                     {% endif %}
+                     <!-- /filter -->
+                  </div>
+               </div>
+            </div>
+            <!-- /detached sidebar -->
+            <!-- Ajout d'un réference-->
+            <div class="modal fade" id="modal_default" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                        <h5 class="modal-title">Ajouter une reference</h5>
+                     </div>
+                     <!--form--> 
+                     <form action="#" enctype="multipart/form-data" id="create_pin" method='POST'>
+                        {% csrf_token %}
+                        <div class="modal-body">
+                           <div class="modal-split">
+                              <!-- lat & lng-->
+                              <div class="form-group">
+                                 <div class="row">
+                                    <div class="category-title">
+                                       <span><p>Info génerale de bien</p></span>
+                                    </div>
+                                    <div class="panel-body">
+                                       <div id="mapDynamique" class="map-container"></div>
+                                    </div>
+                                    <div id="collapse1" style="margin-bottom:5px;">
+                                       <div class="col-sm-6">
+                                          <label>Latitude</label> <input type="text" placeholder="latitude" name="latitude" class="form-control" id="latitudeInput" onkeypress="return isDecimal(event)"/>
+                                       </div>
+                                       <div class="col-sm-6">
+                                          <label>Longitude</label> <input type="text" placeholder="longitude" name="longitude" class="form-control" id="longitudeInput" onkeypress="return isDecimal(event)"/>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- lat & lng-->
+                              <!-- villes-->
+                              <div class="form-group">
+                                 <div class="row">
+                                    <div class="col-sm-6" style="margin-top:5px;">
+                                       <label>Région *</label>
+                                       <select data-placeholder="Selectionner une région" class="select-size-lg " name="region" id="region_create">
+                                          <option></option>
+                                          <optgroup>
+                                             <option value="1">Tanger-Tétouan-Al Hoceïma (1)</option>
+                                             <option value="2">l'Oriental (2)</option>
+                                             <option value="3">Fès-Meknès (3)</option>
+                                             <option value="4">Rabat-Salé-Kénitra (4)</option>
+                                             <option value="5">Béni Mellal-Khénifra (5)</option>
+                                             <option value="6">Casablanca-Settats (6)</option>
+                                             <option value="7">Marrakech-Safi (7)</option>
+                                             <option value="8">Drâa-Tafilalet (8)</option>
+                                             <option value="9">Souss-Massa (9)</option>
+                                             <option value="10">Guelmim-Oued Noun (10)</option>
+                                             <option value="11">Laâyoune-Sakia El Hamra (11)</option>
+                                             <option value="12">Dakhla-Oued Ed Dahab (12)</option>
+                                          </optgroup>
+                                       </select>
+                                    </div>
+                                    <div class="col-sm-6" style="margin-top:5px;">
+                                       <label>Ville *</label>
+                                       <select data-placeholder="Selectionner une ville" class="select-size-lg " name="ville" id="selected_ville_create">
+                                          <option></option>
+                                          <optgroup>
+                                             {% for ville in villes %}
+                                                <option class = "option_villes_create" value="{{ville.id}}">{{ville.name}}</option>
+                                             {% endfor %}
+                                          </optgroup>
+                                       </select>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!--/villes-->
+                              <!-- type de bien -->
+                              <div class="form-group" id="DivTypeDeBien2">
+                                 <div class="row">
+                                    <div class="col-sm-12">
+                                       <label>Type de bien *</label>
+                                       <select data-placeholder="Selectionner le type de bien" class="select-size-lg" name="type_de_bien" id="IdTypeBienNew">
+                                          <option></option>
+                                          <optgroup label="Types">
+                                             <option value="1">Residentiel</option>
+                                             <option value="2">Villa</option>
+                                             <option value="3">Maison</option>
+                                             <option value="4">Professionnel</option>
+                                             <option value="5">Commercial</option>
+                                             <option value="6">Industriel</option>
+                                             <option value="7">Terrain villa</option>
+                                             <option value="8">Terrain industriel</option>
+                                             <option value="9">Terrain urbain</option>
+                                             <option value="10">Terrain agricole</option>
+                                          </optgroup>
+                                       </select>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- /type de bien -->
+                              <!-- /type de reference -->
+                              <div class="form-group">
+                                 <div class="row">
+                                    <div class="col-sm-12" style="margin-top:5px;">
+                                       <label>Type de reference *</label>
+                                       <select data-placeholder="Selectionner le type de reference" class="select-size-lg" name="type_de_reference" id="type_de_reference">
+                                          <option></option>
+                                          <optgroup>
+                                             <option value="1">Vente</option>
+                                             <option value="2">Location</option>
+                                             <option value="3">Rapport</option>
+                                          </optgroup>
+                                       </select>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- /type de reference -->
+                              <!-- type de reference localisée ou non localisée-->
+                              <div class="form-group" style="display: none;" id="is_localized">
+                                 <legend class="text-size-mini text-muted no-border no-padding">Localisée/Non localisée</legend>
+                                 <div class="radio-inline">
+                                    <input type="radio" class="styled"  name="localisee_nonLocalisee" id="localisee" checked="checked" value="localisee"/>
+                                    <label for="localisee">Localisée</label>
+                                 </div>
+                                 <div class="radio-inline">
+                                    <input type="radio" class="styled"  name="localisee_nonLocalisee" id="non_localisee"  value="non_localisee"/>
+                                    <label for="non_localisee">Non localisée </label>	
+                                 </div>
+                              </div>
+                              <!-- /type de reference localisée ou non localisée-->
+                              <!-- nom de la rue-->
+                              <div class="form-group">
+                                 <div class="row">
+                                    <div class="col-sm-12">
+                                       <label>Nom de la rue</label>
+                                       <input type="text" placeholder="Le nom de la rue" name="adresseRue" id="adresseRue" class="form-control" />
+                                    </div>
+                                 </div>
+                              </div>
+                              <!--/nom de la rue-->
+                              <!-- chute_fonciere -->
+                              <div class="form-group" style="display:none" id="chute_fonciere_new">
+                                 <div class="row">
+                                    <div class="col-sm-12"> <!--onkeypress="return isNumber(event)"-->
+                                       <label>Quote-part terrain (éstimée) *</label> <input type="text" placeholder="Quote-part terrain" onkeypress="return isNumber(event)"  name="chute_fonciere" id="chute_fonciere" class="form-control" />
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- /chute_fonciere -->
+                              <!-- surface -->
+                              <div class="form-group" >
+                                 <div class="row">
+                                    <div class="col-sm-12" id="surface_new_div">
+                                       <label>Surface *</label>
+                                       <input type="text" onkeypress="return isNumber(event)"  placeholder="Surface" name="surface_new" id="surface_new" class="form-control" />
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- /surface -->           
+                              <!-- /surface terrain-->
+                              <!-- prix unitaire du bien-->
+                              <div class="form-group" id="pri_unit_tot_new">
+                                 <div class="row">
+                                    <div class="col-sm-6">
+                                       <label id="label-prix-unitaire-vente-new">Prix unitaire *</label>
+                                       <label id="label-prix-unitaire-loyer-new" style="display: none;">Loyer unitaire *</label>
+                                       <input type="text" onkeypress="return isNumber(event)" placeholder="Prix unitaire du bien"   name="prix_unit" id="prix_unit" class="form-control" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                       <label id="label-prix-total-vente-new">Prix total *</label>
+                                       <label id="label-prix-total-loyer-new" style="display: none;">Loyer total *</label> 
+                                       <input type="text" onkeypress="return isNumber(event)" placeholder="Prix total du bien"  name="prix_total" id="prix_total" class="form-control" />
+                                    </div>                                    
+                                 </div>
+                              </div>
+                              <!--/prix unitaire du bien-->
+                              <!-- Contact-->
+                              <div class="form-group">
+                                 <div class="row">
+                                    <div class="col-sm-12">
+                                       <label>Contact (Optionnel)</label> <input type="text" placeholder="contact" name="contact" id="contact" class="form-control" />
+                                    </div>
+                                 </div>
+                              </div>
+                              <!--/Contact-->
+                              <!-- description-->
+                              <div class="form-group">
+                                 <div class="row">
+                                    <div class="col-sm-12">
+                                       <label>Description *</label> <!--input type="text" placeholder="Description" name="description" class="form-control" /-->
+                                       <textarea type="text" placeholder="Description" name="description" id="description" class="form-control"></textarea>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!--/description-->
+                              <!-- #tag -->
+                              <div class="form-group">
+                                 <div class="row">
+                                    <div class="col-sm-12">
+                                       <span class="text-size-mini text-muted no-border no-padding">Tags (Optionnel)</span>
+                                       <select data-placeholder="#" name="tag" id="tag" multiple="multiple" class="select-multiple-tags form-control"></select>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!--/#tag-->
+                           </div>
+                           <div class="modal-split">
+                              <!-- photos-->
+                              <div class="form-group">
+                                 <div class="row">
+                                    <div class="sidebar-category">
+                                       <div class="category-title">
+                                          <span><h4><p>Photographies &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
+                                       </div>
+                                       <div class="col-sm-12">
+                                          <label>Images Description</label> <input type="text" placeholder="images Description" name="descriptionImage" id="descriptionImage" class="form-control"  />
+                                       </div>         
+                                       <div class="col-sm-12">
+                                          <label>Photos</label> 
+                                          <div id="testDropBox" action="" class="dropzone">
+                                             <div class="fallback">
+                                             </div>
+                                          </div>
+                                       </div>      
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- /photos-->
+                           </div>
+                           <!-- pieces jointe-->
+                           <div class="modal-split">
+                              <input type="file" class="file-styled" id="docs" name="docs" multiple style="display:none"/>
+                              <!--fichier 01-->
+                              <div class="form-group">
+                                 <div class="row">
+                                    <div class="sidebar-category">
+                                       <div class="category-title">
+                                          <span><h4><p>Pièces jointes &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
+                                       </div>
+                                       <div class="col-sm-6">
+                                          <label>Type de la pièce jointe 1</label>
+                                          <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien" id="type_piece_jointe_du_bien">
+                                             <option></option>
+                                                <option value="C_V">Contrat de vente</option>
+                                                <option value="C_L">Contrat de location</option>   
+                                          </select>
+                                       </div>         
+                                       <div class="col-sm-6">
+                                          <label>Fichier pdf</label>
+                                          <div class="uploader">
+                                             <input type="file" class="file-styled" id="input-piece-jointe" name="piece_jointe_1"/>
+                                             <span class="filename" style="user-select: none;" id="selected-file">No file selected</span>
+                                             <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                                          </div>
+                                          <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                                       </div>  
+                                    </div>
+                                 </div>
+                              </div>
+                              <!--/fichier 01-->
+                              <!--fichier 02-->
+                              <div class="form-group new_piece_jointe" style="display:none">
+                                 <div class="row">
+                                    <div class="sidebar-category">
+                                       <div class="col-sm-6">
+                                          <label>Type de la pièce jointe 2</label>
+                                          <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_2" id="type_piece_jointe_du_bien_2">
+                                             <option></option>
+                                             <option value="C_V">Contrat de vente</option>
+                                             <option value="C_L">Contrat de location</option>  
+                                          </select>
+                                       </div>      
+                                       <div class="col-sm-6">
+                                          <label>Fichier pdf</label>
+                                          <div class="uploader">
+                                             <input type="file" class="file-styled" id="input-piece-jointe-2" name="piece_jointe_2"/>
+                                             <span class="filename" style="user-select: none;" id="selected-file-2">No file selected</span>
+                                             <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                                          </div>
+                                          <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                                       </div>  
+                                    </div>
+                                 </div>
+                              </div>
+                              <!--/fichier 02-->
+                              <!--fichier 03-->
+                              <div class="form-group new_piece_jointe" style="display:none">
+                                 <div class="row">
+                                    <div class="sidebar-category">
+                                       <div class="col-sm-6">
+                                          <label>type de la pièce jointe 3</label>
+                                          <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_3" id="type_piece_jointe_du_bien_3">
+                                             <option></option>
+                                             <option value="C_V">Contrat de vente</option>
+                                             <option value="C_L">Contrat de location</option>  
+                                          </select>
+                                       </div>
+                                       <div class="col-sm-6">
+                                          <label>Fichier pdf</label>
+                                          <div class="uploader">
+                                             <input type="file" class="file-styled" id="input-piece-jointe-3" name="piece_jointe_3"/>
+                                             <span class="filename" style="user-select: none;" id="selected-file-3">No file selected</span>
+                                             <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                                          </div>
+                                          <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                                       </div>  
+                                    </div>
+                                 </div>
+                              </div>
+                              <!--/fichier 03-->
+                              <!--fichier 04-->
+                              <div class="form-group new_piece_jointe" style="display:none">
+                                 <div class="row">
+                                    <div class="sidebar-category">
+                                       <div class="col-sm-6">
+                                          <label>type de la pièce jointe 4</label>
+                                          <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_4" id="type_piece_jointe_du_bien_4">
+                                             <option></option>
+                                             <option value="C_V">Contrat de vente</option>
+                                             <option value="C_L">Contrat de location</option>  
+                                          </select>
+                                       </div>         
+                                       <div class="col-sm-6">
+                                          <label>Fichier pdf</label>
+                                          <div class="uploader">
+                                             <input type="file" class="file-styled" id="input-piece-jointe-4" name="piece_jointe_4"/>
+                                             <span class="filename" style="user-select: none;" id="selected-file-4">No file selected</span>
+                                             <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                                          </div>
+                                          <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                                       </div>  
+                                    </div>
+                                 </div>
+                              </div>
+                              <!--/fichier 04-->
+                              <!--fichier 05-->
+                              <div class="form-group new_piece_jointe" style="display:none">
+                                 <div class="row">
+                                    <div class="sidebar-category">
+                                       <div class="col-sm-6">
+                                          <label>type de la pièce jointe 5</label>
+                                          <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_5" id="type_piece_jointe_du_bien_5">
+                                             <option></option>
+                                             <option value="C_V">Contrat de vente</option>
+                                             <option value="C_L">Contrat de location</option>  
+                                          </select>
+                                       </div>         
+                                       <div class="col-sm-6">
+                                          <label>Fichier pdf</label>
+                                          <div class="uploader">
+                                             <input type="file" class="file-styled" id="input-piece-jointe-5" name="piece_jointe_5"/>
+                                             <span class="filename" style="user-select: none;" id="selected-file-5">No file selected</span>
+                                             <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                                          </div>
+                                          <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                                       </div>  
+                                    </div>
+                                 </div>
+                              </div>
+                              <!--/fichier 05-->
+                              <a id="new_piece_jointe" class="pull-right" ><i class="fa fa-plus" style="color:blue"></i>&nbsp; Ajouter un autre fichier</a>
+                              <br/>
+                              <br/>
+                           </div>
+                           <!---->
+                           <!-- submit form-->
+                           <div class="modal-footer">
+                              <!--button type="button" class="btn btn-link" data-dismiss="modal">Close</button-->
+                              <!--button type="submit" class="btn btn-primary" id="submit_all">Ajouter réference</button-->
+                           </div>
+                        </div>
+                     </form>
+                     <!--/form-->
+                  </div>
+               </div>
+            </div>
+            <!-- /Ajout d'un réference-->
+            <!-- Ajout d'un réference avec importation CSV-->
+            <div class="modal fade center" id="modalCSV" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                        <h5 class="modal-title">Importer votre fichier CSV</h5>
+                     </div>
+                     <!--form--> 
+                     <form action="#" id="importCSV" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                           <!-- description -->
+                           <div class="alert alert-info no-border" role="alert" >
+                              <p class="text-center" style="font-size:20px">Les normes à respecter pour l'import des fichiers CSV</p>
+                              <br>
+                              <p class="text-center" style="font-size:15px;">Les nom des colonnes doivent être conformes aux suivants :<p>
+                              <p class="text-center" style="font-size:14px; color:black">latitude, longitude, type de bien, type terrain, type de reference, ville, contact, surface terrain, surface ponderee, surface construite, prix unitaire, prix total, date de reference, description.<p>
+                           </div>
+                           <!-- /description -->
+                           <!-- csv input-->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="col-sm-12">
+                                    <label>Fichier CSV</label>
+                                    <div class="uploader">
+                                    <input type="file" accept=".csv" name="file_CSV" class="file-styled" id="file_CSV"/>
+                                    <span class="filename" style="user-select: none;" id="selected-csv">No file selected</span>
+                                    <span class="action btn bg-info-400" style="user-select: none;">Choose File</span>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <!--/csv input-->
+                           <!-- submit form-->
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary">Ajouter réference</button>
+                           </div>
+                        </div>
+                     </form>
+                     <!--/form--> 
+                  </div>
+               </div>
+            </div>
+            <!-- /Ajout d'un réference avec importation CSV-->
+            <!-- editer d'un reference-->
+            <div class="modal fade" id="modal_update_ref" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                        <h5 class="modal-title">Editer la reference</h5>
+                     </div>
+                     <!--form--> 
+                     <form action="#" enctype="multipart/form-data" id="update_my_pin">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                           <!-- id pin -->
+                           <input type="text" name="my_pin_id" class="form-control" id="my_pin_id" style="display:none"/>
+                           <!--/id pin-->
+                           <!-- lat & lng-->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="category-title">
+                                    <span><p>Info génerale de bien</p></span>
+                                 </div>
+                                 <div id="collapse2" style="margin-bottom:5px;">
+                                    <div class="col-sm-6">
+                                       <label>latitude</label> <input type="text" placeholder="latitude" name="latitude" class="form-control" id="latitudeInputUpdate" onkeypress="return isDecimal(event)" readonly/>
+                                    </div>
+                                    <div class="col-sm-6">
+                                       <label>longitude</label> <input type="text" placeholder="longitude" name="longitude" class="form-control" id="longitudeInputUpdate" onkeypress="return isDecimal(event)" readonly/>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- lat & lng-->
+                           <!--Region et ville-->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="col-sm-6" style="margin-top:5px;">
+                                    <label>Région</label>
+                                    <select data-placeholder="Selectionner une région" class="select-size-lg " name="region" id="region_update">
+                                       <option></option>
+                                       <optgroup>
+                                       <option value="1">Tanger-Tétouan-Al Hoceïma (1)</option>
+                                       <option value="2">l'Oriental (2)</option>
+                                       <option value="3">Fès-Meknès (3)</option>
+                                       <option value="4">Rabat-Salé-Kénitra (4)</option>
+                                       <option value="5">Béni Mellal-Khénifra (5)</option>
+                                       <option value="6">Casablanca-Settats (6)</option>
+                                       <option value="7">Marrakech-Safi (7)</option>
+                                       <option value="8">Drâa-Tafilalet (8)</option>
+                                       <option value="9">Souss-Massa (9)</option>
+                                       <option value="10">Guelmim-Oued Noun (10)</option>
+                                       <option value="11">Laâyoune-Sakia El Hamra (11)</option>
+                                       <option value="12">Dakhla-Oued Ed Dahab (12)</option>
+                                       </optgroup>
+                                    </select>
+                                 </div>
+                                 <div class="col-sm-6" style="margin-top:5px;">
+                                    <label>ville</label>
+                                    <select data-placeholder="Selectionner une ville" class="select-size-lg " name="ville" id="selected_ville_update">
+                                       <option></option>
+                                    </select>
+                                 </div>
+                              </div>
+                           </div>
+                           <!--/Region et ville-->
+                           <!-- type de bien -->
+                           <div class="form-group" id="DivTypeDeBien3">
+                              <div class="row">
+                                 <div class="col-sm-12">
+                                    <legend class="text-size-mini text-muted no-border no-padding">Type de bien</legend>
+                                    <select data-placeholder="Selectionner le type de bien" class="select-size-lg" name="type_de_bien" id="IdTypeBienUpdate">
+                                       <option></option>
+                                       <optgroup label="Types">
+                                             <option value="1">Residentiel</option>
+                                             <option value="2">Villa</option>
+                                             <option value="3">Maison</option>
+                                             <option value="4">Professionnel</option>
+                                             <option value="5">Commercial</option>
+                                             <option value="6">Industriel</option>
+                                             <option value="7">Terrain villa</option>
+                                             <option value="8">Terrain industriel</option>
+                                             <option value="9">Terrain urbain</option>
+                                             <option value="10">Terrain agricole</option>
+                                       </optgroup>
+                                    </select>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- /type de bien -->
+                           <!-- /type de reference -->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="col-sm-12" style="margin-top:5px;">
+                                    <label>Type de reference</label>
+                                    <select data-placeholder="Selectionner le type de bien" class="select-size-lg" name="type_de_reference" id="selected_type_reference_update">
+                                       <option></option>
+                                       <optgroup>
+                                          <option value="1">Vente</option>
+                                          <option value="2">Location</option>
+                                          <option value="3">Rapport</option>
+                                       </optgroup>
+                                    </select>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- /type de reference -->
+                           <!-- type de reference localisée ou non localisée-->
+                           <div class="form-group" id="is_localized_update">
+                              <legend class="text-size-mini text-muted no-border no-padding">localisée/non localisée</legend>
+                              <div class="radio-inline">
+                                 <input type="radio" class="styled"  name="localisee_nonLocalisee" id="localisee_update" checked="checked" value="localisee"/>
+                                 <label for="localisee_update">Localisée</label>
+                              </div>
+                              <div class="radio-inline">
+                                 <input type="radio" class="styled"  name="localisee_nonLocalisee" id="non_localisee_update"  value="non_localisee"/>
+                                 <label for="non_localisee_update">Non localisée </label>	
+                              </div>
+                           </div>
+                           <!-- /type de reference localisée ou non localisée-->
+                           <!-- nom de la rue-->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="col-sm-12">
+                                    <label>Nom de la rue</label>
+                                    <input type="text" placeholder="Le nom de la rue" name="adresseRue" id="adresseRue_update" class="form-control" />
+                                 </div>
+                              </div>
+                           </div>
+                           <!--/nom de la rue-->
+                           <!-- chute_fonciere -->
+                           <div class="form-group" style="display:none" id="chute_fonciere_edit">
+                              <div class="row">
+                                 <div class="col-sm-12">
+                                    <label>Quote-part terrain (éstimée)</label> <input type="text" onkeypress="return isNumber(event)"  name="chute_fonciereEdt" id="chute_fonciereEdt" class="form-control" />
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- /chute_fonciere -->
+                           <!-- surface -->
+                           <div class="form-group" >
+                              <div class="row">
+                                 <div class="col-sm-12" id="surface_update_div">
+                                    <label>Surface</label> <input type="text" onkeypress="return isNumber(event)"  name="surf_update" class="form-control" id="surf_update"/>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- /surface -->
+                           <!-- prix unitaire du bien-->
+                           <div class="form-group" id="pri_unit_tot_up" >
+                              <div class="row">
+                                 <div class="col-sm-6">
+                                    <label id="label-prix-unitaire-vente-update">Prix unitaire</label>
+                                    <label id="label-prix-unitaire-loyer-update" style="display: none;" >Loyer unitaire</label>
+                                    <input type="text" onkeypress="return isNumber(event)" name="prix_unit_update" class="form-control" id="prix_unit_update" />
+                                 </div>
+                                 <div class="col-sm-6">
+                                    <label  id="label-prix-total-vente-update">Prix total</label>
+                                    <label id="label-prix-total-loyer-update" style="display: none;">Loyer total</label>
+                                    <input type="text" onkeypress="return isNumber(event)"  name="prix_total_update" class="form-control" id="prix_total_update" />
+                                 </div>                                    
+                              </div>
+                           </div>
+                           <!--/prix unitaire du bien-->
+                           <!-- prix total-->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="col-sm-12">
+                                    <label>contact</label> <input type="text" placeholder="contact" name="contact-update" class="form-control" id="contact-update"/>
+                                 </div>
+                              </div>
+                           </div>
+                           <!--/prix total-->
+                           <!-- description-->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="col-sm-12">
+                                    <label>Description</label> 
+                                    <textarea type="text" placeholder="Description" name="description" class="form-control" id="desc_update"></textarea>
+                                 </div>
+                              </div>
+                           </div>
+                           <!--/description-->
+                           <!-- #tag-->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="col-sm-12">                                       
+                                    <span class="text-size-mini text-muted no-border no-padding">Tags (Optionnel)</span>
+                                    <select data-placeholder="#" name="tag" id="tag_update" multiple="multiple" class="select-multiple-tags">
+                                    </select>
+                                 </div>
+                                 
+                              </div>
+                           </div>
+                           <!--/#tag-->
+                           <!-- submit form-->
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary">Editer réference</button>
+                           </div>
+                        </div>
+                     </form>
+                     <!--/form--> 
+                  </div>
+               </div>
+            </div>
+            <!-- /editer d'un reference-->
+            <!--ajouter une note -->
+            <div class="modal fade" id="modal_note" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                        <h5 class="modal-title">Ajouter une Note</h5>
+                     </div>
+                     <form method="POST" id="ajoutNoteForm">
+                        {% csrf_token %}
+                        <input type = "text"  id="pinId" name="pin_id" style="display:none">
+                        <input type = "text"  name="user_id" value="{{ user.id }}" style="display:none">
+                        <div class="modal-body">
+                           <div class="form-group">
+                              <textarea rows="5" cols="5" class="form-control" placeholder="Votre note" name="note_content" id="contentNote"></textarea>
+                           </div>
+                           <div class="form-group login-options">
+                              <div class="row">
+                              </div>
+                           </div>
+                           <div class="form-group">
+                              <button type="submit" class="btn bg-blue btn-block">Envoyer la note <i class="icon-arrow-right14 position-right"></i></button>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+            <!--/ajouter une note -->
+            <!--editer une note -->
+            <div class="modal fade" id="edit_note" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                        <h5 class="modal-title">Editer la Note</h5>
+                     </div>
+                     <form method="POST" id="EditNoteForm">
+                        {% csrf_token %}
+                        <input type = "text"  id="NoteId" name="note_id" style="display:none">
+                        <div class="modal-body">
+                           <div class="form-group">
+                              <textarea rows="5" cols="5" class="form-control" placeholder="Votre note" name="old_note_content" id="OldcontentNote"></textarea>
+                           </div>
+                           <div class="form-group login-options">
+                              <div class="row">
+                              </div>
+                           </div>
+                           <div class="form-group">
+                              <button type="submit" class="btn bg-blue btn-block">Enregistrer les modifications <i class="icon-arrow-right14 position-right"></i></button>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+            <!--/editer une note -->
+            <!--ajouter une piece jointe -->
+            <div class="modal fade" id="modal_doc"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                        <h5 class="modal-title">Ajouter un document</h5>
+                     </div>
+                     <form method="POST" id="piece_jointe_modif" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                           <!-- pieces jointe-->
+                           <input type="text" class="file-styled" id="pin_id_fichier" name="pin_id_fichier" style="display:none"/>
+                           <!--fichier 01-->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="sidebar-category">
+                                    <div class="category-title">
+                                       <span><h4><p>Pièces jointes &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                       <label>Type de la pièce jointe</label>
+                                       <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_new">
+                                          <option></option>
+                                          <option value="C_V">Contrat de vente</option>
+                                          <option value="C_L">Contrat de location</option>  
+                                       </select>
+                                    </div>         
+                                    <div class="col-sm-6">
+                                       <label>Fichier pdf</label>
+                                       <div class="uploader">
+                                          <input type="file" class="file-styled" id="input-piece-jointe-modify" name="piece_jointe_new"/>
+                                          <span class="filename" style="user-select: none;" id="selected-file-modify-pj">No file selected</span>
+                                          <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                                       </div>
+                                       <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                                    </div>  
+                                 </div>
+                              </div>
+                           </div>
+                           <!--/fichier 01-->
+                           <br/>
+                           <br/>
+                           <div class="form-group">
+                              <button type="submit" class="btn bg-blue btn-block">Ajouter <i class="icon-arrow-right14 position-right"></i></button>
+                           </div>
+                           <!---->
+                        </div> 
+                     </form>
+                  </div>
+               </div>
+            </div>
+            <!--/ajouter une piece jointe -->
+            <!--ajouter des photographies -->
+            <div class="modal fade" id="modal_photographies" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                        <h5 class="modal-title">Ajouter des photographies</h5>
+                     </div>
+                     <form method="POST" id="photographies_modif" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="text" placeholder="images Description" name="pinId-photographies" id="pinId-photographies" class="form-control" style="display:none"/> 
+                        <div class="modal-body">
+                           <!-- photos-->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="sidebar-category">
+                                    <div class="category-title">
+                                       <span><h4><p>Photographies</p></h4></span>
+                                    </div>
+                                    <div class="col-sm-12">
+                                       <label>images Description</label> <input type="text" placeholder="images Description" name="descriptionImage" id="descriptionImage-modif" class="form-control"/>
+                                    </div>         
+                                    <div class="col-sm-12">
+                                       <label>Photos</label> 
+                                       <div id="modify-DropBox" action="" class="dropzone">
+                                          <div class="fallback">
+                                          </div>
+                                       </div>
+                                    </div>      
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- /photos-->
+                           <br/>
+                           <br/>
+                           <div class="form-group">
+                              <button type="submit" class="btn bg-blue btn-block">Ajouter <i class="icon-arrow-right14 position-right"></i></button>
+                           </div>
+                        </div> 
+                     </form>
+                  </div>
+               </div>
+            </div>
+            <!--/ajouter des photographies -->
+            <!-- suppression message-->
+            <div class="modal fade" id="myDeleteMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title"></h4>
+                     </div>
+                     <div class="modal-body">
+                        <div class="bootbox-body">Confirmer si vous etes sur de votre choix </div>
+                     </div>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                        <button data-bb-handler="main" type="button" class="btn btn-primary" id="confirm">Confirmer</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- / suppression message-->
+            <!--ajouter une actualisation -->
+            <div class="modal fade" id="AjouterActualisation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                        <h5 class="modal-title">Ajouter une actualisation à la réference </h5>
+                     </div>
+                     <form method="POST" id="ajout-actualisation-form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                           <input type="text" class="file-styled" id="pin_id_actualisation" name="pin_id_actualisation" style="display:none" /><!---->
+                           <div class="form-group">
+                              <div class="row">
+                                 <div class="sidebar-category">
+                                    <div class="category-title">
+                                       <span><h4><p>Actualisation</p></h4></span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                       <label>nouveau prix unitaire</label>
+                                       <input type="text" class="form-control" id="prix_unit1_actualisation" placeholder="prix unitaire" name="prix_unit1_actualisation" />
+                                    </div>
+                                    
+                                    <div class="col-sm-6">
+                                       <label>nouveau prix total</label>
+                                       <input type="text" class="form-control" id="prix_tot_actualisation" placeholder="prix total" name="prix_tot_actualisation" />
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           
+                           <br/>
+                           <br/>
+                           <div class="form-group">
+                              <button type="submit" class="btn bg-blue btn-block">Enregistrer <i class="icon-arrow-right14 position-right"></i></button>
+                           </div>
+                           <!---->
+                        </div> 
+                     </form>
+                  </div>
+               </div>
+            </div>
+            <!--/ajouter une actualisation -->
+         </div>
+         <div>
+            {% include 'partials/footer.html' %}
+         </div>
+         <!-- /main content -->
+      </div>
+      <!-- /page content -->
+   </div>
+   <!-- /page container -->
+   <blockquote>{{ user.content|escape }}</blockquote>
+</body>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{user.key_map}}&libraries=places"></script>
+<script src="https://unpkg.com/@googlemaps/markerclustererplus/dist/index.min.js"></script>
+<script>
+   //---------------------------------------------------------Loader map--------------------------------------------------------
+   function loaderStart(elToBlock){
+     $(elToBlock).block({
+       message: '<i class="icon-spinner6 spinner"></i>',
+       overlayCSS: {
+         backgroundColor: '#fff',
+         opacity: 0.8
+       },
+       css: {
+         border: 0,
+         padding: 0,
+         backgroundColor: 'none'
+       }
+     });
+   }
+   /*___________________________fusion______________________*/
+   var map = null;
+   markerCluster = null;
+   markers = null ;
+   if("{{user.type_map}}" === "Google"){
+      var options = {
+         minZoom:3,
+         zoom:12,
+         center:{
+            lat:33.5745251,
+            lng:-7.5690786
+         },
+         //mapTypeId: 'hybrid',
+         streetViewControl: true,
+         styles: [{
+            featureType: "road",
+            stylers: [{visibility: "on"}]
+         }],
+         mapTypeControl: true,
+         scrollwheel: true,
+      }
+      map = new google.maps.Map(document.getElementById('map'), options);
+      var input = document.getElementById('pac-input');
+      var searchBox = new google.maps.places.SearchBox(input);
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+      //---------------------------------------------------------Initialisation des Clusters google--------------------------------------------------------
+      var markerCluster = new MarkerClusterer(map, markers, {
+         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+      });
+      var infoWindow = new google.maps.InfoWindow()
+      //---------------------------------------------------------addListener dans la maps google--------------------------------------------------------
+      map.addListener('rightclick', (mapsMouseEvent) => {
+         // Close the current InfoWindow.
+         infoWindow.close();
+         // Create a new InfoWindow.
+         infoWindow = new google.maps.InfoWindow({
+            position: mapsMouseEvent.latLng,
+         });
+         infoWindow.setContent(
+            "<div class='category-content no-padding'>"+
+            "<ul class='navigation'>"+
+            "<li class='navigation-header' style='color:black'> Plus d'options</li>"+
+            "<li><a data-toggle='modal' data-target='#modal_default' style='color:black'>Ajouter la référence</a></li>"+
+            "</ul>"+
+            "</div>"
+         );
+         infoWindow.open(map);
+         $("#latitudeInput").val(mapsMouseEvent.latLng.toJSON()["lat"])
+         $("#longitudeInput").val(mapsMouseEvent.latLng.toJSON()["lng"])
+         mini_map_2.off();
+         mini_map_2.remove();      
+         const mapDiv2 = document.getElementById("mapDynamique");
+         mini_map_2 = new L.map('mapDynamique').setView([parseFloat(mapsMouseEvent.latLng.toJSON()["lat"]), parseFloat(mapsMouseEvent.latLng.toJSON()["lng"])], 15)
+         L.tileLayer('http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+         }).addTo(mini_map_2);
+         const resizeObserver = new ResizeObserver(() => {mini_map_2.invalidateSize();});
+         resizeObserver.observe(mapDiv2);
+         var marker2 = L.marker([parseFloat(mapsMouseEvent.latLng.toJSON()["lat"]), parseFloat(mapsMouseEvent.latLng.toJSON()["lng"])],{draggable:'true',autoPan: true}).addTo(mini_map_2);
+         marker2.on("drag", function(e) {
+            var marker = e.target;
+            var position = marker.getLatLng();
+            $("#latitudeInput").val(position.lat);
+            $("#longitudeInput").val(position.lng);
+         });
+      });
+      var searchBox = new google.maps.places.SearchBox(document.getElementById('pac-input'));
+      map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById('pac-input'));
+      google.maps.event.addListener(searchBox, 'places_changed', function() {
+         searchBox.set('map', null);
+         var places = searchBox.getPlaces();
+         var bounds = new google.maps.LatLngBounds();
+         var i, place;
+         for (i = 0; place = places[i]; i++) {
+            (function(place) {
+               var marker = new google.maps.Marker({
+                  position: place.geometry.location
+               });
+               marker.bindTo('map', searchBox, 'map');
+               google.maps.event.addListener(marker, 'map_changed', function() {
+                  if (!this.getMap()) {
+                     this.unbindAll();
+                  }
+               });
+               bounds.extend(place.geometry.location);
+            }(place));
+         }
+         map.fitBounds(bounds);
+         searchBox.set('map', map);
+         map.setZoom(Math.min(map.getZoom(),12));
+      });
+      
+      get_pins_validees();
+   }
+   else{
+      /* on click sur le marker*/
+      function markerOnClick(props){
+         return function(e) {
+            if(content) {
+               var popup = L.popup()
+               .setLatLng(e.latlng)
+               /*le content du popup à ameliorer par la suite cote affichage*/
+               .setContent("<div class='text-center'>"+
+                  "<p class='info'>Info : "+props.content.label+"<p/></div>"+
+                  '<p class=\'content-group-sm\'>Type de bien: '+getTypeDeBien(props.content.typedebien)+'</p>'+
+                  '<p class=\'content-group-sm\'>Type de reference: '+getTypeDeReference(props.content.type_de_reference)+'</p>'+
+                  "<div class='text-center'>"+
+                  '<button class=\'btn btn-info btn-rounded btn-xs\' onclick="pinLinkOnClick(\'' + props.content.id + '\')">Plus d\'informations</button>'+
+                  '</div>'
+               )
+               .openOn(map);
+            }
+         }
+      }    
+      /* on right click sur le marker*/
+      function markerOnRightClick(props){
+         return function(e) {
+            var editer = '';
+            var supprimer = '';
+            if(content) {
+               // $("#my_pin_id").val(content.id);
+               if(props.content.is_valid === false){
+                  editer =  "<li><a onclick='editLinkOnClick(" + props.content.id + ")'>Editer la référence</a></li>";
+                  supprimer = "{% if user.permission != 'validateur' %}<li><a onclick='deleteLinkOnClick(" +props.content.id + ")'> Supprimer la référence</a></li>{% endif %}"+"</ul>"
+               }
+               var list =
+                  "<div class='category-content no-padding'>"+
+                  "<ul class='navigation navigation-alt navigation-accordion listPopUp'>"+
+                  "<li class='navigation-header' style='color:black'><b>Plus d'options</b></li>"+
+                  editer+
+                  supprimer+
+                  "</div>";
+               var popup = L.popup()
+               .setLatLng(e.latlng)
+               .setContent(list)
+               .openOn(map);
+            }
+         }
+      }  
+     /* option de la map*/
+      var options = {
+         minZoom: 5,
+         zoom:12,
+         center:{lat:33.5745251,lng:-7.5690786},// lat & lng du casablanca par defaut
+         // setMaxBounds:[31.791702, -7.09262]
+      }
+      var map = new L.map('map', options);
+      var osmLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+         attribution: '© OpenStreetMap contributors',
+         maxZoom: 19
+      });
+      var imagery = L.esri.basemapLayer('Imagery');
+      var imageryTransportation = L.esri.basemapLayer('ImageryTransportation');
+      var imageryLabels = L.esri.basemapLayer('ImageryLabels');
+      var oldLayerID = 0;
+      map.on('baselayerchange', function(e) {
+         currentLayerID = e.layer._leaflet_id;
+         if(currentLayerID != oldLayerID && e.name === "openStreetMap Satellite"){
+            oldLayerID = e.layer._leaflet_id;
+            map.removeLayer(osmLayer);
+            map.addLayer(imagery);
+            map.addLayer(imageryTransportation);
+            imageryTransportation.setOpacity(1);
+         }
+         if(currentLayerID != oldLayerID && e.name === "OpenStreetMap"){
+            oldLayerID = e.layer._leaflet_id;
+            map.removeLayer(imagery);
+            map.removeLayer(imageryTransportation);
+            map.addLayer(osmLayer);  
+         }
+      });
+      var markers=[];
+      var markersCluster = new L.MarkerClusterGroup({
+         spiderfyOnMaxZoom: true,
+         showCoverageOnHover: true,
+         zoomToBoundsOnClick: true,
+         disableClusteringAtZoom: 13,
+      });/* declaration des clusturing markers */
+     /* Le layer par défaut */
+      map.addLayer(osmLayer);     
+      /*le layer des markers cluster*/
+      map.addLayer(markersCluster);     
+      /* option des calques normale & Satellite*/
+      map.addControl(new L.Control.Layers( {
+         'OpenStreetMap': osmLayer, 
+         'openStreetMap Satellite': imageryLabels, 
+      }, {}));
+      L.control.fullscreen({
+         position: 'topleft', // change the position of the button can be topleft, topright, bottomright or bottomleft, default topleft
+         title: 'Show me the fullscreen !', // change the title of the button, default Full Screen
+         titleCancel: 'Exit fullscreen mode', // change the title of the button when fullscreen is on, default Exit Full Screen
+         content: null, // change the content of the button, can be HTML, default null
+         forceSeparateButton: true, // force separate button to detach from zoom buttons, default false
+         forcePseudoFullscreen: true, // force use of pseudo full screen even if full screen API is available, default false
+         fullscreenElement: false // Dom element to render in full screen, false by default, fallback to map._container
+      }).addTo(map);
+     /* search option*/
+      var searchControl = new L.esri.Controls.Geosearch().addTo(map);
+      var results = L.layerGroup().addTo(map);    
+      searchControl.on('results', function (data) {
+         results.clearLayers();
+         for (var i = data.results.length - 1; i >= 0; i--) {
+            results.addLayer(L.marker(data.results[i].latlng,{icon: redIcon()}));
+         }
+      });
+       /* ajout d'un reference avec un clique droit*/
+      map.on('contextmenu', onMapClick);
+      function onMapClick(e) {
+         var list ="<div class='category-content no-padding'><ul class='navigation listPopUp'><li class='navigation-header' style='color:black'><b>Plus d'options</b></li>"+
+            "<li><a data-toggle='modal' data-target='#modal_default'>Ajouter une nouvelle référence</a></li></ul></div>";
+         mini_map_2.off();
+         mini_map_2.remove();      
+         const mapDiv2 = document.getElementById("mapDynamique");
+         mini_map_2 = new L.map('mapDynamique').setView([parseFloat(e.latlng.lat), parseFloat(e.latlng.lng)], 15)
+         L.tileLayer('http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+         }).addTo(mini_map_2);
+         const resizeObserver = new ResizeObserver(() => {mini_map_2.invalidateSize();});
+         resizeObserver.observe(mapDiv2);
+         var marker2 = L.marker([parseFloat(e.latlng.lat), parseFloat(e.latlng.lng)],{draggable:'true',autoPan: true}).addTo(mini_map_2);
+         var position = marker2.getLatLng();
+          marker2.on("drag", function(e) {
+            var marker = e.target;
+            var position = marker.getLatLng();
+            $("#latitudeInput").val(position.lat);
+            $("#longitudeInput").val(position.lng);
+         });
+         var popup = L.popup()
+         .setLatLng(e.latlng)
+         .setContent(list)
+         .openOn(map);
+         $("#latitudeInput").val(e.latlng.lat);
+         $("#longitudeInput").val(e.latlng.lng);
+      }     
+      get_pins_validees();
+   }
+   //---------------------------------------------------------addMarkerLeaflet--------------------------------------------------------
+   function addMarkerLeaflet(props) {
+      if(props.content.type_de_reference != null){
+         if( props.content.type_de_reference == 2 && props.content.is_localized != false){
+            /* orange icon */
+            var orange_marker = new L.marker(props.coords,{icon: orangeIcon(props.content.label)})
+            .on('click', markerOnClick(props))
+            .on('contextmenu',markerOnRightClick(props));
+            markersCluster.addLayer(orange_marker);
+         }
+         if( props.content.type_de_reference == 1 && props.content.is_localized != false){
+            /* default icon*/
+            var default_marker = new L.marker(props.coords,{icon: blueIcon(props.content.label)})
+            .on('click', markerOnClick(props))
+            .on('contextmenu',markerOnRightClick(props));
+            markersCluster.addLayer(default_marker);
+         }
+         if( props.content.type_de_reference == 3){
+            /* default icon*/
+            var default_marker = new L.marker(props.coords,{icon: yellowIcon(props.content.label)})
+            .on('click', markerOnClick(props))
+            .on('contextmenu',markerOnRightClick(props));
+            markersCluster.addLayer(default_marker);
+         }
+         if(props.content.type_de_reference == 2 && props.content.is_localized === false){
+            var default_marker = new L.marker(props.coords,{icon: orangeStarIcon(props.content.label)})
+            .on('click', markerOnClick(props))
+            .on('contextmenu',markerOnRightClick(props));
+            markersCluster.addLayer(default_marker);
+         }
+         if(props.content.type_de_reference == 1 && props.content.is_localized === false){
+            var default_marker = new L.marker(props.coords,{icon: BlueStarIcon(props.content.label)})
+            .on('click', markerOnClick(props))
+            .on('contextmenu',markerOnRightClick(props));
+            markersCluster.addLayer(default_marker);
+         }
+      }
+      else{
+         var default_marker = new L.marker(props.coords,{icon: GrayIcon(props.content.label)})
+         .on('click', markerOnClick(props))
+         .on('contextmenu',markerOnRightClick(props));
+         markersCluster.addLayer(default_marker);
+      }
+   }
+   //---------------------------------------------------------addMarkerGoogle--------------------------------------------------------
+   function addMarkerGoogle(props){
+      if (props.content.type_de_reference == 2 && props.content.is_localized != false){
+         var marker = new google.maps.Marker({
+            position:props.coords,
+            id:props.content.id,
+            map:map,
+            label:props.content.label,
+            icon: {url: "/static/images/marker-icon-2x-orange.png", scaledSize: new google.maps.Size(25, 41), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)}
+         });
+      }
+      else if (props.content.type_de_reference == 1 && props.content.is_localized != false){
+         var marker = new google.maps.Marker({
+            position:props.coords,
+            id:props.content.id,
+            map:map,
+            label:props.content.label,
+            icon: {url: "/static/images/marker-icon-2x-violet.png", scaledSize: new google.maps.Size(25, 41), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)}
+         });
+      }
+      else if (props.content.type_de_reference == 3 && props.content.is_localized != false){
+         var marker = new google.maps.Marker({
+            position:props.coords,
+            id:props.content.id,
+            map:map,
+            label:props.content.label,
+            icon: {url: "/static/images/marker-icon-2x-gold.png", scaledSize: new google.maps.Size(25, 41), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)}
+         });
+      }
+      else if (props.content.type_de_reference == 2 && props.content.is_localized != true){
+         var marker = new google.maps.Marker({
+            position:props.coords,
+            id:props.content.id,
+            map:map,
+            label:props.content.label,
+            icon: {url: "/static/images/star-marron.png", scaledSize: new google.maps.Size(35, 41), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)}
+         });
+      }
+      else if (props.content.type_de_reference == 1 && props.content.is_localized != true){
+         var marker = new google.maps.Marker({
+            position:props.coords,
+            id:props.content.id,
+            map:map,
+            label:props.content.label,
+            icon: {url: "/static/images/star-blue.png", scaledSize: new google.maps.Size(35, 41), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)}
+         });
+      }
+      if(props.content.typedebien){
+         marker.addListener('click', (mapsMouseEvent) => {
+            infoWindow.close();
+            infoWindow = new google.maps.InfoWindow({
+               position: mapsMouseEvent.latLng,
+            });
+            infoWindow.setContent("<div class='text-center'>"+
+               "<p class='info'>Info : "+props.content.label.text+"<p/></div>"+
+               '<p class=\'content-group-sm\'>Type de bien: '+getTypeDeBien(props.content.typedebien)+'</p>'+
+               '<p class=\'content-group-sm\'>Type de reference: '+getTypeDeReference(props.content.type_de_reference)+'</p>'+
+               "<div class='text-center'>"+
+               '<button class=\'btn btn-info btn-rounded btn-xs\' onclick="pinLinkOnClick(\'' + props.content.id + '\')">Plus d\'info</button>'+
+               '</div>'
+            );
+            infoWindow.open(map, marker);
+            searchBox.setBounds(map.getBounds());
+         });
+         marker.addListener('rightclick', (mapsMouseEvent) => {
+            infoWindow.close();
+            infoWindow = new google.maps.InfoWindow({
+               position: mapsMouseEvent.latLng,
+            });
+            var editer = ""
+            if(props.content.is_valid === false){
+               editer =  "<li><a onclick='editLinkOnClick(" + props.content.id + ")'>Editer la référence</a></li>";
+            }
+            $("#my_pin_id").val(props.content.id);
+            infoWindow.setContent(
+               "<div class='category-content no-padding'>"+
+               "<ul class='navigation navigation-alt navigation-accordion listPopUp'>"+
+               "<li class='navigation-header' style='color:black'><b>Plus d'options</b></li>"+
+               editer+
+               "<li><a onclick='deleteLinkOnClick(" +props.content.id + ")'> Supprimer la référence</a></li>"+
+               "</ul>"+
+                  "</div>"
+            );
+            infoWindow.open(map, marker);
+            searchBox.setBounds(map.getBounds());
+         }); 
+      }
+      markerCluster.addMarker(marker);
+   }
+   /*markers collection leaflet*/
+   function createMarkersLeaflet(data, region){
+      markersCluster.clearLayers();
+
+      /*focus sur la ville selectionnée*/
+      if(region!=null){
+         address = region+' maroc';
+         $.get(location.protocol + '//nominatim.openstreetmap.org/search?format=json&q='+address, function(data){
+            point = [data[0].lat, data[0].lon]
+            map.setView(point, 9, { animation: true });
+         });
+      }
+      for (var i = 0; i < data.length; i++) {
+         /* markers recuperation*/
+         markers[i]={
+            coords:{
+               lat: parseFloat(data[i].lat),
+               lng: parseFloat(data[i].lng)
+            },
+            content:{
+               typedebien: data[i].type_de_bien,
+               id: data[i].id,
+               type_de_reference: data[i].type_de_reference,
+               is_valid: data[i].is_validate_by_user,
+               is_localized: data[i].is_localized,
+               label: data[i].label
+            }
+         }
+         /* Appel de la fonction addMarker() pour l'ajout des markers dans la map */
+         addMarkerLeaflet(markers[i]);
+      }
+   }
+   function createMarkersGoogle(data){
+      markerCluster.clearMarkers();
+      for (var i = 0; i < data.length; i++) {
+         /* markers recuperation*/
+         markers[i]={
+            coords:{
+               lat: parseFloat(data[i].lat),
+               lng: parseFloat(data[i].lng)
+            },
+            content:{
+               typedebien: data[i].type_de_bien,
+               id: data[i].id,
+               type_de_reference: data[i].type_de_reference,
+               is_valid: data[i].is_validate_by_user,
+               is_localized: data[i].is_localized,
+               label: {
+                  text: data[i].label,
+                  color: "#000000",
+                  fontSize: "10px",
+                  fontWeight: "bolder"
+               },
+            }
+         }
+         /* Appel de la fonction addMarker() pour l'ajout des markers dans la map */
+         addMarkerGoogle(markers[i]);
+      }
+   }
+   /*filtrage*/
+   $("#filterForm").submit(function( event ) {
+      event.preventDefault ();
+      $(".leaflet-popup").remove();
+      type_affectation = ''
+      /* récupération du formulaire à transmettre */
+      const formData = new FormData(this);
+      /* valeur des inputs*/ 
+      region = formData.get('region')
+      typedebien = formData.get('type_de_bien')
+      if(typedebien == 'terrain_nu'){
+         type_affectation = formData.get('terrain_nu_affectation')
+      }        
+      typeDeReference = formData.get('type_reference')
+      note = formData.get('note')
+      if(typedebien != '' && typeDeReference != '' && region != ''){
+         //var block = $("#page-content");
+         //loaderStart(block);
+         /* definir l URL pour l'exécution du filtrage*/
+         fetch("http://193.70.90.13:80/map/pins-filter-2/",{
+            method: 'POST',//définir la method du submit du form
+            mode : 'same-origin',
+            credentials: 'same-origin' ,
+            body : formData//définir la formulaire pour le url
+         })
+         .then((resp) => resp.json())
+         .then(function(data) { 
+            /* récupération des donnees et affichage des nouveaux pins */
+            if(data.length != 0 && typeof data.length != 'undefined'){
+               markers=[];
+               if("{{user.type_map}}" === "Leaflet"){
+                  createMarkersLeaflet(data, region);
+               }
+               else{
+                  createMarkersGoogle(data);
+               }
+            }
+            else{
+               if (typeof data['message'] === 'undefined'){
+                  notification('Désolé, aucun résultat trouvé')
+               }
+               else {
+                  notification('Désolé, '+ data['message']);
+               }
+            }
+            //$(block).unblock();
+            /* reset border of selections*/
+            $('#IdTypeBien').select2({
+               containerCssClass: 'border'
+            });
+            $('#IdRegion').select2({
+               containerCssClass: 'border'
+            });
+         });
+      }
+      else{
+         if(region == ''){
+            $('#IdRegion').select2({
+               containerCssClass: 'border-danger'
+            });
+         }
+         if(typedebien == ''){
+            $('#IdTypeBien').select2({
+               containerCssClass: 'border-danger'
+            });
+         }
+         notification('Veuillez Choisir vos paramètres de filtrage.');
+      }
+   });
+   /*detail*/
+   var mini_map = new L.map('map_focus').setView([51.505, -0.09], 15);
+   /* get images per pin*/
+   function getPhotographies(id){
+      var url = 'http://193.70.90.13:80/map/photo-pin-2/'+id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".photos").remove();
+         $(".photographies_lenght").html(data.length)
+         var supprimerPhotos='';
+         if(data.length!=0){
+            $("#ajouter-photos").data("nbrPhotos", data.length);
+            if(data.length === 12){
+               $("#ajouter-photos").hide();
+            }
+            for(var i=0;i<data.length;i++){
+               if(data[i].pin.is_validate_by_user === false){
+                  supprimerPhotos = "<a onclick='TrashIconOnClick(" +data[i].id + ")' class='btn border-white text-white btn-flat btn-icon btn-rounded ml-5'><i class='icon-trash'></i></a>";
+               }
+               $("#PhotographiesDiv").append("<div class='col-lg-3 col-sm-6 photos'><div class='thumbnail thumbnail-photos'><div class='thumb thumb-photos'>"+
+                  "<img loading=lazy' src="+ data[i].photo+" alt='' class='imageCapture image-thumbnail'>"+
+                  
+                  "<div class='caption-overflow'><span>"+
+                  "<a href="+ data[i].photo+" data-popup='lightbox' rel='gallery' class='btn border-white text-white btn-flat btn-icon btn-rounded imageDisplay'><i class='icon-plus3'></i></a>"+
+                  "<a href="+ data[i].photo+" class='btn border-white text-white btn-flat btn-icon btn-rounded ml-5'><i class='icon-link2'></i></a>"+supprimerPhotos+"</span></div></div></div></div>"
+               )
+            }
+            $("#content-photographies").show();
+         }
+         else{
+            $("#content-photographies").hide();
+         }
+      });
+   }
+   function getNotes(pin_id){
+      var url = 'http://193.70.90.13:80/map/note-pin-2/'+pin_id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".media-note").remove();
+         var has_note=false;
+         var has_photos=false;
+         $(".Notes_lenght").html(data.length);
+         if(data.length!=0){ 
+            for(var i=0;i<data.length;i++){
+               var id={{user.id}};
+               var userType = '{{user.userType}}';
+               var editer_option='';
+               var note_delete='';
+               var images_profiles='';   
+               if( id == data[i].editer_par.id || userType === 'principal'){
+                  has_note=true
+                  note_delete="<li><a onclick='delete_note(" + data[i].id + ")'><i class='icon-trash-alt'></i>   Supprimer</a></li>";
+                  editer_option = "<li><a href='#' id='editerNote' data-toggle='modal' data-target='#edit_note'><i class='icon-quill2'></i>Edit</a></li>";
+                  $("#OldcontentNote").html(data[i].note);
+                  $('#NoteId').val(data[i].id)
+               }
+               if( data[i].editer_par.photoProfile != null){
+                  images_profiles = data[i].editer_par.photoProfile
+               }
+               else{
+                  images_profiles = "{% static 'images/placeholder.jpg' %}"
+               }
+               $("#ul-Notes").append("<li class='media-note'>"+
+               "<div class='media-left'>"+
+               "<img loading=lazy' src="+images_profiles+" class='img-circle img-sm' alt='' >"+
+               "</div>"+
+               "<div class='media-body'>"+
+               "<div class='media-heading'>"+
+               " <a href='#' class='text-semibold'>"+ data[i].editer_par.last_name +" "+data[i].editer_par.first_name+"</a>"+
+               "<span class='media-annotation dotted'>"+ data[i].date +"</span>"+
+               "</div>"+
+               "<input type='text' class='form-control' class='noteContent' value='"+data[i].note+"' style='border-style: none;background-color:white' readonly='readonly'>"+
+               "<ul class='list-inline list-inline-separate text-size-small'>"+
+               editer_option+
+               note_delete+
+               "</ul>"+
+               "</div>"+
+               "</li>"
+               )
+            }
+         }
+         if (has_note==false){
+            $("#ajouterNoteLink").show();
+         }
+         else{
+            $("#ajouterNoteLink").hide();
+         }
+      });
+   }
+   function getDocs(pin_id){
+      $("#pin_id_fichier").val(pin_id);
+      $("#ul-docs").hide();
+      var url = 'http://193.70.90.13:80/map/list-docs-pin/'+pin_id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".docs_pin").remove();
+         
+         $(".Docs_lenght").html(data.length);
+         $('#ul-docs').DataTable().clear().draw();
+         var typeFile = '';
+         var supprimerDocs = '';
+         if(data.length!=0){ 
+            $("#ul-docs").show();
+            if(data.length === 5 ){
+               $("#ajouterDocs").hide();
+            }
+            for(var i=0;i<data.length;i++){
+               typeFile = data[i].type_file;
+               if(typeFile === 'C_L'){
+                  typeFile = 'Contrat de location';
+               }
+               if(typeFile === 'C_V'){
+                  typeFile = 'Contrat de vente';
+               }
+               if(data[i].pin.is_validate_by_user === false){
+                  supprimerDocs = "<li><a onclick='delete_piece_jointe_OnClick(" +data[i].id + ")'><i class='icon-bin'></i> Move to trash</a></li>";
+               }
+               filePath = data[i].fichier;
+               filePathSplited =  filePath.split("/");
+               fileName = filePathSplited[filePathSplited.length - 1]
+               fichier = "<a href='"+data[i].fichier+"'>"+fileName+"</a>";
+               actions ="<td class='text-center'><ul class='icons-list'><li class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='icon-menu9'></i>"+
+                  "</a><ul class='dropdown-menu dropdown-menu-right'><li><a onclick='show_pdf(" + data[i].id + ")'><i class=' icon-file-plus2'></i> Show</a></li>"+supprimerDocs+
+                  "</ul></li></ul></td>";
+               DocsAddRow(typeFile, data[i].username.username, fichier, actions);
+            }
+         }
+      });
+   }
+   var mini_map_2 = new L.map('mapDynamique').setView([51.505, -0.09], 15);
+   function setSwitchery(switchElement, checkedBool) {
+      if((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
+         switchElement.setPosition(true);
+         switchElement.handleOnchange(true);
+      }
+   } 
+   function getUser(id, typeUser){
+      var url = 'http://193.70.90.13:80/map/getUser/'+id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         if(data.length!=0){
+            if(typeUser === 'editeur'){
+               if( data.photoProfile != null){
+                  images_profiles_edit = data.photoProfile
+               }
+               else{
+                  images_profiles_edit = "{% static 'images/placeholder.jpg' %}"
+                  }
+               
+               $("#edit_by").prop("src",images_profiles_edit);
+               $('#edit_by_name').html(data.username);
+               $("#editeur").show();
+            }
+            if(typeUser === 'validateur'){
+               if( data.photoProfile != null){
+                  images_profiles = data.photoProfile
+               }
+               else{
+                     images_profiles = "{% static 'images/placeholder.jpg' %}"
+               }
+               
+               $("#validated_by").prop("src",images_profiles);
+               $('#validated_by_name').html(data.username);
+               $("#validateur").show();
+            }
+         }
+      });
+   }
+   /* function d'affichage du box d'info */
+   function pinLinkOnClick(id) {
+      $(".leaflet-popup").remove();
+      $("#editeur").hide();
+      $("#validateur").hide();
+      var url = 'http://193.70.90.13:80/map/pins-detail/'+id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         if(data.id != null && typeof data.id != "undefined"){
+            
+            mini_map.off();
+            mini_map.remove();
+            getPhotographies(data.id);
+            getNotes(data.id);
+            getDocs(data.id);
+            $("#pin_id_fichier").val(data.id);
+            $("#pinId-photographies").val(data.id);
+            $("#pin_id_actualisation").val(data.id);
+            /* switchery status */
+            var mySwitch = new Switchery($('#mySwitchCheck')[0], {
+               size:"small",
+               color: '#0D74E9'
+            });
+            // afficher status
+            if(data.is_validate_by_user === true){
+               setSwitchery(mySwitch, true);
+               $("#ajouterDocs").hide();
+               $("#ajouter-photos").hide();
+            }
+            else{
+               setSwitchery(mySwitch, false);
+               $("#ajouterDocs").show();
+               $("#ajouter-photos").show();
+            }
+            /* on  switchery click */
+            var checkbox_status = mySwitch.element.checked;
+            $('#mySwitchCheck').off('click').on('click', function(e) {
+               e.preventDefault();
+               if(checkbox_status === false){
+                  //I am off i will turn on
+                  validerPins(data.id);
+               }
+               if(checkbox_status === true){
+                  //I am off i will turn on
+                  validerPins(data.id);
+               }
+            });
+            /* resizeObserver pour regler le probleme de la map leafleat et le size du div */	
+            const mapDiv = document.getElementById("map_focus");
+            mini_map = new L.map('map_focus').setView([parseFloat(data.lat), parseFloat(data.lng)], 15)
+            L.tileLayer('http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+               attribution: '© OpenStreetMap contributors'
+            }).addTo(mini_map);
+            const resizeObserver = new ResizeObserver(() => {mini_map.invalidateSize();});
+            resizeObserver.observe(mapDiv);
+
+            if(data.type_de_reference != null && data.type_de_reference != ''){
+               if(data.type_de_reference === 2 && data.is_localized != false){
+                  var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: orangeIcon(data.label)}).addTo(mini_map); 
+               }
+               if(data.type_de_reference === 1 && data.is_localized != false){
+                  var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: blueIcon(data.label)}).addTo(mini_map); 
+               }
+               if(data.type_de_reference === 3){
+                  var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: yellowIcon(data.label)}).addTo(mini_map); 
+               }
+               if(data.type_de_reference === 1 && data.is_localized === false){
+                  var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: BlueStarIcon(data.label)}).addTo(mini_map); 
+               }
+               if(data.type_de_reference === 2 && data.is_localized === false){
+                  var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: orangeStarIcon(data.label)}).addTo(mini_map); 
+               }
+            }else{
+               var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: GrayIcon(data.label)}).addTo(mini_map);
+            }     
+            var typedebien = data.type_de_bien;
+            var typedereference = data.type_de_reference
+            var label = data.label
+            var ville = data.ville
+            var dateRef = data.date_ref
+            var surface = data.surface
+            var prix_unit = data.prix_unit
+            var prix_total = data.prix_total
+            var description = data.descriptif
+            var is_validate_by_user=data.is_validate_by_user
+            var contact = data.contact
+            var tags = data.tags
+            var rue = data.rue
+            var adresse = data.adresse
+            var is_localized = data.is_localized
+	    var from_mobile = data.from_mobile
+            $('#pinId').val(data.id)
+            if( data.username.photoProfile != null){
+               images_profiles = data.username.photoProfile
+            }
+            else{
+               images_profiles = "{% static 'images/placeholder.jpg' %}"
+            }
+            $("#created_by").prop("src",images_profiles);
+            $('#created_by_name').html(data.username.username);
+            $("#created_date").html("crée le: "+data.date_ajout);
+            if(data.user_editer != null){
+               getUser(data.user_editer, 'editeur');
+            }
+            if(data.user_valider != null){
+               getUser(data.user_valider, 'validateur');
+            }
+            //--------------------------------------------
+            if(from_mobile != null && from_mobile === true)
+            {
+               $(".from-mobile").show();
+            }
+            else{
+               $(".from-mobile").hide();
+            }
+//-------
+            
+            if( is_localized != null && is_localized === true){
+               $('.is_localized_info').html("&nbsp; Réference localisée");
+               $('.is_localized').show();
+            }
+            else{
+               if(is_localized != null && is_localized === false){
+                  
+                  $('.is_localized_info').html("&nbsp; Réference non localisée");
+                  $('.is_localized').show();
+               }
+               else{
+                  $('.is_localized').hide();
+               }
+            }
+            if(adresse !=null && adresse !=''){
+               $(".adresse_info").html(adresse);
+               $(".adresse").show();
+            }
+            else{
+               $(".adresse").hide();
+            }
+            if(typedebien != null && typedebien != ''){
+               $('.typedebien_info').html(getTypeDeBien(typedebien))
+               $('.typedebien').show();
+            }
+            else{
+               $('.typedebien').hide();
+            }
+
+            if(rue != null && rue != ''){
+               $('.rue_info').html(rue);
+               $('.rue').show();
+            }
+            else{
+               $('.rue').hide();
+            }
+
+            if(label != null && label != ''){
+               $('.label_info').html(label)
+            }
+            if(typedereference != null && typedereference != ''){
+               $('.typederef_info').html(getTypeDeReference(data.type_de_reference));
+               if(typedereference === 2){
+                  $(".prixunitLabel").html("Loyer unitaire: ");
+                  $(".prixtotalLabel").html("Loyer total: ");
+               }
+               else{
+                  $(".prixunitLabel").html("Prix unitaire: ");
+                  $(".prixtotalLabel").html("Prix total: ");
+               }
+               $('.typederef').show();
+            }
+            else{
+               $('.typederef').hide();
+            }
+            if(description != null && description != ''){
+               $('.description_info').html(data.descriptif)
+               $('.description').show();
+            }
+            else{
+               $('.description').hide();
+            }
+            if(ville != null && ville != ''){
+               $('.ville_info').html(ville.name)
+               $('.ville').show();
+            }
+            else{
+               $('.ville').hide();
+            }
+            if(contact != null && contact != ''){
+               $('.contact_info').html(contact)
+               $('.contact').show();
+            }
+            else{
+               $('.contact').hide();
+            }
+            $('#tags_info').tokenfield('setTokens', []);
+            if(tags != null && tags != ''){
+               $('#tags_info').tokenfield('setTokens', data.tags);
+               $("ul .tokenfield").css({"border-style" : "none", "background-color":"white"});
+               $(".tags").show();
+            }
+            else{
+               $(".tags").hide();
+            }
+            getPinActualisation(data.actualisation, data.surface, data.id);
+            /*--------------------------------------*/
+            if(prix_total != null && prix_total != parseFloat(0)){
+               $('.prixtotal_info').html(addCommas(data.prix_total))
+               $('.prixtotal').show();
+            }
+            else{
+               $('.prixtotal').hide();
+            }
+            /*--------------------------------------*/
+            if(prix_unit != null && prix_unit != parseFloat(0)){
+               $('.prixunit_info').html(addCommas(data.prix_unit));
+               $('.prixunit').show();
+            }
+            else{
+               $('.prixunit').hide();
+            }
+            /*--------------------------------------*/
+            if(surface != null && surface != parseFloat(0)){
+               $('.surface_info').html(addCommas(data.surface))
+               $('.surface_').show();
+            }
+            else{
+               $('.surface_').hide();
+            }
+            /*--------------------------------------*/
+            if(data.chute_fonciere != null && data.chute_fonciere != 0){
+               $('.chute_fonciere_info').html(addCommas(data.chute_fonciere))
+               $('.chuteFonc').show();
+            }
+            else{
+               $('.chuteFonc').hide();
+            }
+            /******************************************/
+            $( '#content' ).show(function(){
+               $(window).scrollTop($('#content').position().top);
+            });
+         }
+         else{
+            notification('Désolé, '+ data['message']);
+         }  
+      });
+   }
+   /* create my pin*/
+   /*ajouter pin*/
+   $("#region_create").change(function(e){
+      var idRegion = $("#region_create").val();
+      if(idRegion !=null &&  idRegion!='' && typeof idRegion != "undefined"){
+         var url = 'http://193.70.90.13:80/map/getVilles/'+idRegion
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            $(".option_villes_create").remove();
+            for(i=0; i<data.length; i++){
+               var option = "<option class = 'option_villes_create' value="+data[i].id+">"+data[i].name+"</option>";
+               $('#selected_ville_create').append(option);
+            }
+            
+         });
+      }
+   });
+   var storedFiles = [];
+   var storedDocs = new Array(5);
+   function removeFile(collection, file){
+      for (var i = 0; i < collection.length; i++) {
+         if (collection[i] === file) {
+            collection.splice(i, 1);
+            break;
+         } 
+      }
+   }
+   function appendFiles(_form, storedFiles){
+      for (var i = 0; i < storedFiles.length; i++) {
+         _form.append("file", storedFiles[i]); 
+      }
+   }
+   function appendDocs(_form, storedDocs){
+      for (var i = 0; i < storedDocs.length; i++) {
+         _form.append("docs", storedDocs[i]); 
+      }
+   }
+   let dzClosure = null
+   let token_ = $('meta[name="csrf-token"]').attr('content');
+   //---------------------------------------------------------create_my_pin---------------------------------------------------------
+   var myDropzone = new Dropzone("div#testDropBox",{
+      url: "http://193.70.90.13:80/map/create_my_pin/",
+      autoProcessQueue: false,
+      uploadMultiple: true,
+      parallelUploads: 5,
+      maxFiles: 12,
+      maxFilesize: 2,
+      acceptedFiles: 'image/*',
+      paramName: "file",
+      addRemoveLinks: true,
+      param: {
+         _token: token_
+      },
+      init: function() {
+         dzClosure = this; // Makes sure that 'this' is understood inside the functions below.
+         const formData = new FormData($("#create_pin")[0]);  
+
+         this.on("addedfile", function(file) {
+            storedFiles.push(file);
+         });
+         this.on("removedfile", function(file) {
+            removeFile(storedFiles,file);
+         });
+         this.on('error', function(file, response) {
+            notification("les fichiers qui ne respecte pas le format ou la taille mentionner seront supprimés!");
+            removeFile(storedFiles,file);
+            this.removeFile(file);
+         });
+         /* start fichier jointes des pins*/
+         $('#input-piece-jointe').change(function(e){
+            var length = document.getElementById("input-piece-jointe").files.length;
+            var myFile = $('#input-piece-jointe').prop('files')[0];
+            if(length != 0){
+               var fileName = e.target.files[0].name;
+               $("#selected-file").html(fileName);
+               formData.delete('piece_jointe_1');
+               storedDocs[0]=myFile;
+            }
+            else{
+               $("#selected-file").html('No file selected');
+               formData.delete('piece_jointe_1');
+               removeFile(storedDocs,storedDocs[0]);
+            }
+         });
+         $('#input-piece-jointe-2').change(function(e){
+            var length = document.getElementById("input-piece-jointe-2").files.length
+            var myFile = $('#input-piece-jointe-2').prop('files')[0];
+            if(length != 0){
+               var fileName = e.target.files[0].name;
+               $("#selected-file-2").html(fileName);
+               storedDocs[1]=myFile;
+            }
+            else{
+               $("#selected-file-2").html('No file selected');
+               formData.delete('piece_jointe_2');
+               removeFile(storedDocs,storedDocs[1]);
+            }
+         });
+         $('#input-piece-jointe-3').change(function(e){
+            var length = document.getElementById("input-piece-jointe-3").files.length
+            var myFile = $('#input-piece-jointe-3').prop('files')[0];
+            if(length != 0){
+               var fileName = e.target.files[0].name;
+               $("#selected-file-3").html(fileName);
+               storedDocs[2]=myFile;
+            }
+            else{
+               $("#selected-file-3").html('No file selected');
+               removeFile(storedDocs,storedDocs[2]);
+            }
+         });         
+         $('#input-piece-jointe-4').change(function(e){
+            var length = document.getElementById("input-piece-jointe-4").files.length;
+            var myFile = $('#input-piece-jointe-4').prop('files')[0];
+            if(length != 0){
+               var fileName = e.target.files[0].name;
+               $("#selected-file-4").html(fileName);
+               storedDocs[3]=myFile;
+            }
+            else{
+               $("#selected-file-4").html('No file selected');
+               removeFile(storedDocs,storedDocs[3]);
+            }
+         });
+         $('#input-piece-jointe-5').change(function(e){
+            var length = document.getElementById("input-piece-jointe-5").files.length;
+            var myFile = $('#input-piece-jointe-5').prop('files')[0];
+            if(length != 0){
+               var fileName = e.target.files[0].name;
+               $("#selected-file-5").html(fileName);
+               storedDocs[4]=myFile;
+            }
+            else{
+               $("#selected-file-5").html('No file selected');
+               removeFile(storedDocs,storedDocs[4]);
+            }
+         });
+         /* end fichier jointes des pins*/
+         /* create_my_pin */
+         $("#create_pin").submit(function( event ) {
+            event.preventDefault ();
+            var adresse = "";
+            var url = "https://nominatim.openstreetmap.org/search?format=json&q="+parseFloat($("#latitudeInput").val())+','+parseFloat($("#longitudeInput").val());
+            $.get(url, function(data){
+             adresse = data[0].display_name;
+            });
+            setTimeout(function(){
+               formData.append("adresse", adresse);   /* récupération du formulaire à transmettre */
+               formData.delete('file');
+               appendFiles(formData, storedFiles);
+               formData.delete('docs');
+               appendDocs(formData, storedDocs);
+               
+               formData.append("latitude", $("#latitudeInput").val());
+               formData.append("longitude", $("#longitudeInput").val());
+               formData.append("region", $("#region_create").val());
+               formData.append("ville", $("#selected_ville_create").val());
+               formData.append("type_de_reference", $("#type_de_reference").val());
+               formData.append("type_de_bien", $("#IdTypeBienNew").val());
+               formData.append("chute_fonciere", $("#chute_fonciere").val());
+               formData.append("surface_new", $("#surface_new").val());
+               formData.append("prix_unit", $("#prix_unit").val());
+               formData.append("loyer_unit", $("#loyer_unit").val());
+               formData.append("contact", $("#contact").val());
+               formData.append("prix_total", $("#prix_total").val());
+               formData.append("loyer_total", $("#loyer_total").val());
+               formData.append("description", $("#description").val());
+               formData.append("tag", $("#tag").val());
+               formData.append("descriptionImage", $("#descriptionImage").val());
+               formData.append("type_piece_jointe_du_bien", $("#type_piece_jointe_du_bien").val());
+               formData.append("type_piece_jointe_du_bien_2", $("#type_piece_jointe_du_bien_2").val());
+               formData.append("type_piece_jointe_du_bien_3", $("#type_piece_jointe_du_bien_3").val());
+               formData.append("type_piece_jointe_du_bien_4", $("#type_piece_jointe_du_bien_4").val());
+               formData.append("type_piece_jointe_du_bien_5", $("#type_piece_jointe_du_bien_5").val());
+               formData.append("adresseRue", $("#adresseRue").val());
+               $('#create_pin').find(':checkbox:checked, :radio:checked').each(function () {
+                  formData.append(this.name, $(this).val());
+               });
+                           /* definir l URL pour l'exécution du filtrage*/
+            fetch("http://193.70.90.13:80/map/create_my_pin/",{
+               method: 'POST',//définir la method du submit du form
+               mode : 'same-origin',
+               credentials: 'same-origin' ,
+               body : formData//définir la formulaire pour le url
+            })
+            .then((resp) => resp.json())
+            .then(function(data) { 
+               /* récupération des donnees et affichage des nouveaux pins */
+               if (data.id == null) {
+                  notification( data['message'] );
+               }
+               else {
+                  notificationSuccess('success message', 'la reference a été ajoutée avec succès' );
+                  $('#modal_default').modal('toggle');
+                  $(".leaflet-popup").remove();
+                  storedDocs= new Array(5);
+                  if("{{user.type_map}}" === "Leaflet"){
+                     marker={
+                        coords:{
+                           lat: parseFloat(data.lat),
+                           lng: parseFloat(data.lng)
+                        },
+                        content:{
+                           typedebien: data.type_de_bien,
+                           id: data.id,
+                           type_de_reference: data.type_de_reference,
+                           is_valid: data.is_validate_by_user,
+                           is_localized: data.is_localized,
+                           label: data.label
+
+                        } 
+                     }
+                     addMarkerLeaflet(marker);
+                  }
+                  else{
+                     marker={
+                        coords:{
+                           lat: parseFloat(data.lat),
+                           lng: parseFloat(data.lng)
+                        },
+                        content:{
+                           typedebien: data.type_de_bien,
+                           id: data.id,
+                           type_de_reference: data.type_de_reference,
+                           is_valid: data.is_validate_by_user,
+                           is_localized: data.is_localized,
+                           label: {
+                              text: data.label,
+                              color: "#000000",
+                              fontSize: "10px",
+                              fontWeight: "bolder"
+                           },
+                        }
+                     }
+                     /* Appel de la fonction addMarker() pour l'ajout des markers dans la map */
+                     addMarkerGoogle(marker);
+                  }
+                  getTags();
+               }
+            });
+             }, 1500);
+
+         });
+         //send all the form data along with the files:
+         this.on("sending", function(data, xhr, formData) {});
+      }
+   }); 
+   //---------------------------------------------------------tags------------------------------------------------------------------
+   getTags();
+   function getTags(){
+      var url = 'http://193.70.90.13:80/map/getTags/'
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".option_tags").remove();
+         for(i=0; i<data.length; i++){
+            var option = "<option class = 'option_tags' value="+data[i].label+">"+data[i].label+"</option>";
+            $('#tag_update').append(option);
+            $('#tag').append(option);
+         }
+      });
+   }
+   //---------------------------------------------------------validerPins------------------------------------------------------------
+   function validerPins(pin_id){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+      checkbox_status = true;
+         var url = 'http://193.70.90.13:80/map/validate_my_pin/'+pin_id
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0){
+               notificationSuccess('success message', 'La reference a été validée avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               //get_pins_non_validees();
+               $("#content").hide();
+            }
+            else{
+                  notification(data['message']);
+            }
+         });
+      });
+   }
+   //---------------------------------------------------------get Pins valides--------------------------------------------------------
+   var checkboxes = document.querySelectorAll("input[type=checkbox][name=type_valide_nonValid_Mobile]");
+   let enabledSettings = []
+   // Use Array.forEach to add an event listener to each checkbox.
+   checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+         enabledSettings = 
+            Array.from(checkboxes) // Convert checkboxes to an array to use filter and map.
+            .filter(i => i.checked) // Use Array.filter to remove unchecked checkboxes.
+            .map(i => i.value) // Use Array.map to extract only the checkbox values from the array of objects.
+            get_filter_pins(enabledSettings)
+      })
+   });
+
+   function get_filter_pins(val){
+      var block = $("#page-content");
+      loaderStart(block);
+      var time_start = new Date(Date.now());
+      var s_start = time_start.getSeconds();
+      var time_end = 0;
+      var s_end = 0;
+      if("{{user.type_map}}" === "Leaflet")
+         markersCluster.clearLayers();
+      else
+         markerCluster.clearMarkers();
+      for(i=0;i<val.length;i++){
+         var url = 'http://193.70.90.13:80/map/'+val[i]+'/'
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            $(".line_pin").remove();
+            $('#ul-pins').DataTable().clear().draw();
+            markers=[];
+            if(data.length!=0){
+               if("{{user.type_map}}" === "Leaflet"){
+                  for (var i = 0; i < data.length; i++) {
+                     markers[i]={
+                        coords:{
+                           lat: parseFloat(data[i].lat),
+                           lng: parseFloat(data[i].lng)
+                        },
+                        content:{
+                           typedebien: data[i].type_de_bien,
+                           id: data[i].id,
+                           type_de_reference: data[i].type_de_reference,
+                           is_valid: data[i].is_validate_by_user,
+                           is_localized: data[i].is_localized,
+                           label: data[i].label
+                        }
+                     }
+                     addMarkerLeaflet(markers[i]);
+                  }
+               }
+               else
+                  for (var i = 0; i < data.length; i++) {
+                     markers[i]={
+                        coords:{
+                           lat: parseFloat(data[i].lat),
+                           lng: parseFloat(data[i].lng)
+                        },
+                        content:{
+                           typedebien: data[i].type_de_bien,
+                           id: data[i].id,
+                           type_de_reference: data[i].type_de_reference,
+                           is_valid: data[i].is_validate_by_user,
+                           is_localized: data[i].is_localized,
+                           label: {
+                              text: data[i].label,
+                              color: "#000000",
+                              fontSize: "10px",
+                              fontWeight: "bolder"
+                           },
+                        }
+                     }
+                     addMarkerGoogle(markers[i]);
+                  }
+            }
+            time_end = new Date(Date.now());
+            s_end =time_end.getSeconds();
+         })
+      }
+      time_end = new Date(Date.now());
+      s_end =time_end.getSeconds();
+      $(block).unblock();
+   }
+   
+   
+   
+   
+   
+  
+   //---------------------------------------------------------get Pins valides--------------------------------------------------------
+   function get_pins_validees(){
+      $("#content").hide();
+      $(".leaflet-popup").remove();
+      var block = $("#page-content");
+      loaderStart(block);
+      var time_start = new Date(Date.now());
+      var s_start = time_start.getSeconds();
+      var time_end = 0;
+      var s_end = 0;
+      var url = 'http://193.70.90.13:80/map/pins-list-2/'
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".line_pin").remove();
+         $('#ul-pins').DataTable().clear().draw();
+         markers=[];
+         if(data.length!=0){
+            if("{{user.type_map}}" === "Leaflet")
+               createMarkersLeaflet(data, null);
+            else
+               createMarkersGoogle(data);
+         }
+         else{
+            notificationInfo("info: ","Il n'y a pas de réferences");
+         }
+         time_end = new Date(Date.now());
+         s_end =time_end.getSeconds();
+         $(block).unblock();
+      });
+   }
+   //---------------------------------------------------------get Pins non valides--------------------------------------------------------
+   function get_pins_non_validees(){
+      $("#content").hide();
+      $(".leaflet-popup").remove();
+      var block = $("#page-content");
+      loaderStart(block);
+      var time_start = new Date(Date.now());
+      var s_start = time_start.getSeconds();
+      var time_end = 0;
+      var s_end = 0;
+      var url = 'http://193.70.90.13:80/map/list-pin-non-valider/'
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".line_pin").remove();
+         $('#ul-pins').DataTable().clear().draw();
+         markers=[];
+         if(data.length!=0){
+            if("{{user.type_map}}" === "Leaflet")
+            {
+               createMarkersLeaflet(data, null);
+            }
+            else{
+               createMarkersGoogle(data);
+            }
+               
+         }
+         else{            
+            if("{{user.type_map}}" === "Leaflet")
+            {
+               markersCluster.clearLayers();
+            }
+            else{
+               markerCluster.clearMarkers();
+            }
+            notificationInfo("info: ","Il n'y a pas de réferences non valide");
+         }
+         time_end = new Date(Date.now());
+         s_end =time_end.getSeconds();
+         $(block).unblock();
+      });
+   }
+   //---------------------------------------------------------update_my_pin---------------------------------------------------------
+   $("#region_update").change(function(e){
+      var idRegion = $("#region_update").val();
+      var url = 'http://193.70.90.13:80/map/getVilles/'+idRegion
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".option_villes").remove();
+         for(i=0; i<data.length; i++){
+            var selected='';
+            if(data[i].id === villeId){
+               selected='selected';
+            }
+            var option = "<option "+selected+" class = 'option_villes' value="+data[i].id+">"+data[i].name+"</option>";
+            $('#selected_ville_update').append(option);
+         }
+      });
+   });
+   $("#update_my_pin").submit(function( event ) {
+      event.preventDefault ();
+      /* récupération du formulaire à transmettre */
+      const formData = new FormData(this);
+      /* definir l URL pour l'exécution du filtrage*/
+      fetch("http://193.70.90.13:80/map/update_my_pin/",{
+        method: 'POST',//définir la method du submit du form
+        mode : 'same-origin',
+        credentials: 'same-origin' ,
+        body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) { 
+         /* récupération des donnees et affichage des nouveaux pins */
+         if (data.id == null || typeof data.id === 'undefined') {
+            notification( data['message'] );
+         }
+         else {
+            notificationSuccess('success message', 'La reference a été modifié avec succès' );
+            if($("#content").is(":visible")){
+              pinLinkOnClick(data.id);
+            }
+           $('#modal_update_ref').modal('toggle');
+           getTags();
+        }
+      });
+   });
+   //---------------------------------------------------------editLinkOnClick---------------------------------------------------------
+   function editLinkOnClick(id){
+      //$(".leaflet-popup").remove();
+      var url = 'http://193.70.90.13:80/map/pins-detail-2/'+id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         /* show data */
+         $("#my_pin_id").val(data.id);
+         $("#latitudeInputUpdate").val(data.lat)
+         $("#longitudeInputUpdate").val(data.lng)
+         if (data.ville!=null)
+            villeId = data.ville.id
+         else
+            villeId = 1
+         if (data.ville!=null)
+            $("#region_update").val(data.region.id).change();
+         $("#selected_type_reference_update").val(data.type_de_reference).change();
+         //$("#Idtype_Terrain_update").val(data.type_de_terrain).change();
+         if(data.is_localized===true)
+            $("#localisee_update").prop("checked", true).trigger("click");
+         else
+            $("#non_localisee_update").prop("checked", true).trigger("click");
+         $("#IdTypeBienUpdate").val(data.type_de_bien).change();
+         //$("#Idtype_Terrain_update").val(data.type_de_terrain).change();
+         $("#chute_fonciereEdt").val(data.chute_fonciere);
+         $("#surf_update").val(data.surface);
+         $("#prix_unit_update").val(data.prix_unit);
+         $("#loyer_unit_update").val(data.prix_unit);
+         $("#contact-update").val(data.contact);
+         $("#adresseRue_update").val(data.rue);
+         $("#prix_total_update").val(data.prix_total);
+         $("#loyer_total_update").val(data.prix_total);
+         $("#desc_update").val(data.descriptif);
+         $("#tag_update").val(null).trigger("change");
+         if(data.tags!=null && data.tags!=''){
+            var tags=(data.tags).split(",");
+            $("#tag_update").val(tags).trigger("change");
+         }
+         $('#modal_update_ref').modal('toggle');
+      });
+   }
+   //---------------------------------------------------------Ajout une Note---------------------------------------------------------
+   $("#ajoutNoteForm").submit(function( event ) {
+      event.preventDefault ();
+      const formData = new FormData(this);
+      fetch("http://193.70.90.13:80/map/ajout_note-2/",{
+        method: 'POST',//définir la method du submit du form
+        mode : 'same-origin',
+        credentials: 'same-origin' ,
+        body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+        if(data.length!=0) {
+          getNotes(data.pin.id);
+          $("#modal_note").modal('toggle');
+        }
+      }); 
+   });
+   //---------------------------------------------------------Editer la note---------------------------------------------------------
+   $("#EditNoteForm").submit(function( event ) {
+      event.preventDefault ();
+      const formData = new FormData(this);
+      fetch("http://193.70.90.13:80/map/update-note-2/",{
+         method: 'POST',//définir la method du submit du form
+         mode : 'same-origin',
+         credentials: 'same-origin' ,
+         body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.length!=0) {
+            getNotes(data.pin.id);
+            $("#edit_note").modal('toggle');
+         }
+      }); 
+   });
+   //---------------------------------------------------------Ajouter photographies---------------------------------------------------------
+   let dzClosure_modification = null;
+   let token_dropZone= $('meta[name="csrf-token"]').attr('content');
+   storedFiles_modif=[];
+   let existant = $("#ajouter-photos").data("nbrPhotos")
+   let nbrPhotos= 12 - parseInt(existant);
+   var myDropzone_modification = new Dropzone("div#modify-DropBox",{
+      url: "http://193.70.90.13:80/map/ajoutPhotographies/"+$("#pinId-photographies").val(),
+      autoProcessQueue: false,
+      uploadMultiple: true,
+      parallelUploads: 5,
+      maxFiles: 12,
+      maxFilesize: 2,
+      acceptedFiles: 'image/*',
+      paramName: "file",
+      addRemoveLinks: true,
+      param: {
+        _token: token_dropZone
+      },
+      init: function() {
+         dzClosure_modification = this; // Makes sure that 'this' is understood inside the functions below.
+         const formData = new FormData($("#photographies_modif")[0]);  
+         this.on("addedfile", function(file) {
+            storedFiles_modif.push(file);
+         });
+         this.on("removedfile", function(file) {
+            removeFile(storedFiles_modif,file);
+         });
+         this.on('error', function(file, response) {
+            notification("les images avec une taille > 2Mo ne sont pas considérées !");
+            removeFile(storedFiles_modif,file);
+            this.removeFile(file);
+         });
+         $("#photographies_modif").submit(function( event ) {
+            event.preventDefault ();
+            formData.delete('file');
+            appendFiles(formData, storedFiles_modif);
+            formData.append("descriptionImage", $("#descriptionImage-modif").val());
+            fetch("http://193.70.90.13:80/map/ajoutPhotographies/"+ $("#pinId-photographies").val(),{
+               method: 'POST',//définir la method du submit du form
+               mode : 'same-origin',
+               credentials: 'same-origin' ,
+               body : formData//définir la formulaire pour le url
+            })
+            .then((resp) => resp.json())
+            .then(function(data) {
+               if(data.length == null){
+               notification( data['message'] );
+               }
+               else{
+                  notificationSuccess('success message', 'les images ont été ajoutées avec succès' );
+                  $('#modal_photographies').modal('toggle');
+                  getPhotographies( $("#pinId-photographies").val() );
+               }
+            });
+         });
+      }//fin init function
+   });
+   //---------------------------------------------------------trash icon click---------------------------------------------------------
+   function TrashIconOnClick(photo_id){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+         var url = 'http://193.70.90.13:80/map/delete_my_photo_pin/'+photo_id
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0){
+               notificationSuccess('success message', 'la photos a été supprimée avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               getPhotographies(data.pin.id);
+            }
+            else{
+               notification("desole, un probleme est survenu lors de la suppression")
+            }
+         });
+      });
+   }
+   //---------------------------------------------------------supprimer un document-------------------------------------------------------
+   function delete_piece_jointe_OnClick(idPieceJointe){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+         var url = 'http://193.70.90.13:80/map/delete_my_piece_jointe/'+idPieceJointe
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0){
+               notificationSuccess('success message', 'le fichier a été supprimé avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               getDocs(data.pin.id);
+            }
+            else{
+               notification("desole, un probleme est survenu lors de la suppression")
+            }
+         });
+      });
+   }
+   //---------------------------------------------------------Ajouter un document---------------------------------------------------------
+   $("#piece_jointe_modif").submit(function( event ) {
+      event.preventDefault ();
+      /* récupération du formulaire à transmettre */
+      var pin_id = $("#pin_id_fichier").val();
+      const formData = new FormData(this);
+      fetch("http://193.70.90.13:80/map/create_my_piece_jointe/"+pin_id,{
+        method: 'POST',//définir la method du submit du form
+        mode : 'same-origin',
+        credentials: 'same-origin' ,
+        body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.id != null){
+            notificationSuccess('success message', 'ajout avec succès' );
+            getDocs(pin_id);
+            $("#modal_doc").modal('toggle');
+         }        
+         else{
+            notification( data['message'] );
+         }
+      });
+   });
+   //---------------------------------------------------------Importer mon fichier CSV---------------------------------------------------------
+   $("#importCSV").submit(function( event ) {
+      event.preventDefault ();
+      var block = $(this).parent();
+      loaderStart(block);
+      const formData = new FormData(this);
+      fetch("http://193.70.90.13:80/map/pins-import-2/",{
+        method: 'POST',
+        mode : 'same-origin',
+        credentials: 'same-origin' ,
+        body : formData
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if (data.length != 0 && typeof data.length != 'undefined') {
+            notificationSuccess('success message', 'le fichier a été importé avec succès' );
+            $("#modalCSV").modal('toggle');
+         }
+         else {
+            notification( data['message'] );
+         }
+         $(block).unblock();
+      });
+   });
+   /* DocsAddRow to datatable*/
+   function DocsAddRow(type_doc,username,fichierPdf,actions) {
+      $('#ul-docs').dataTable().fnAddData([type_doc, username, fichierPdf, actions]);
+   }
+   /* supprimer la reference*/
+   function deleteLinkOnClick(pin_id){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+         var url = 'http://193.70.90.13:80/map/delete_my_pin/'+pin_id
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0){
+               notificationSuccess('success message', 'la reference a été supprimée avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               $(".leaflet-popup").remove();
+               $("#content").hide();
+               get_pins_non_validees();
+            }
+            else{
+               notification("desole, un probleme est survenu lors de la suppression")
+            }
+         });
+      });
+   }
+   //---------------------------------------------------------get Pin Actualisation---------------------------------------------------------
+   function getPinActualisation(actualisationArray,surface, id){
+      $(".tr-actualisation").remove();
+      if(actualisationArray!= null && actualisationArray.length!=0){
+         for (var i =0; i < actualisationArray.length; i++) {
+            tr="<tr class='tr-actualisation'><td>"+actualisationArray[i][0]+"</td>"+
+               "<td>"+addCommas(actualisationArray[i][1])+"</td>"+
+               "<td>"+addCommas(surface)+"</td>"+
+               "<td>"+addCommas(actualisationArray[i][2])+"</td>"+
+               "<td><button class='editActualisation' style='border-style: none; background-color:transparent;' onclick='editActualisationCLick()'><i class='icon-pencil' style='color: blue; font-size:10erm;'></i></button>&nbsp;<button</td>"+
+               "</tr>"
+               ;
+            $("#actualisation").append(tr);
+         }
+         $("#actualisation-li").show();
+      }
+      else{
+         $("#actualisation-li").hide();
+      }
+   }
+
+   $("#new_actualisation").on('click', function(event){
+      $("#AjouterActualisation").modal('toggle');
+   });
+   $("#ajout-actualisation-form").submit(function( event ) {
+      event.preventDefault ();
+      const formData = new FormData(this);
+      fetch("http://193.70.90.13:80/map/ajout_actualisation/",{
+         method: 'POST',//définir la method du submit du form
+         mode : 'same-origin',
+         credentials: 'same-origin' ,
+         body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.id != null ) {
+            notificationSuccess('success message', 'l\'actualisation a été effectuée avec succès' );
+            getPinActualisation(data.actualisation, data.surface, data.id); 
+            idEditeur = "{{user.id}}";
+            if(idEditeur != null){
+               getUser(idEditeur, 'editeur');
+            }
+            
+            $("#AjouterActualisation").modal('toggle');
+         }
+         else{
+            notification('Erreur, '+ data['message']);
+         }
+      }); 
+   });
+</script>
+{% endblock %}
+</html>

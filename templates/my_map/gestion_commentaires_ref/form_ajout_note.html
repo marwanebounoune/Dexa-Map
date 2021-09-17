@@ -1,0 +1,49 @@
+<!--ajouter une note -->
+<div class="modal fade" id="modal_note" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Ajouter une Note</h5>
+         </div>
+         <form method="POST" id="ajoutNoteForm">
+            {% csrf_token %}
+            <input type = "text"  id="pinId" name="pin_id" style="display:none">
+            <input type = "text"  name="user_id" value="{{ user.id }}" style="display:none">
+            <div class="modal-body">
+               <div class="form-group">
+                  <textarea rows="5" cols="5" class="form-control" placeholder="Votre note" name="note_content" id="contentNote"></textarea>
+               </div>
+               <div class="form-group login-options">
+                  <div class="row">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <button type="submit" class="btn bg-blue btn-block">Envoyer la note <i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+<!--/ajouter une note -->
+<script>
+    //---------------------------------------------------------Ajout une Note---------------------------------------------------------
+    $("#ajoutNoteForm").submit(function( event ) {
+      event.preventDefault ();
+      const formData = new FormData(this);
+      fetch("http://127.0.0.1:8000/notes/ajout_note-2/",{
+        method: 'POST',//définir la method du submit du form
+        mode : 'same-origin',
+        credentials: 'same-origin' ,
+        body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+        if(data.length!=0) {
+          getNotes(data.pin.id);
+          $("#modal_note").modal('toggle');
+        }
+      }); 
+   });
+</script>

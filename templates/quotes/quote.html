@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{%load static%}
+{% block content %}
+
+    <!-- Content area -->
+<div class="content">
+
+        <!-- Main charts -->
+    <div class="row">
+            
+        <div class="col-lg-8">
+
+                <!-- Traffic sources -->
+            <div class="panel panel-flat">
+                
+                
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                    </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+
+                    <div class="item active">
+                        <img src="{% static 'images/cover.jpg'%}" alt="Los Angeles" style="width:100%;">
+                        <div class="carousel-caption">
+                            <h3>Los Angeles</h3>
+                            <p>LA is always so much fun!</p>
+                        </div>
+                </div>
+
+                    <div class="item">
+                        <img src="im100.png" alt="Chicago" style="width:100%;">
+                        <div class="carousel-caption">
+                            <h3>Chicago</h3>
+                            <p>Thank you, Chicagqqqqoq!</p>
+                        </div>
+                    </div>
+
+<div class="item">
+<img src="im100.png" alt="New York" style="width:100%;">
+<div class="carousel-caption">
+<h3>New York</h3>
+<p>We love the Big Apple!</p>
+</div>
+</div>
+
+</div>
+
+<!-- Left and right controls -->
+<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+<span class="glyphicon glyphicon-chevron-left"></span>
+<span class="sr-only">Previous</span>
+</a>
+<a class="right carousel-control" href="#myCarousel" data-slide="next">
+<span class="glyphicon glyphicon-chevron-right"></span>
+<span class="sr-only">Next</span>
+</a>
+</div>
+                    
+                </div>
+                <!-- /traffic sources -->
+            </div>
+
+    <div class="col-lg-4">
+                
+                
+
+        <!-- Advanced login -->
+        
+        <form  method="POST" action="{% url 'quotation' %}" class="was-validated">
+            {% csrf_token %}
+            <div class="panel panel-body login-form">
+                
+                <div class="text-center">
+                    <h5 class="content-group-lg">Demander un devis <small class="display-block">DataImmo</small></h5>
+            </div>
+            {% include 'partials/messages.html' %}
+                <!-- Nom complet -->
+            <div class="form-group has-feedback has-feedback-left">
+                    <input type="text" class="form-control" placeholder="Nom complet" name="nom" {% if devis_validation.nom %} value='{{devis_validation.nom}}' {% endif %} id="nom">
+                    <div class="form-control-feedback">
+                        <i class="icon-user text-muted"></i>
+                    </div>
+                    {% if  devis_validation %}
+                        {% if devis_validation.nom|length > 255 or devis_validation.nom|length == 0 %}
+                            <div class="invalid-feedback" style="color:red" ></div>
+                        {% endif %}
+                    {% endif %}
+            </div>
+                
+                <!-- email -->
+                <div class="form-group has-feedback has-feedback-left">
+                    <input type="email" class="form-control" placeholder="adresse e-mail" name="email" {% if devis_validation.email %} value='{{devis_validation.email}}' {% endif %}>
+                    <div class="form-control-feedback">
+                        <i class=" icon-envelop3 text-muted"></i>
+                    </div>
+                    {% if  devis_validation %}
+                        {% if devis_validation.email|length > 254 or devis_validation.email|length == 0 or valid_email == 1 %}
+                            <div class="invalid-feedback" style="color:red" ></div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                <!-- Tel -->
+                <div class="form-group has-feedback has-feedback-left">
+                    <input type="text" class="form-control" data-mask="9999999999" placeholder="Numéro de Téléphone" name="telephone" {% if devis_validation.telephone %} value='{{devis_validation.telephone}}' {% endif %}>
+                    <div class="form-control-feedback">
+                    <i class="icon-phone2 text-muted"></i>
+                    </div>
+                    {% if  devis_validation %}
+                        {% if devis_validation.telephone|length > 10 or devis_validation.telephone|length == 0 or valid_phone == 1 %}
+                            <div class="invalid-feedback" style="color:red" ></div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                <!-- Company name -->
+                <div class="form-group has-feedback has-feedback-left">
+                    <input type="text" class="form-control"  placeholder="Société" name="societe" {% if devis_validation.societe %} value='{{devis_validation.societe}}' {% endif %}>
+                    <div class="form-control-feedback">
+                    <i class="icon-office text-muted"></i>
+                    </div>
+                    {% if  devis_validation %}
+                        {% if devis_validation.societe|length > 200 or devis_validation.societe|length == 0 %}
+                            <div class="invalid-feedback" style="color:red" ></div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                <!-- Champs d'activité -->
+                
+                <div class="content-group">
+                                <p class="content-group-sm">
+                                    <select data-placeholder="Secteur d'activité" class="select-access-value form-control" name="secteur" id="IdSecteur">
+                                        <option></option>
+                                        <option value="Autre" {% if devis_validation.secteur == 'Autre' %}selected{% endif %}>Autre</option>
+                                        <option value="SG_AM" {% if devis_validation.secteur == 'SG_AM' %}selected{% endif %}>Société de gestion / Asset management </option>
+                                        <option value="B_L" {% if devis_validation.secteur == 'B_L' %}selected{% endif %}>Banque / Leasing</option>
+                                        <option value="P_D" {% if devis_validation.secteur == 'P_D' %}selected{% endif %}>Promoteur / Développeur</option>
+                                        <option value="TI" {% if devis_validation.secteur == 'TI' %}selected{% endif %}>Transaction en immobilier</option>
+                                        <option value="C_EI" {% if devis_validation.secteur == 'C_EI' %}selected{% endif %}>Conseil / Expertise en immobilier</option>
+                                    </select>
+                                    
+                                    {% if  devis_validation %}
+                                        {% if devis_validation.secteur|length == 0 %}
+                                            <div class="invalid-feedback" style="color:red" ></div>
+                                        {% endif %}
+                                    {% endif %}
+                                </p>
+                </div>
+                
+                <!-- Champs de texte -->
+                
+                <div class="form-group">
+                            
+                                <textarea rows="5" cols="5" class="form-control" placeholder="Message - Merci de détailler votre besoin ici" name="message">{% if devis_validation.message %} {{devis_validation.message}} {% endif %}</textarea>
+                                {% if  devis_validation %}
+                                    {% if devis_validation.message|length == 0 %}
+                                        <div class="invalid-feedback" style="color:red" ></div>
+                                    {% endif %}
+                                {% endif %}
+                            
+                </div>
+                                
+                <div class="form-group login-options">
+                    <div class="row">
+                        
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LcCXI4aAAAAAESYHyO3LB1J-32ogf7Nw8B_3WjT"></div>   
+                    <button type="submit" class="btn bg-blue btn-block" onclick="ShowProgressAnimation();">Envoyer la demande de devis <i class="icon-arrow-right14 position-right"></i></button>
+                </div>
+
+        
+
+                
+                
+                
+                <span class="help-block text-center no-margin"> <b> Un de nos agents prendera contact avec vous. </b></span>
+            </div>
+        </form>
+        <!-- /advanced login -->
+
+</div>	
+        <!-- /main charts -->
+
+
+        <!-- Dashboard content -->
+
+        <!-- Footer -->
+            
+        <!-- /footer -->
+
+    </div>
+    
+    
+    <!-- /content area -->
+</div>
+<script>
+
+$( document ).ready(function() {
+    /* focus bleu*/
+    $(".form-control").focus(function(){
+        $( this ).css({"border-color": "#80bdff", "box-shadow": "0 0 0 0.2rem rgb(0 123 255 / 25%)"
+        })
+    });
+    $(".form-control").blur(function(){
+        $( this ).css({"border-color": "#ced4da", "box-shadow": "none"
+        })
+    });
+    /* focus rouge */
+    $( ".invalid-feedback" ).siblings(".form-control").css({"border-color": "red"
+        });
+
+    $( ".invalid-feedback" ).siblings(".form-control").blur(function(){
+        $( this ).css({"border-color": "red", "box-shadow": "none"
+        })
+    });
+    // select2 focus rouge
+    $( ".invalid-feedback" ).siblings('.content-group-sm').each(function () {
+        $( "#IdSecteur" ).select2({
+        containerCssClass: 'border-danger'
+        });
+        
+    });
+    $( ".invalid-feedback" ).siblings('.content-group-sm').on('#IdSecteur select2:close', function (e) {
+        $( ".select2-selection" ).css({"border-color": "red", "box-shadow": "none"
+        });
+    });
+
+    // select2 focus and blur normal
+    $('#IdSecteur').on('select2:open', function (e) {
+        $( ".select2-selection" ).css({"border-color": "#80bdff", "border-bottom-color": "#80bdff","box-shadow": "0 0 0 0.2rem rgb(0 123 255 / 25%)","border-radius": "3px"
+       });
+    });
+    $('#IdSecteur').on('select2:close', function (e) {
+        $( ".select2-selection" ).css({"border-color": "#ced4da", "box-shadow": "none"
+        });
+    });
+
+});
+</script>
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" async defer></script>
+
+{% endblock  %}

@@ -1,0 +1,71 @@
+                       <!-- document -->
+                       <div class="tab-pane fade" id="docs">
+                        <div class="panel-body">
+                           <ul id="ajouterDocs" >
+                              <a href="#" class="btn btn-default btn-sm pull-right" data-toggle='modal' data-target='#modal_doc'>
+                                 <i class="fa fa-plus"></i>&nbsp;Ajouter des documents
+                              </a>
+                           </ul>
+                           <table class="table table-striped media-library table-lg" id="ul-docs" style="display:none">
+                              <thead>
+                                    <tr>
+                                       <th>type de document</th>
+                                       <th>username</th>
+                                       <th>fichier pdf</th>
+                                       <th>Actions</th>
+                                    </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                     <!-- /document -->
+<script>
+          function getDocs(pin_id){
+      $("#pin_id_fichier").val(pin_id);
+      $("#ul-docs").hide();
+      var url = 'http://127.0.0.1:8000/map/list-docs-pin/'+pin_id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".docs_pin").remove();
+         
+         $(".Docs_lenght").html(data.length);
+         $('#ul-docs').DataTable().clear().draw();
+         var typeFile = '';
+         var supprimerDocs = '';
+         if(data.length!=0){ 
+            $("#ul-docs").show();
+            if(data.length === 5 ){
+               $("#ajouterDocs").hide();
+            }
+            for(var i=0;i<data.length;i++){
+               typeFile = data[i].type_file;
+               if(typeFile === 'C_L'){
+                  typeFile = 'Contrat de location';
+               }
+               if(typeFile === 'C_V'){
+                  typeFile = 'Contrat de vente';
+               }
+               if(data[i].pin.is_validate_by_user === false){
+                  supprimerDocs = "<li><a onclick='delete_piece_jointe_OnClick(" +data[i].id + ")'><i class='icon-bin'></i> Move to trash</a></li>";
+               }
+               filePath = data[i].fichier;
+               filePathSplited =  filePath.split("/");
+               fileName = filePathSplited[filePathSplited.length - 1]
+               fichier = "<a href='"+data[i].fichier+"'>"+fileName+"</a>";
+               actions ="<td class='text-center'><ul class='icons-list'><li class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='icon-menu9'></i>"+
+                  "</a><ul class='dropdown-menu dropdown-menu-right'><li><a onclick='show_pdf(" + data[i].id + ")'><i class=' icon-file-plus2'></i> Show</a></li>"+supprimerDocs+
+                  "</ul></li></ul></td>";
+               DocsAddRow(typeFile, data[i].username.username, fichier, actions);
+            }
+         }
+      });
+   }
+
+      /* DocsAddRow to datatable*/
+      function DocsAddRow(type_doc,username,fichierPdf,actions) {
+      $('#ul-docs').dataTable().fnAddData([type_doc, username, fichierPdf, actions]);
+   }
+</script>

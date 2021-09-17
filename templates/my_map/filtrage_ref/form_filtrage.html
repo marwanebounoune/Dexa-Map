@@ -1,0 +1,172 @@
+<div class="sidebar-category">
+    <div class="category-title">
+       <span>Filtre DataImmo</span>
+       <ul class="icons-list">
+          <li><a href="#" data-action="collapse"></a></li>
+       </ul>
+    </div>
+    <div class="category-content">
+       <form id="filterForm" method="POST">
+          {% csrf_token %}
+          <div class="form-group" id="DivVilles">
+             <legend class="text-size-mini text-muted no-border no-padding">Région</legend>
+             <select data-placeholder="Selectionner votre région" class="select-size-lg " name="region" id="IdRegion">
+                <option></option>
+                <optgroup>
+                   <option value="1">Tanger-Tétouan-Al Hoceïma (1)</option>
+                   <option value="2">l'Oriental (2)</option>
+                   <option value="3">Fès-Meknès (3)</option>
+                   <option value="4">Rabat-Salé-Kénitra (4)</option>
+                   <option value="5">Béni Mellal-Khénifra (5)</option>
+                   <option value="6">Casablanca-Settats (6)</option>
+                   <option value="7">Marrakech-Safi (7)</option>
+                   <option value="8">Drâa-Tafilalet (8)</option>
+                   <option value="9">Souss-Massa (9)</option>
+                   <option value="10">Guelmim-Oued Noun (10)</option>
+                   <option value="11">Laâyoune-Sakia El Hamra (11)</option>
+                   <option value="12">Dakhla-Oued Ed Dahab (12)</option>
+                </optgroup>
+             </select>
+          </div>
+          <div class="form-group" id="DivTypeDeBien1">
+             <legend class="text-size-mini text-muted no-border no-padding">Type de bien</legend>
+             <select data-placeholder="Selectionner le type de bien" class="select-size-lg" name="type_de_bien" id="IdTypeBien">
+                <option></option>
+                <optgroup label="Types">
+                   <option value="1">Residentiel</option>
+                   <option value="2">Villa</option>
+                   <option value="3">Maison</option>
+                   <option value="4">Professionnel</option>
+                   <option value="5">Commercial</option>
+                   <option value="6">Industriel</option>
+                   <option value="7">Terrain villa</option>
+                   <option value="8">Terrain industriel</option>
+                   <option value="9">Terrain urbain</option>
+                   <option value="10">Terrain agricole</option>
+                </optgroup>
+             </select>
+          </div>
+          <div class="form-group">
+          <legend class="text-size-mini text-muted no-border no-padding">Type de référence</legend>
+          <div class="checkbox-inline">
+             <input type="checkbox" class="styled"  name="type_reference_vente" value="1" id="vente" autocomplete="off"/>
+             <label for="vente">Vente</label>	
+          </div>
+          <br>
+          <div class="checkbox-inline">
+             <input type="checkbox" class="styled"  name="type_reference_location" value="2" id="location" autocomplete="off"/>
+             <label for="location">Location</label>	
+          </div>
+          <br>
+          <div class="checkbox-inline">
+             <input type="checkbox" class="styled"  name="type_reference_rapport" value="3" id="rapport" autocomplete="off"/>
+             <label for="rapport">Rapport</label>	
+          </div>
+          </div>
+          <div class="form-group">
+          <legend class="text-size-mini text-muted no-border no-padding">Type de validation</legend>
+          <div class="checkbox-inline">
+             <input type="checkbox" class="styled"  name="type_validation_ok" value="1" id="type_validation_ok"/>
+             <label for="type_validation_ok">Reférences validées</label>	
+          </div>
+          <br>
+          <div class="checkbox-inline">
+             <input type="checkbox" class="styled"  name="type_validation_non" value="2" id="type_validation_non"/>
+             <label for="type_validation_non">Reférences non validées</label>	
+          </div>
+          <br>
+          <div class="checkbox-inline">
+             <input type="checkbox" class="styled"  name="type_validation_mobile" value="3" id="type_validation_mobile"/>
+             <label for="type_validation_mobile">Application mobile</label>	
+          </div>
+          </div>
+          <div class="form-group">
+             <legend class="text-size-mini text-muted no-border no-padding">Chercher dans notes <span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></legend>
+             <div class="has-feedback has-feedback-left form-group">
+             <input type="search" class="form-control" placeholder="Search..." name="note">
+             <div class="form-control-feedback">
+                <i class="icon-search4 text-size-small text-muted"></i>
+             </div>
+             </div>
+          </div>
+          <div class="form-group">
+             <legend class="text-size-mini text-muted no-border no-padding">Chercher dans tags <span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></legend>
+             <div class="has-feedback has-feedback-left form-group">
+                <input type="text" name="tags" id="tag-search" class="tags-input" placeholder="#" />
+             </div>
+          </div>
+          <button type="submit" class="btn bg-blue btn-block">Filter</button>
+       </form>
+    </div>
+ </div>
+ <script>
+       /*filtrage*/
+   $("#filterForm").submit(function( event ) {
+      event.preventDefault ();
+      $(".leaflet-popup").remove();
+      type_affectation = ''
+      /* récupération du formulaire à transmettre */
+      const formData = new FormData(this);
+      /* valeur des inputs*/ 
+      region = formData.get('region')
+      typedebien = formData.get('type_de_bien')
+      if(typedebien == 'terrain_nu'){
+         type_affectation = formData.get('terrain_nu_affectation')
+      }        
+      typeDeReference = formData.get('type_reference')
+      note = formData.get('note')
+      if(typedebien != '' && typeDeReference != '' && region != ''){
+         //var block = $("#page-content");
+         //loaderStart(block);
+         /* definir l URL pour l'exécution du filtrage*/
+         fetch("http://127.0.0.1:8000/filtrageRef/pins-filter/",{
+            method: 'POST',//définir la method du submit du form
+            mode : 'same-origin',
+            credentials: 'same-origin' ,
+            body : formData//définir la formulaire pour le url
+         })
+         .then((resp) => resp.json())
+         .then(function(data) { 
+            /* récupération des donnees et affichage des nouveaux pins */
+            if(data.length != 0 && typeof data.length != 'undefined'){
+               markers=[];
+               if("{{user.type_map}}" === "Leaflet"){
+                  createMarkersLeaflet(data, region);
+               }
+               else{
+                  createMarkersGoogle(data);
+               }
+            }
+            else{
+               if (typeof data['message'] === 'undefined'){
+                  notification('Désolé, aucun résultat trouvé')
+               }
+               else {
+                  notification('Désolé, '+ data['message']);
+               }
+            }
+            //$(block).unblock();
+            /* reset border of selections*/
+            $('#IdTypeBien').select2({
+               containerCssClass: 'border'
+            });
+            $('#IdRegion').select2({
+               containerCssClass: 'border'
+            });
+         });
+      }
+      else{
+         if(region == ''){
+            $('#IdRegion').select2({
+               containerCssClass: 'border-danger'
+            });
+         }
+         if(typedebien == ''){
+            $('#IdTypeBien').select2({
+               containerCssClass: 'border-danger'
+            });
+         }
+         notification('Veuillez Choisir vos paramètres de filtrage.');
+      }
+   });
+ </script>

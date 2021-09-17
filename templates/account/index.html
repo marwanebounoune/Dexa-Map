@@ -1,0 +1,346 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>A|Value - Expertise immobilière</title>
+	<!-- Global stylesheets -->
+	
+	
+	
+	<!-- Global stylesheets -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/icons/icomoon/styles.css'%}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/bootstrap.css'%}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/core.css'%}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/components.css'%}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/colors.css'%}" rel="stylesheet" type="text/css">
+	
+   
+	<style>
+/* Slider */
+.slick-slide {
+    margin: 0px 20px;
+}
+
+.slick-slide img {
+    width: 100%;
+}
+
+.slick-slider
+{
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+
+    -webkit-touch-callout: none;
+    -khtml-user-select: none;
+    -ms-touch-action: pan-y;
+        touch-action: pan-y;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.slick-list
+{
+    position: relative;
+    display: block;
+    overflow: hidden;
+
+    margin: 0;
+    padding: 0;
+}
+.slick-list:focus
+{
+    outline: none;
+}
+.slick-list.dragging
+{
+    cursor: pointer;
+    cursor: hand;
+}
+
+.slick-slider .slick-track,
+.slick-slider .slick-list
+{
+    -webkit-transform: translate3d(0, 0, 0);
+       -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+         -o-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+}
+
+.slick-track
+{
+    position: relative;
+    top: 0;
+    left: 0;
+
+    display: block;
+}
+.slick-track:before,
+.slick-track:after
+{
+    display: table;
+
+    content: '';
+}
+.slick-track:after
+{
+    clear: both;
+}
+.slick-loading .slick-track
+{
+    visibility: hidden;
+}
+
+.slick-slide
+{
+    display: none;
+    float: left;
+
+    height: 100%;
+    min-height: 1px;
+}
+[dir='rtl'] .slick-slide
+{
+    float: right;
+}
+.slick-slide img
+{
+    display: block;
+}
+.slick-slide.slick-loading img
+{
+    display: none;
+}
+.slick-slide.dragging img
+{
+    pointer-events: none;
+}
+.slick-initialized .slick-slide
+{
+    display: block;
+}
+.slick-loading .slick-slide
+{
+    visibility: hidden;
+}
+.slick-vertical .slick-slide
+{
+    display: block;
+
+    height: auto;
+
+    border: 1px solid transparent;
+}
+.slick-arrow.slick-hidden {
+    display: none;
+}
+	</style>
+	
+	
+	<!-- /global stylesheets -->
+	
+	 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+ 
+
+
+</head>
+
+<body>
+	<!-- Main navbar -->	
+	<!-- /main navbar -->
+	<!-- Page container -->
+	<div class="page-container">
+		<!-- Page content -->
+		<div class="page-content">
+			<!-- Main content -->
+			<div class="content-wrapper">
+				<!-- Page header -->
+				<div class="page-header page-header-default">
+					<div class="page-header-content">
+						<div class="page-title">
+							<font size="+1"><span class="text-semibold">&nbsp;&nbsp;<font color="#2196F3">A|</font>DataFoncier-</color></span> Real estate GIS Database</font><font size="-1"><sub><i> [by DEXA]</i></sub>
+						</div>
+						<div class="heading-elements">
+							<div class="heading-btn-group">
+								<a href="#" class="btn btn-link btn-float has-text"><i class="icon-phone text-primary" style="font-size:20px;" ></i><span><b>0661170229 [24h/24]</b><br/></span></a>
+								<a href="#" class="btn btn-link btn-float has-text"><i class="icon-envelope text-primary" style="font-size:20px;"></i> <span><b>contact@ddv.com</b></span></a>
+								<a href="#" class="btn btn-link btn-float has-text"><i class="icon-question3 text-primary" style="font-size:20px;"></i> <span><b>FAQ</b></span></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /page header -->
+				<!-- Content area -->
+				<div class="content">
+					<!-- Main charts -->
+					<div class="row">
+						<div class="col-lg-8">
+							<!-- Traffic sources -->
+							<div class="panel panel-flat">	
+								<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    								<!-- Indicators -->
+    								<ol class="carousel-indicators">
+      									<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      									<li data-target="#myCarousel" data-slide-to="1"></li>
+    									<li data-target="#myCarousel" data-slide-to="2"></li>
+    								</ol>
+    								<!-- Wrapper for slides -->
+    								<div class="carousel-inner">
+      									<div class="item active">
+        									<img src="{% static 'images/login_cover.jpg'%}" alt="Los Angeles" style="width:100%;">
+        									<div class="carousel-caption">
+          										<h3>Los Angeles</h3>
+          										<p>LA is always so much fun!</p>
+        									</div>
+      									</div>
+      									<div class="item">
+        									<img src="{% static 'images/login_cover.jpg'%}" alt="Chicago" style="width:100%;">
+        									<div class="carousel-caption">
+          										<h3>Chicago</h3>
+          										<p>Thank you, Chicagqqqqoq!</p>
+        									</div>
+      									</div>
+      									<div class="item">
+        									<img src="{% static 'images/login_cover.jpg'%}" alt="New York" style="width:100%;">
+        									<div class="carousel-caption">
+          										<h3>New York</h3>
+          										<p>We love the Big Apple!</p>
+        									</div>
+      									</div>
+    								</div>
+    								<!-- Left and right controls -->
+    								<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+      									<span class="glyphicon glyphicon-chevron-left"></span>
+      									<span class="sr-only">Previous</span>
+    								</a>
+    								<a class="right carousel-control" href="#myCarousel" data-slide="next">
+      									<span class="glyphicon glyphicon-chevron-right"></span>
+      									<span class="sr-only">Next</span>
+    								</a>
+  								</div>
+							</div>
+							<!-- /traffic sources -->
+						</div>
+						<div class="col-lg-4">
+							<!-- Advanced login -->
+							<form  action="{% url 'login'%}" method="POST">
+								{% csrf_token %}
+								<div class="panel panel-body login-form">
+									<div class="text-center">
+										<h5 class="content-group-lg">Connectez vous à votre compte <small class="display-block">Saisissez vos identifiants</small></h5>
+									</div>
+									{% include 'partials/messages.html' %}
+									<div class="form-group has-feedback has-feedback-left">
+										<input name="username" type="text" class="form-control" placeholder="User name" required>
+										<div class="form-control-feedback">
+											<i class="icon-user text-muted"></i>
+										</div>
+									</div>
+									<div class="form-group has-feedback has-feedback-left">
+										<input name="password" type="password" class="form-control" placeholder="Mot de passe" required>
+										<div class="form-control-feedback">
+											<i class="icon-lock2 text-muted"></i>
+										</div>
+									</div>
+									<div class="form-group login-options">
+										<div class="row">
+											<div class="col-sm-5 text-right">
+												<a href="login_password_recover.html">Mot de passe oublié?</a>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<button type="submit" class="btn bg-blue btn-block">Connexion <i class="icon-arrow-right14 position-right"></i></button>
+									</div>
+									<div class="content-divider text-muted form-group"><span>Vous n'avez pas de compte ?</span></div>
+									<div class="col-md-6">
+										<a href="{%url 'quotation'%}" class="btn btn-default btn-block content-group">Demander un devis</a>
+									</div>
+									<div class="col-md-6">
+										<a href="login_registration.html" class="btn btn-default btn-block content-group">Demander une démo</a>
+									</div>
+									<span class="help-block text-center no-margin">By continuing, you're confirming that you've read our <a href="#">Terms &amp; Conditions</a> and <a href="#">Cookie Policy</a></span>
+								</div>
+							</form>
+							<!-- /advanced login -->
+						</div>
+					</div>	
+					<!-- /main charts -->
+					<!-- Dashboard content -->
+					<div class="row">
+						<div class="col-lg-12">
+							<!-- Marketing campaigns -->
+							<div class="panel panel-flat">
+								<div class="panel-heading">
+									<h6 class="panel-title"><b>Ils nous ont fait confiance</b></h6>
+									<section class="customer-logos slider" data-arrows="true">
+										<div class="slide"><img src="https://raw.githubusercontent.com/solodev/infinite-logo-carousel/master/images/image1.png"></div>
+										<div class="slide"><img src="https://raw.githubusercontent.com/solodev/infinite-logo-carousel/master/images/image2.png"></div>
+										<div class="slide"><img src="https://raw.githubusercontent.com/solodev/infinite-logo-carousel/master/images/image3.png"></div>
+										<div class="slide"><img src="https://raw.githubusercontent.com/solodev/infinite-logo-carousel/master/images/image4.png"></div>
+										<div class="slide"><img src="https://raw.githubusercontent.com/solodev/infinite-logo-carousel/master/images/image5.png"></div>
+										<div class="slide"><img src="https://raw.githubusercontent.com/solodev/infinite-logo-carousel/master/images/image6.png"></div>
+										<div class="slide"><img src="https://raw.githubusercontent.com/solodev/infinite-logo-carousel/master/images/image7.png"></div>
+										<div class="slide"><img src="https://raw.githubusercontent.com/solodev/infinite-logo-carousel/master/images/image8.png"></div>
+		  							</section>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<!-- Footer -->
+				<div class="footer col-lg-12 text-center">
+					{% include 'partials/footer.html' %}
+				</div>
+				<!-- /footer -->
+				<!-- /content area -->
+			</div>
+			<!-- /main content -->
+		</div>
+		<!-- /page content -->
+	</div>
+	<!-- /page container -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+ 		  $('.customer-logos').slick({
+   			slidesToShow: 7,
+			dots: false,
+			prevArrow: false,
+			nextArrow: false,
+    		slidesToScroll: 1,
+			autoplay: true,
+			autoplaySpeed: 1000,
+			arrows: true,
+			dots: false,
+			pauseOnHover: true,
+			responsive: [{
+			breakpoint: 768,
+			settings: {
+				slidesToShow: 4
+			}
+			}, {
+			breakpoint: 520,
+			settings: {
+				slidesToShow: 3
+			}
+			}]
+		});
+		});
+    </script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!-- editer d'un reference-->
+<div class="modal fade" id="modal_update_ref" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Editer la reference</h5>
+         </div>
+         <!--form--> 
+         <form action="#" enctype="multipart/form-data" id="update_my_pin">
+            {% csrf_token %}
+            <div class="modal-body">
+               <!-- id pin -->
+               <input type="text" name="my_pin_id" class="form-control" id="my_pin_id" style="display:none"/>
+               <!--/id pin-->
+               <!-- lat & lng-->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="category-title">
+                        <span><p>Info génerale de bien</p></span>
+                     </div>
+                     <div id="collapse2" style="margin-bottom:5px;">
+                        <div class="col-sm-6">
+                           <label>latitude</label> <input type="text" placeholder="latitude" name="latitude" class="form-control" id="latitudeInputUpdate" onkeypress="return isDecimal(event)" readonly/>
+                        </div>
+                        <div class="col-sm-6">
+                           <label>longitude</label> <input type="text" placeholder="longitude" name="longitude" class="form-control" id="longitudeInputUpdate" onkeypress="return isDecimal(event)" readonly/>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- lat & lng-->
+               <!--Region et ville-->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-sm-6" style="margin-top:5px;">
+                        <label>Région</label>
+                        <select data-placeholder="Selectionner une région" class="select-size-lg " name="region" id="region_update">
+                           <option></option>
+                           <optgroup>
+                           <option value="1">Tanger-Tétouan-Al Hoceïma (1)</option>
+                           <option value="2">l'Oriental (2)</option>
+                           <option value="3">Fès-Meknès (3)</option>
+                           <option value="4">Rabat-Salé-Kénitra (4)</option>
+                           <option value="5">Béni Mellal-Khénifra (5)</option>
+                           <option value="6">Casablanca-Settats (6)</option>
+                           <option value="7">Marrakech-Safi (7)</option>
+                           <option value="8">Drâa-Tafilalet (8)</option>
+                           <option value="9">Souss-Massa (9)</option>
+                           <option value="10">Guelmim-Oued Noun (10)</option>
+                           <option value="11">Laâyoune-Sakia El Hamra (11)</option>
+                           <option value="12">Dakhla-Oued Ed Dahab (12)</option>
+                           </optgroup>
+                        </select>
+                     </div>
+                     <div class="col-sm-6" style="margin-top:5px;">
+                        <label>ville</label>
+                        <select data-placeholder="Selectionner une ville" class="select-size-lg " name="ville" id="selected_ville_update">
+                           <option></option>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+               <!--/Region et ville-->
+               <!-- type de bien -->
+               <div class="form-group" id="DivTypeDeBien3">
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <legend class="text-size-mini text-muted no-border no-padding">Type de bien</legend>
+                        <select data-placeholder="Selectionner le type de bien" class="select-size-lg" name="type_de_bien" id="IdTypeBienUpdate">
+                           <option></option>
+                           <optgroup label="Types">
+                                 <option value="1">Residentiel</option>
+                                 <option value="2">Villa</option>
+                                 <option value="3">Maison</option>
+                                 <option value="4">Professionnel</option>
+                                 <option value="5">Commercial</option>
+                                 <option value="6">Industriel</option>
+                                 <option value="7">Terrain villa</option>
+                                 <option value="8">Terrain industriel</option>
+                                 <option value="9">Terrain urbain</option>
+                                 <option value="10">Terrain agricole</option>
+                           </optgroup>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+               <!-- /type de bien -->
+               <!-- /type de reference -->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-sm-12" style="margin-top:5px;">
+                        <label>Type de reference</label>
+                        <select data-placeholder="Selectionner le type de bien" class="select-size-lg" name="type_de_reference" id="selected_type_reference_update">
+                           <option></option>
+                           <optgroup>
+                              <option value="1">Vente</option>
+                              <option value="2">Location</option>
+                              <option value="3">Rapport</option>
+                           </optgroup>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+               <!-- /type de reference -->
+               <!-- type de reference localisée ou non localisée-->
+               <div class="form-group" id="is_localized_update">
+                  <legend class="text-size-mini text-muted no-border no-padding">localisée/non localisée</legend>
+                  <div class="radio-inline">
+                     <input type="radio" class="styled"  name="localisee_nonLocalisee" id="localisee_update" checked="checked" value="localisee"/>
+                     <label for="localisee_update">Localisée</label>
+                  </div>
+                  <div class="radio-inline">
+                     <input type="radio" class="styled"  name="localisee_nonLocalisee" id="non_localisee_update"  value="non_localisee"/>
+                     <label for="non_localisee_update">Non localisée </label>	
+                  </div>
+               </div>
+               <!-- /type de reference localisée ou non localisée-->
+               <!-- nom de la rue-->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <label>Nom de la rue</label>
+                        <input type="text" placeholder="Le nom de la rue" name="adresseRue" id="adresseRue_update" class="form-control" />
+                     </div>
+                  </div>
+               </div>
+               <!--/nom de la rue-->
+               <!-- chute_fonciere -->
+               <div class="form-group" style="display:none" id="chute_fonciere_edit">
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <label>Quote-part terrain (éstimée)</label> <input type="text" onkeypress="return isNumber(event)"  name="chute_fonciereEdt" id="chute_fonciereEdt" class="form-control" />
+                     </div>
+                  </div>
+               </div>
+               <!-- /chute_fonciere -->
+               <!-- surface -->
+               <div class="form-group" >
+                  <div class="row">
+                     <div class="col-sm-12" id="surface_update_div">
+                        <label>Surface</label> <input type="text" onkeypress="return isNumber(event)"  name="surf_update" class="form-control" id="surf_update"/>
+                     </div>
+                  </div>
+               </div>
+               <!-- /surface -->
+               <!-- prix unitaire du bien-->
+               <div class="form-group" id="pri_unit_tot_up" >
+                  <div class="row">
+                     <div class="col-sm-6">
+                        <label id="label-prix-unitaire-vente-update">Prix unitaire</label>
+                        <label id="label-prix-unitaire-loyer-update" style="display: none;" >Loyer unitaire</label>
+                        <input type="text" onkeypress="return isNumber(event)" name="prix_unit_update" class="form-control" id="prix_unit_update" />
+                     </div>
+                     <div class="col-sm-6">
+                        <label  id="label-prix-total-vente-update">Prix total</label>
+                        <label id="label-prix-total-loyer-update" style="display: none;">Loyer total</label>
+                        <input type="text" onkeypress="return isNumber(event)"  name="prix_total_update" class="form-control" id="prix_total_update" />
+                     </div>                                    
+                  </div>
+               </div>
+               <!--/prix unitaire du bien-->
+               <!-- prix total-->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <label>contact</label> <input type="text" placeholder="contact" name="contact-update" class="form-control" id="contact-update"/>
+                     </div>
+                  </div>
+               </div>
+               <!--/prix total-->
+               <!-- description-->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <label>Description</label> 
+                        <textarea type="text" placeholder="Description" name="description" class="form-control" id="desc_update"></textarea>
+                     </div>
+                  </div>
+               </div>
+               <!--/description-->
+               <!-- #tag-->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-sm-12">                                       
+                        <span class="text-size-mini text-muted no-border no-padding">Tags (Optionnel)</span>
+                        <select data-placeholder="#" name="tag" id="tag_update" multiple="multiple" class="select-multiple-tags form-control"></select>
+
+                     </div>
+                     
+                  </div>
+               </div>
+               <!--/#tag-->
+               <!-- submit form-->
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Editer réference</button>
+               </div>
+            </div>
+         </form>
+         <!--/form--> 
+      </div>
+   </div>
+</div>
+<!-- /editer d'un reference-->
+<script>
+      //---------------------------------------------------------update_my_pin---------------------------------------------------------
+     $("#region_update").change(function(e){
+      var idRegion = $("#region_update").val();
+      var url = 'http://127.0.0.1:8000/map/getVilles/'+idRegion
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".option_villes").remove();
+         for(i=0; i<data.length; i++){
+            var selected='';
+            if(data[i].id === villeId){
+               selected='selected';
+            }
+            var option = "<option "+selected+" class = 'option_villes' value="+data[i].id+">"+data[i].name+"</option>";
+            $('#selected_ville_update').append(option);
+         }
+      });
+   });
+   $("#update_my_pin").submit(function( event ) {
+      event.preventDefault ();
+      /* récupération du formulaire à transmettre */
+      const formData = new FormData(this);
+      /* definir l URL pour l'exécution du filtrage*/
+      fetch("http://127.0.0.1:8000/reference/update_my_pin/",{
+        method: 'POST',//définir la method du submit du form
+        mode : 'same-origin',
+        credentials: 'same-origin' ,
+        body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) { 
+         /* récupération des donnees et affichage des nouveaux pins */
+         if (data.id == null || typeof data.id === 'undefined') {
+            notification( data['message'] );
+         }
+         else {
+            notificationSuccess('success message', 'La reference a été modifié avec succès' );
+            if($("#content").is(":visible")){
+              pinLinkOnClick(data.id);
+            }
+            $("#tag_update").empty().trigger("change");
+           $('#modal_update_ref').modal('toggle');
+           getTags();
+        }
+      });
+   });
+   
+      //---------------------------------------------------------editLinkOnClick---------------------------------------------------------
+      function editLinkOnClick(id){
+      //$(".leaflet-popup").remove();
+      var url = 'http://127.0.0.1:8000/reference/pins-detail-2/'+id+'/'
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         /* show data */
+         $("#my_pin_id").val(data.id);
+         $("#latitudeInputUpdate").val(data.lat)
+         $("#longitudeInputUpdate").val(data.lng)
+         if (data.ville!=null)
+            villeId = data.ville.id
+         else
+            villeId = 1
+         if (data.ville!=null)
+            $("#region_update").val(data.region.id).change();
+         $("#selected_type_reference_update").val(data.type_de_reference).change();
+         //$("#Idtype_Terrain_update").val(data.type_de_terrain).change();
+         if(data.is_localized===true)
+            $("#localisee_update").prop("checked", true).trigger("click");
+         else
+            $("#non_localisee_update").prop("checked", true).trigger("click");
+         $("#IdTypeBienUpdate").val(data.type_de_bien).change();
+         //$("#Idtype_Terrain_update").val(data.type_de_terrain).change();
+         $("#chute_fonciereEdt").val(data.chute_fonciere);
+         $("#surf_update").val(data.surface);
+         $("#prix_unit_update").val(data.prix_unit);
+         $("#loyer_unit_update").val(data.prix_unit);
+         $("#contact-update").val(data.contact);
+         $("#adresseRue_update").val(data.rue);
+         $("#prix_total_update").val(data.prix_total);
+         $("#loyer_total_update").val(data.prix_total);
+         $("#desc_update").val(data.descriptif);
+
+         $("#tag_update").val(null).trigger("change");
+         $("#tag_update").empty().trigger("change");
+         
+         if(data.tags!=null && data.tags!=''){
+            var tags=(data.tags).split(",");
+            getTags();
+            List_of_all_tags = all_tags.concat(tags.filter(function (item) {
+        return all_tags.indexOf(item) === -1;
+    }));
+            console.log("tags",List_of_all_tags)
+            $('#tag_update').select2({tags: List_of_all_tags});
+            $("#tag_update").val(tags).trigger("change");
+         }
+         
+         $('#modal_update_ref').modal('toggle');
+      });
+   }
+</script>

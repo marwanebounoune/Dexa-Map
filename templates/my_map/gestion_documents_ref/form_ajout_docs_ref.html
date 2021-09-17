@@ -1,0 +1,100 @@
+            <!--ajouter une piece jointe -->
+            <div class="modal fade" id="modal_doc"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                   <div class="modal-content">
+                      <div class="modal-header">
+                         <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                         <h5 class="modal-title">Ajouter un document</h5>
+                      </div>
+                      <form method="POST" id="piece_jointe_modif" enctype="multipart/form-data">
+                         {% csrf_token %}
+                         <div class="modal-body">
+                            <!-- pieces jointe-->
+                            <input type="text" class="file-styled" id="pin_id_fichier" name="pin_id_fichier" style="display:none"/>
+                            <!--fichier 01-->
+                            <div class="form-group">
+                               <div class="row">
+                                  <div class="sidebar-category">
+                                     <div class="category-title">
+                                        <span><h4><p>Pièces jointes &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
+                                     </div>
+                                     <div class="col-sm-6">
+                                        <label>Type de la pièce jointe</label>
+                                        <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_new">
+                                           <option></option>
+                                           <option value="C_V">Contrat de vente</option>
+                                           <option value="C_L">Contrat de location</option>  
+                                        </select>
+                                     </div>         
+                                     <div class="col-sm-6">
+                                        <label>Fichier pdf</label>
+                                        <div class="uploader">
+                                           <input type="file" class="file-styled" id="input-piece-jointe-modify" name="piece_jointe_new"/>
+                                           <span class="filename" style="user-select: none;" id="selected-file-modify-pj">No file selected</span>
+                                           <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                                        </div>
+                                        <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                                     </div>  
+                                  </div>
+                               </div>
+                            </div>
+                            <!--/fichier 01-->
+                            <br/>
+                            <br/>
+                            <div class="form-group">
+                               <button type="submit" class="btn bg-blue btn-block">Ajouter <i class="icon-arrow-right14 position-right"></i></button>
+                            </div>
+                            <!---->
+                         </div> 
+                      </form>
+                   </div>
+                </div>
+             </div>
+             <!--/ajouter une piece jointe -->
+             <script>
+                  //---------------------------------------------------------supprimer un document-------------------------------------------------------
+   function delete_piece_jointe_OnClick(idPieceJointe){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+         var url = 'http://127.0.0.1:8000/docs/delete_my_piece_jointe/'+idPieceJointe
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0){
+               notificationSuccess('success message', 'le fichier a été supprimé avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               getDocs(data.pin.id);
+            }
+            else{
+               notification("desole, un probleme est survenu lors de la suppression")
+            }
+         });
+      });
+   }
+   //---------------------------------------------------------Ajouter un document---------------------------------------------------------
+   $("#piece_jointe_modif").submit(function( event ) {
+      event.preventDefault ();
+      /* récupération du formulaire à transmettre */
+      var pin_id = $("#pin_id_fichier").val();
+      const formData = new FormData(this);
+      fetch("http://127.0.0.1:8000/docs/create_my_piece_jointe/"+pin_id,{
+        method: 'POST',//définir la method du submit du form
+        mode : 'same-origin',
+        credentials: 'same-origin' ,
+        body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.id != null){
+            notificationSuccess('success message', 'ajout avec succès' );
+            getDocs(pin_id);
+            $("#modal_doc").modal('toggle');
+         }        
+         else{
+            notification( data['message'] );
+         }
+      });
+   });
+             </script>
+ 

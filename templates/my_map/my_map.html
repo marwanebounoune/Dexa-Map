@@ -1,0 +1,1044 @@
+{% extends "libraries.html" %}
+{%load static%}
+<!DOCTYPE html>
+<html lang="fr">
+{% block content %}
+<body data-spy="scroll" data-target=".sidebar-detached" class="has-detached-right">
+   <!-- Page container -->
+   <div class="page-container" id="page-content">
+      <!-- Page content -->
+      <div class="page-content">
+         <!-- Main content -->
+         <div class="content" >
+            <div class="container-detached">
+               <div class="content-detached">
+                  <!-- map area -->
+                  {% include 'my_map/map_container.html' %}
+                  <!-- /map area -->
+
+                  <!-- Box overview -->
+                  {% include 'my_map/affichage_box_ref/box_detail.html' %}
+                  <!-- /Box overview -->
+               </div>
+            </div>
+
+
+         <!-- filtrage sidebar -->
+            {% include 'my_map/filtrage_ref/detached_bar_filtrage.html' %}
+         <!-- /filtrage sidebar -->
+
+         <!-- Ajout d'un réference-->
+            {% include 'my_map/gestion_ref/form_ajout_ref.html' %}
+         <!-- /Ajout d'un réference-->
+
+         <!-- Ajout d'un réference avec importation CSV-->
+            {% include 'my_map/gestion_csv/form_csv_ref_import.html' %}
+         <!-- /Ajout d'un réference avec importation CSV-->
+
+         <!-- editer d'un reference-->
+            {% include 'my_map/gestion_ref/form_edit_ref.html' %}
+         <!-- /editer d'un reference-->
+
+         <!--ajouter une note -->
+            {% include 'my_map/gestion_commentaires_ref/form_ajout_note.html' %}
+         <!--/ajouter une note -->
+
+         <!--editer une note -->
+            {% include 'my_map/gestion_commentaires_ref/form_edit_note.html' %}
+         <!--/editer une note -->
+
+         <!--ajouter une piece jointe -->
+            {% include 'my_map/gestion_documents_ref/form_ajout_docs_ref.html' %}          
+         <!--/ajouter une piece jointe -->
+
+         <!--ajouter des photographies -->
+            {% include 'my_map/gestion_photos_ref/form_ajout_photos_ref.html' %}
+         <!--/ajouter des photographies -->
+
+            <!-- suppression message-->
+               {% include 'partials/message_confirm_suppression.html' %}
+            <!-- / suppression message-->
+
+            <!--ajouter une actualisation -->
+               {% include 'my_map/gestion_ref/form_ajout_actualisation_ref.html' %}
+            <!--/ajouter une actualisation -->
+         </div>
+         <div>
+            {% include 'partials/footer.html' %}
+         </div>
+         <!-- /main content -->
+      </div>
+      <!-- /page content -->
+   </div>
+   <!-- /page container -->
+   <blockquote>{{ user.content|escape }}</blockquote>
+</body>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{user.key_map}}&libraries=places"></script>
+<script src="https://unpkg.com/@googlemaps/markerclustererplus/dist/index.min.js"></script>
+<script>
+   $("#tag_update").select2({
+        tags: true
+    });
+    var all_tags = []
+   //---------------------------------------------------------Loader map--------------------------------------------------------
+   function loaderStart(elToBlock){
+     $(elToBlock).block({
+       message: '<i class="icon-spinner6 spinner"></i>',
+       overlayCSS: {
+         backgroundColor: '#fff',
+         opacity: 0.8
+       },
+       css: {
+         border: 0,
+         padding: 0,
+         backgroundColor: 'none'
+       }
+     });
+   }
+   /*___________________________fusion______________________*/
+   var map = null;
+   markerCluster = null;
+   markers = null ;
+   if("{{user.type_map}}" === "Google"){
+      var options = {
+         minZoom:3,
+         zoom:12,
+         center:{
+            lat:33.5745251,
+            lng:-7.5690786
+         },
+         //mapTypeId: 'hybrid',
+         streetViewControl: true,
+         styles: [{
+            featureType: "road",
+            stylers: [{visibility: "on"}]
+         }],
+         mapTypeControl: true,
+         scrollwheel: true,
+      }
+      map = new google.maps.Map(document.getElementById('map'), options);
+      var input = document.getElementById('pac-input');
+      var searchBox = new google.maps.places.SearchBox(input);
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+      //---------------------------------------------------------Initialisation des Clusters google--------------------------------------------------------
+      var markerCluster = new MarkerClusterer(map, markers, {
+         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+      });
+      var infoWindow = new google.maps.InfoWindow()
+      //---------------------------------------------------------addListener dans la maps google--------------------------------------------------------
+      map.addListener('rightclick', (mapsMouseEvent) => {
+         // Close the current InfoWindow.
+         infoWindow.close();
+         // Create a new InfoWindow.
+         infoWindow = new google.maps.InfoWindow({
+            position: mapsMouseEvent.latLng,
+         });
+         infoWindow.setContent(
+            "<div class='category-content no-padding'>"+
+            "<ul class='navigation'>"+
+            "<li class='navigation-header' style='color:black'> Plus d'options</li>"+
+            "<li><a data-toggle='modal' data-target='#modal_default' style='color:black'>Ajouter la référence</a></li>"+
+            "</ul>"+
+            "</div>"
+         );
+         infoWindow.open(map);
+         $("#latitudeInput").val(mapsMouseEvent.latLng.toJSON()["lat"])
+         $("#longitudeInput").val(mapsMouseEvent.latLng.toJSON()["lng"])
+         mini_map_2.off();
+         mini_map_2.remove();      
+         const mapDiv2 = document.getElementById("mapDynamique");
+         mini_map_2 = new L.map('mapDynamique').setView([parseFloat(mapsMouseEvent.latLng.toJSON()["lat"]), parseFloat(mapsMouseEvent.latLng.toJSON()["lng"])], 15)
+         L.tileLayer('http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+         }).addTo(mini_map_2);
+         const resizeObserver = new ResizeObserver(() => {mini_map_2.invalidateSize();});
+         resizeObserver.observe(mapDiv2);
+         var marker2 = L.marker([parseFloat(mapsMouseEvent.latLng.toJSON()["lat"]), parseFloat(mapsMouseEvent.latLng.toJSON()["lng"])],{draggable:'true',autoPan: true}).addTo(mini_map_2);
+         marker2.on("drag", function(e) {
+            var marker = e.target;
+            var position = marker.getLatLng();
+            $("#latitudeInput").val(position.lat);
+            $("#longitudeInput").val(position.lng);
+         });
+      });
+      var searchBox = new google.maps.places.SearchBox(document.getElementById('pac-input'));
+      map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById('pac-input'));
+      google.maps.event.addListener(searchBox, 'places_changed', function() {
+         searchBox.set('map', null);
+         var places = searchBox.getPlaces();
+         var bounds = new google.maps.LatLngBounds();
+         var i, place;
+         for (i = 0; place = places[i]; i++) {
+            (function(place) {
+               var marker = new google.maps.Marker({
+                  position: place.geometry.location
+               });
+               marker.bindTo('map', searchBox, 'map');
+               google.maps.event.addListener(marker, 'map_changed', function() {
+                  if (!this.getMap()) {
+                     this.unbindAll();
+                  }
+               });
+               bounds.extend(place.geometry.location);
+            }(place));
+         }
+         map.fitBounds(bounds);
+         searchBox.set('map', map);
+         map.setZoom(Math.min(map.getZoom(),12));
+      });
+      
+      get_pins_validees();
+   }
+   else{
+      /* on click sur le marker*/
+      function markerOnClick(props){
+         return function(e) {
+            if(content) {
+               var popup = L.popup()
+               .setLatLng(e.latlng)
+               /*le content du popup à ameliorer par la suite cote affichage*/
+               .setContent("<div class='text-center'>"+
+                  "<p class='info'>Info : "+props.content.label+"<p/></div>"+
+                  '<p class=\'content-group-sm\'>Type de bien: '+getTypeDeBien(props.content.typedebien)+'</p>'+
+                  '<p class=\'content-group-sm\'>Type de reference: '+getTypeDeReference(props.content.type_de_reference)+'</p>'+
+                  "<div class='text-center'>"+
+                  '<button class=\'btn btn-info btn-rounded btn-xs\' onclick="pinLinkOnClick(\'' + props.content.id + '\')">Plus d\'informations</button>'+
+                  '</div>'
+               )
+               .openOn(map);
+            }
+         }
+      }    
+      /* on right click sur le marker*/
+      function markerOnRightClick(props){
+         return function(e) {
+            var editer = '';
+            var supprimer = '';
+            if(content) {
+               // $("#my_pin_id").val(content.id);
+               if(props.content.is_valid === false){
+                  editer =  "<li><a onclick='editLinkOnClick(" + props.content.id + ")'>Editer la référence</a></li>";
+                  supprimer = "{% if user.permission != 'validateur' %}<li><a onclick='deleteLinkOnClick(" +props.content.id + ")'> Supprimer la référence</a></li>{% endif %}"+"</ul>"
+               }
+               var list =
+                  "<div class='category-content no-padding'>"+
+                  "<ul class='navigation navigation-alt navigation-accordion listPopUp'>"+
+                  "<li class='navigation-header' style='color:black'><b>Plus d'options</b></li>"+
+                  editer+
+                  supprimer+
+                  "</div>";
+               var popup = L.popup()
+               .setLatLng(e.latlng)
+               .setContent(list)
+               .openOn(map);
+            }
+         }
+      }  
+     /* option de la map*/
+      var options = {
+         minZoom: 5,
+         zoom:12,
+         center:{lat:33.5745251,lng:-7.5690786},// lat & lng du casablanca par defaut
+         // setMaxBounds:[31.791702, -7.09262]
+      }
+      var map = new L.map('map', options);
+      var osmLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+         attribution: '© OpenStreetMap contributors',
+         maxZoom: 19
+      });
+      var imagery = L.esri.basemapLayer('Imagery');
+      var imageryTransportation = L.esri.basemapLayer('ImageryTransportation');
+      var imageryLabels = L.esri.basemapLayer('ImageryLabels');
+      var oldLayerID = 0;
+      map.on('baselayerchange', function(e) {
+         currentLayerID = e.layer._leaflet_id;
+         if(currentLayerID != oldLayerID && e.name === "openStreetMap Satellite"){
+            oldLayerID = e.layer._leaflet_id;
+            map.removeLayer(osmLayer);
+            map.addLayer(imagery);
+            map.addLayer(imageryTransportation);
+            imageryTransportation.setOpacity(1);
+         }
+         if(currentLayerID != oldLayerID && e.name === "OpenStreetMap"){
+            oldLayerID = e.layer._leaflet_id;
+            map.removeLayer(imagery);
+            map.removeLayer(imageryTransportation);
+            map.addLayer(osmLayer);  
+         }
+      });
+      var markers=[];
+      var markersCluster = new L.MarkerClusterGroup({
+         spiderfyOnMaxZoom: true,
+         showCoverageOnHover: true,
+         zoomToBoundsOnClick: true,
+         disableClusteringAtZoom: 13,
+      });/* declaration des clusturing markers */
+     /* Le layer par défaut */
+      map.addLayer(osmLayer);     
+      /*le layer des markers cluster*/
+      map.addLayer(markersCluster);     
+      /* option des calques normale & Satellite*/
+      map.addControl(new L.Control.Layers( {
+         'OpenStreetMap': osmLayer, 
+         'openStreetMap Satellite': imageryLabels, 
+      }, {}));
+      L.control.fullscreen({
+         position: 'topleft', // change the position of the button can be topleft, topright, bottomright or bottomleft, default topleft
+         title: 'Show me the fullscreen !', // change the title of the button, default Full Screen
+         titleCancel: 'Exit fullscreen mode', // change the title of the button when fullscreen is on, default Exit Full Screen
+         content: null, // change the content of the button, can be HTML, default null
+         forceSeparateButton: true, // force separate button to detach from zoom buttons, default false
+         forcePseudoFullscreen: true, // force use of pseudo full screen even if full screen API is available, default false
+         fullscreenElement: false // Dom element to render in full screen, false by default, fallback to map._container
+      }).addTo(map);
+     /* search option*/
+      var searchControl = new L.esri.Controls.Geosearch().addTo(map);
+      var results = L.layerGroup().addTo(map);    
+      searchControl.on('results', function (data) {
+         results.clearLayers();
+         for (var i = data.results.length - 1; i >= 0; i--) {
+            results.addLayer(L.marker(data.results[i].latlng,{icon: redIcon()}));
+         }
+      });
+       /* ajout d'un reference avec un clique droit*/
+      map.on('contextmenu', onMapClick);
+      function onMapClick(e) {
+         var list ="<div class='category-content no-padding'><ul class='navigation listPopUp'><li class='navigation-header' style='color:black'><b>Plus d'options</b></li>"+
+            "<li><a data-toggle='modal' data-target='#modal_default'>Ajouter une nouvelle référence</a></li></ul></div>";
+         mini_map_2.off();
+         mini_map_2.remove();      
+         const mapDiv2 = document.getElementById("mapDynamique");
+         mini_map_2 = new L.map('mapDynamique').setView([parseFloat(e.latlng.lat), parseFloat(e.latlng.lng)], 15)
+         L.tileLayer('http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+         }).addTo(mini_map_2);
+         const resizeObserver = new ResizeObserver(() => {mini_map_2.invalidateSize();});
+         resizeObserver.observe(mapDiv2);
+         var marker2 = L.marker([parseFloat(e.latlng.lat), parseFloat(e.latlng.lng)],{draggable:'true',autoPan: true}).addTo(mini_map_2);
+         var position = marker2.getLatLng();
+          marker2.on("drag", function(e) {
+            var marker = e.target;
+            var position = marker.getLatLng();
+            $("#latitudeInput").val(position.lat);
+            $("#longitudeInput").val(position.lng);
+         });
+         var popup = L.popup()
+         .setLatLng(e.latlng)
+         .setContent(list)
+         .openOn(map);
+         $("#latitudeInput").val(e.latlng.lat);
+         $("#longitudeInput").val(e.latlng.lng);
+      }     
+      get_pins_validees();
+   }
+   //---------------------------------------------------------addMarkerLeaflet--------------------------------------------------------
+   function addMarkerLeaflet(props) {
+      if(props.content.type_de_reference != null){
+         if( props.content.type_de_reference == 2 && props.content.is_localized != false){
+            /* orange icon */
+            var orange_marker = new L.marker(props.coords,{icon: orangeIcon(props.content.label)})
+            .on('click', markerOnClick(props))
+            .on('contextmenu',markerOnRightClick(props));
+            markersCluster.addLayer(orange_marker);
+         }
+         if( props.content.type_de_reference == 1 && props.content.is_localized != false){
+            /* default icon*/
+            var default_marker = new L.marker(props.coords,{icon: blueIcon(props.content.label)})
+            .on('click', markerOnClick(props))
+            .on('contextmenu',markerOnRightClick(props));
+            markersCluster.addLayer(default_marker);
+         }
+         if( props.content.type_de_reference == 3){
+            /* default icon*/
+            var default_marker = new L.marker(props.coords,{icon: yellowIcon(props.content.label)})
+            .on('click', markerOnClick(props))
+            .on('contextmenu',markerOnRightClick(props));
+            markersCluster.addLayer(default_marker);
+         }
+         if(props.content.type_de_reference == 2 && props.content.is_localized === false){
+            var default_marker = new L.marker(props.coords,{icon: orangeStarIcon(props.content.label)})
+            .on('click', markerOnClick(props))
+            .on('contextmenu',markerOnRightClick(props));
+            markersCluster.addLayer(default_marker);
+         }
+         if(props.content.type_de_reference == 1 && props.content.is_localized === false){
+            var default_marker = new L.marker(props.coords,{icon: BlueStarIcon(props.content.label)})
+            .on('click', markerOnClick(props))
+            .on('contextmenu',markerOnRightClick(props));
+            markersCluster.addLayer(default_marker);
+         }
+      }
+      else{
+         var default_marker = new L.marker(props.coords,{icon: GrayIcon(props.content.label)})
+         .on('click', markerOnClick(props))
+         .on('contextmenu',markerOnRightClick(props));
+         markersCluster.addLayer(default_marker);
+      }
+   }
+   //---------------------------------------------------------addMarkerGoogle--------------------------------------------------------
+   function addMarkerGoogle(props){
+      if (props.content.type_de_reference == 2 && props.content.is_localized != false){
+         var marker = new google.maps.Marker({
+            position:props.coords,
+            id:props.content.id,
+            map:map,
+            label:props.content.label,
+            icon: {url: "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|CA841C", origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)}
+         });
+      }
+      else if (props.content.type_de_reference == 1 && props.content.is_localized != false){
+         var marker = new google.maps.Marker({
+            position:props.coords,
+            id:props.content.id,
+            map:map,
+            label:props.content.label,
+            icon: {url: "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|2880B6", origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)}
+         });
+      }
+      else if (props.content.type_de_reference == 3 && props.content.is_localized != false){
+         var marker = new google.maps.Marker({
+            position:props.coords,
+            id:props.content.id,
+            map:map,
+            label:props.content.label,
+            icon: {url: "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FEEC42", origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)}
+         });
+      }
+      else if (props.content.type_de_reference == 2 && props.content.is_localized != true){
+         var marker = new google.maps.Marker({
+            position:props.coords,
+            id:props.content.id,
+            map:map,
+            label:props.content.label,
+            icon: {url: "/static/images/star-marron.png", scaledSize: new google.maps.Size(35, 41), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)}
+         });
+      }
+      else if (props.content.type_de_reference == 1 && props.content.is_localized != true){
+         var marker = new google.maps.Marker({
+            position:props.coords,
+            id:props.content.id,
+            map:map,
+            label:props.content.label,
+            icon: {url: "/static/images/star-blue.png", scaledSize: new google.maps.Size(35, 41), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)}
+         });
+      }
+      if(props.content.typedebien){
+         marker.addListener('click', (mapsMouseEvent) => {
+            infoWindow.close();
+            infoWindow = new google.maps.InfoWindow({
+               position: mapsMouseEvent.latLng,
+            });
+            infoWindow.setContent("<div class='text-center'>"+
+               "<p class='info'>Info : "+props.content.label.text+"<p/></div>"+
+               '<p class=\'content-group-sm\'>Type de bien: '+getTypeDeBien(props.content.typedebien)+'</p>'+
+               '<p class=\'content-group-sm\'>Type de reference: '+getTypeDeReference(props.content.type_de_reference)+'</p>'+
+               "<div class='text-center'>"+
+               '<button class=\'btn btn-info btn-rounded btn-xs\' onclick="pinLinkOnClick(\'' + props.content.id + '\')">Plus d\'info</button>'+
+               '</div>'
+            );
+            infoWindow.open(map, marker);
+            searchBox.setBounds(map.getBounds());
+         });
+         marker.addListener('rightclick', (mapsMouseEvent) => {
+            infoWindow.close();
+            infoWindow = new google.maps.InfoWindow({
+               position: mapsMouseEvent.latLng,
+            });
+            var editer = ""
+            if(props.content.is_valid === false){
+               editer =  "<li><a onclick='editLinkOnClick(" + props.content.id + ")'>Editer la référence</a></li>";
+            }
+            $("#my_pin_id").val(props.content.id);
+            infoWindow.setContent(
+               "<div class='category-content no-padding'>"+
+               "<ul class='navigation navigation-alt navigation-accordion listPopUp'>"+
+               "<li class='navigation-header' style='color:black'><b>Plus d'options</b></li>"+
+               editer+
+               "<li><a onclick='deleteLinkOnClick(" +props.content.id + ")'> Supprimer la référence</a></li>"+
+               "</ul>"+
+                  "</div>"
+            );
+            infoWindow.open(map, marker);
+            searchBox.setBounds(map.getBounds());
+         }); 
+      }
+      markerCluster.addMarker(marker);
+   }
+   /*markers collection leaflet*/
+   function createMarkersLeaflet(data, region){
+      markersCluster.clearLayers();
+
+      /*focus sur la ville selectionnée*/
+      if(region!=null){
+         address = region+' maroc';
+         $.get(location.protocol + '//nominatim.openstreetmap.org/search?format=json&q='+address, function(data){
+            point = [data[0].lat, data[0].lon]
+            map.setView(point, 9, { animation: true });
+         });
+      }
+      for (var i = 0; i < data.length; i++) {
+         /* markers recuperation*/
+         markers[i]={
+            coords:{
+               lat: parseFloat(data[i].lat),
+               lng: parseFloat(data[i].lng)
+            },
+            content:{
+               typedebien: data[i].type_de_bien,
+               id: data[i].id,
+               type_de_reference: data[i].type_de_reference,
+               is_valid: data[i].is_validate_by_user,
+               is_localized: data[i].is_localized,
+               label: data[i].label
+            }
+         }
+         /* Appel de la fonction addMarker() pour l'ajout des markers dans la map */
+         addMarkerLeaflet(markers[i]);
+      }
+   }
+   function createMarkersGoogle(data){
+      markerCluster.clearMarkers();
+      for (var i = 0; i < data.length; i++) {
+         /* markers recuperation*/
+         markers[i]={
+            coords:{
+               lat: parseFloat(data[i].lat),
+               lng: parseFloat(data[i].lng)
+            },
+            content:{
+               typedebien: data[i].type_de_bien,
+               id: data[i].id,
+               type_de_reference: data[i].type_de_reference,
+               is_valid: data[i].is_validate_by_user,
+               is_localized: data[i].is_localized,
+               label: {
+                  text: data[i].label,
+                  color: "#000000",
+                  fontSize: "10px",
+                  fontWeight: "bolder"
+               },
+            }
+         }
+         /* Appel de la fonction addMarker() pour l'ajout des markers dans la map */
+         addMarkerGoogle(markers[i]);
+      }
+   }
+
+   /*detail*/
+   var mini_map = new L.map('map_focus').setView([51.505, -0.09], 15);
+
+   function getNotes(pin_id){
+      var url = 'http://127.0.0.1:8000/notes/note-pin-2/'+pin_id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".media-note").remove();
+         var has_note=false;
+         var has_photos=false;
+         $(".Notes_lenght").html(data.length);
+         if(data.length!=0){ 
+            for(var i=0;i<data.length;i++){
+               var id={{user.id}};
+               var userType = '{{user.userType}}';
+               var editer_option='';
+               var note_delete='';
+               var images_profiles='';   
+               if( id == data[i].editer_par.id || userType === 'principal'){
+                  has_note=true
+                  note_delete="<li><a onclick='delete_note(" + data[i].id + ")'><i class='icon-trash-alt'></i>   Supprimer</a></li>";
+                  editer_option = "<li><a href='#' id='editerNote' data-toggle='modal' data-target='#edit_note'><i class='icon-quill2'></i>Edit</a></li>";
+                  $("#OldcontentNote").html(data[i].note);
+                  $('#NoteId').val(data[i].id)
+               }
+               if( data[i].editer_par.photoProfile != null){
+                  images_profiles = data[i].editer_par.photoProfile
+               }
+               else{
+                  images_profiles = "{% static 'images/placeholder.jpg' %}"
+               }
+               $("#ul-Notes").append("<li class='media-note'>"+
+               "<div class='media-left'>"+
+               "<img loading=lazy' src="+images_profiles+" class='img-circle img-sm' alt='' >"+
+               "</div>"+
+               "<div class='media-body'>"+
+               "<div class='media-heading'>"+
+               " <a href='#' class='text-semibold'>"+ data[i].editer_par.last_name +" "+data[i].editer_par.first_name+"</a>"+
+               "<span class='media-annotation dotted'>"+ data[i].date +"</span>"+
+               "</div>"+
+               "<input type='text' class='form-control' class='noteContent' value='"+data[i].note+"' style='border-style: none;background-color:white' readonly='readonly'>"+
+               "<ul class='list-inline list-inline-separate text-size-small'>"+
+               editer_option+
+               note_delete+
+               "</ul>"+
+               "</div>"+
+               "</li>"
+               )
+            }
+         }
+         if (has_note==false){
+            $("#ajouterNoteLink").show();
+         }
+         else{
+            $("#ajouterNoteLink").hide();
+         }
+      });
+   }
+
+   var mini_map_2 = new L.map('mapDynamique').setView([51.505, -0.09], 15);
+   function setSwitchery(switchElement, checkedBool) {
+      if((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
+         switchElement.setPosition(true);
+         switchElement.handleOnchange(true);
+      }
+   } 
+   function getUser(id, typeUser){
+      var url = 'http://127.0.0.1:8000/map/getUser/'+id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         if(data.length!=0){
+            if(typeUser === 'editeur'){
+               if( data.photoProfile != null){
+                  images_profiles_edit = data.photoProfile
+               }
+               else{
+                  images_profiles_edit = "{% static 'images/placeholder.jpg' %}"
+                  }
+               
+               $("#edit_by").prop("src",images_profiles_edit);
+               $('#edit_by_name').html(data.username);
+               $("#editeur").show();
+            }
+            if(typeUser === 'validateur'){
+               if( data.photoProfile != null){
+                  images_profiles = data.photoProfile
+               }
+               else{
+                     images_profiles = "{% static 'images/placeholder.jpg' %}"
+               }
+               
+               $("#validated_by").prop("src",images_profiles);
+               $('#validated_by_name').html(data.username);
+               $("#validateur").show();
+            }
+         }
+      });
+   }
+   /* function d'affichage du box d'info */
+   function pinLinkOnClick(id) {
+      $(".leaflet-popup").remove();
+      $("#editeur").hide();
+      $("#validateur").hide();
+      var url = 'http://127.0.0.1:8000/plusInfo/pins-detail/'+id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         if(data.id != null && typeof data.id != "undefined"){
+            
+            mini_map.off();
+            mini_map.remove();
+            getPhotographies(data.id);
+            getNotes(data.id);
+            getDocs(data.id);
+            $("#pin_id_fichier").val(data.id);
+            $("#pinId-photographies").val(data.id);
+            $("#pin_id_actualisation").val(data.id);
+            /* switchery status */
+            var mySwitch = new Switchery($('#mySwitchCheck')[0], {
+               size:"small",
+               color: '#0D74E9'
+            });
+            // afficher status
+            if(data.is_validate_by_user === true){
+               setSwitchery(mySwitch, true);
+               $("#ajouterDocs").hide();
+               $("#ajouter-photos").hide();
+            }
+            else{
+               setSwitchery(mySwitch, false);
+               $("#ajouterDocs").show();
+               $("#ajouter-photos").show();
+            }
+            /* on  switchery click */
+            var checkbox_status = mySwitch.element.checked;
+            $('#mySwitchCheck').off('click').on('click', function(e) {
+               e.preventDefault();
+               if(checkbox_status === false){
+                  //I am off i will turn on
+                  validerPins(data.id);
+               }
+               if(checkbox_status === true){
+                  //I am off i will turn on
+                  validerPins(data.id);
+               }
+            });
+            /* resizeObserver pour regler le probleme de la map leafleat et le size du div */	
+            const mapDiv = document.getElementById("map_focus");
+            mini_map = new L.map('map_focus').setView([parseFloat(data.lat), parseFloat(data.lng)], 15)
+            L.tileLayer('http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+               attribution: '© OpenStreetMap contributors'
+            }).addTo(mini_map);
+            const resizeObserver = new ResizeObserver(() => {mini_map.invalidateSize();});
+            resizeObserver.observe(mapDiv);
+
+            if(data.type_de_reference != null && data.type_de_reference != ''){
+               if(data.type_de_reference === 2 && data.is_localized != false){
+                  var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: orangeIcon(data.label)}).addTo(mini_map); 
+               }
+               if(data.type_de_reference === 1 && data.is_localized != false){
+                  var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: blueIcon(data.label)}).addTo(mini_map); 
+               }
+               if(data.type_de_reference === 3){
+                  var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: yellowIcon(data.label)}).addTo(mini_map); 
+               }
+               if(data.type_de_reference === 1 && data.is_localized === false){
+                  var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: BlueStarIcon(data.label)}).addTo(mini_map); 
+               }
+               if(data.type_de_reference === 2 && data.is_localized === false){
+                  var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: orangeStarIcon(data.label)}).addTo(mini_map); 
+               }
+            }else{
+               var marker = L.marker([parseFloat(data.lat), parseFloat(data.lng)],{icon: GrayIcon(data.label)}).addTo(mini_map);
+            }     
+            var typedebien = data.type_de_bien;
+            var typedereference = data.type_de_reference
+            var label = data.label
+            var ville = data.ville
+            var dateRef = data.date_ref
+            var surface = data.surface
+            var prix_unit = data.prix_unit
+            var prix_total = data.prix_total
+            var description = data.descriptif
+            var is_validate_by_user=data.is_validate_by_user
+            var contact = data.contact
+            var tags = data.tags
+            var rue = data.rue
+            var adresse = data.adresse
+            var is_localized = data.is_localized
+	    var from_mobile = data.from_mobile
+            $('#pinId').val(data.id)
+            if( data.username.photoProfile != null){
+               images_profiles = data.username.photoProfile
+            }
+            else{
+               images_profiles = "{% static 'images/placeholder.jpg' %}"
+            }
+            $("#created_by").prop("src",images_profiles);
+            $('#created_by_name').html(data.username.username);
+            $("#created_date").html("crée le: "+data.date_ajout);
+            if(data.user_editer != null){
+               getUser(data.user_editer, 'editeur');
+            }
+            if(data.user_valider != null){
+               getUser(data.user_valider, 'validateur');
+            }
+            //--------------------------------------------
+            if(from_mobile != null && from_mobile === true)
+            {
+               $(".from-mobile").show();
+            }
+            else{
+               $(".from-mobile").hide();
+            }
+//-------
+            
+            if( is_localized != null && is_localized === true){
+               $('.is_localized_info').html("&nbsp; Réference localisée");
+               $('.is_localized').show();
+            }
+            else{
+               if(is_localized != null && is_localized === false){
+                  
+                  $('.is_localized_info').html("&nbsp; Réference non localisée");
+                  $('.is_localized').show();
+               }
+               else{
+                  $('.is_localized').hide();
+               }
+            }
+            if(adresse !=null && adresse !=''){
+               $(".adresse_info").html(adresse);
+               $(".adresse").show();
+            }
+            else{
+               $(".adresse").hide();
+            }
+            if(typedebien != null && typedebien != ''){
+               $('.typedebien_info').html(getTypeDeBien(typedebien))
+               $('.typedebien').show();
+            }
+            else{
+               $('.typedebien').hide();
+            }
+
+            if(rue != null && rue != ''){
+               $('.rue_info').html(rue);
+               $('.rue').show();
+            }
+            else{
+               $('.rue').hide();
+            }
+
+            if(label != null && label != ''){
+               $('.label_info').html(label)
+            }
+            if(typedereference != null && typedereference != ''){
+               $('.typederef_info').html(getTypeDeReference(data.type_de_reference));
+               if(typedereference === 2){
+                  $(".prixunitLabel").html("Loyer unitaire: ");
+                  $(".prixtotalLabel").html("Loyer total: ");
+               }
+               else{
+                  $(".prixunitLabel").html("Prix unitaire: ");
+                  $(".prixtotalLabel").html("Prix total: ");
+               }
+               $('.typederef').show();
+            }
+            else{
+               $('.typederef').hide();
+            }
+            if(description != null && description != ''){
+               $('.description_info').html(data.descriptif)
+               $('.description').show();
+            }
+            else{
+               $('.description').hide();
+            }
+            if(ville != null && ville != ''){
+               $('.ville_info').html(ville.name)
+               $('.ville').show();
+            }
+            else{
+               $('.ville').hide();
+            }
+            if(contact != null && contact != ''){
+               $('.contact_info').html(contact)
+               $('.contact').show();
+            }
+            else{
+               $('.contact').hide();
+            }
+            $('#tags_info').tokenfield('setTokens', []);
+            if(tags != null && tags != ''  && tags != "null"){
+               $('#tags_info').tokenfield('setTokens', data.tags);
+               $("ul .tokenfield").css({"border-style" : "none", "background-color":"white"});
+               $(".tags").show();
+            }
+            else{
+               $(".tags").hide();
+            }
+            getPinActualisation(data.actualisation, data.surface, data.id);
+            /*--------------------------------------*/
+            if(prix_total != null && prix_total != parseFloat(0)){
+               $('.prixtotal_info').html(addCommas(data.prix_total))
+               $('.prixtotal').show();
+            }
+            else{
+               $('.prixtotal').hide();
+            }
+            /*--------------------------------------*/
+            if(prix_unit != null && prix_unit != parseFloat(0)){
+               $('.prixunit_info').html(addCommas(data.prix_unit));
+               $('.prixunit').show();
+            }
+            else{
+               $('.prixunit').hide();
+            }
+            /*--------------------------------------*/
+            if(surface != null && surface != parseFloat(0)){
+               $('.surface_info').html(addCommas(data.surface))
+               $('.surface_').show();
+            }
+            else{
+               $('.surface_').hide();
+            }
+            /*--------------------------------------*/
+            if(data.chute_fonciere != null && data.chute_fonciere != 0){
+               $('.chute_fonciere_info').html(addCommas(data.chute_fonciere))
+               $('.chuteFonc').show();
+            }
+            else{
+               $('.chuteFonc').hide();
+            }
+            /******************************************/
+            $( '#content' ).show(function(){
+               $(window).scrollTop($('#content').position().top);
+            });
+         }
+         else{
+            notification('Désolé, '+ data['message']);
+         }  
+      });
+   }
+   /* create my pin*/
+  
+   //---------------------------------------------------------tags------------------------------------------------------------------
+   getTags();
+   function getTags(){
+      var url = 'http://127.0.0.1:8000/tags/getTags/'
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         all_tags = []
+         $(".option_tags").remove();
+         for(i=0; i<data.length; i++){
+            var option = "<option class = 'option_tags' value="+data[i].label+">"+data[i].label+"</option>";
+            all_tags.push(data[i].label);
+            $('#tag').append(option);
+         }
+      });
+   }
+   //---------------------------------------------------------validerPins------------------------------------------------------------
+   function validerPins(pin_id){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+      checkbox_status = true;
+         var url = 'http://127.0.0.1:8000/reference/validate_my_pin/'+pin_id
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0){
+               notificationSuccess('success message', 'La reference a été validée avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               //get_pins_non_validees();
+               $("#content").hide();
+            }
+            else{
+                  notification(data['message']);
+            }
+         });
+      });
+   }
+  
+   //---------------------------------------------------------get Pins valides--------------------------------------------------------
+   function get_pins_validees(){
+      $("#content").hide();
+      $(".leaflet-popup").remove();
+      var block = $("#page-content");
+      loaderStart(block);
+      var time_start = new Date(Date.now());
+      var s_start = time_start.getSeconds();
+      var time_end = 0;
+      var s_end = 0;
+      var url = 'http://127.0.0.1:8000/reference/pins-list-2/'
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".line_pin").remove();
+         $('#ul-pins').DataTable().clear().draw();
+         markers=[];
+         if(data.length!=0){
+            if("{{user.type_map}}" === "Leaflet")
+               createMarkersLeaflet(data, null);
+            else
+               createMarkersGoogle(data);
+         }
+         else{
+            notificationInfo("info: ","Il n'y a pas de réferences");
+         }
+         time_end = new Date(Date.now());
+         s_end =time_end.getSeconds();
+         $(block).unblock();
+      });
+   }
+   //---------------------------------------------------------get Pins non valides--------------------------------------------------------
+   function get_pins_non_validees(){
+      $("#content").hide();
+      $(".leaflet-popup").remove();
+      var block = $("#page-content");
+      loaderStart(block);
+      var time_start = new Date(Date.now());
+      var s_start = time_start.getSeconds();
+      var time_end = 0;
+      var s_end = 0;
+      var url = 'http://127.0.0.1:8000/reference/list-pin-non-valider/'
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".line_pin").remove();
+         $('#ul-pins').DataTable().clear().draw();
+         markers=[];
+         if(data.length!=0){
+            if("{{user.type_map}}" === "Leaflet")
+            {
+               createMarkersLeaflet(data, null);
+            }
+            else{
+               createMarkersGoogle(data);
+            }
+               
+         }
+         else{            
+            if("{{user.type_map}}" === "Leaflet")
+            {
+               markersCluster.clearLayers();
+            }
+            else{
+               markerCluster.clearMarkers();
+            }
+            notificationInfo("info: ","Il n'y a pas de réferences non valide");
+         }
+         time_end = new Date(Date.now());
+         s_end =time_end.getSeconds();
+         $(block).unblock();
+      });
+   }
+
+   /* supprimer la reference*/
+   function deleteLinkOnClick(pin_id){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+         var url = 'http://127.0.0.1:8000/reference/delete_my_pin/'+pin_id+'/'
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0){
+               notificationSuccess('success message', 'la reference a été supprimée avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               $(".leaflet-popup").remove();
+               $("#content").hide();
+               get_pins_non_validees();
+            }
+            else{
+               notification("desole, un probleme est survenu lors de la suppression")
+            }
+         });
+      });
+   }
+
+
+   $("#new_actualisation").on('click', function(event){
+      $("#AjouterActualisation").modal('toggle');
+   });
+   $("#ajout-actualisation-form").submit(function( event ) {
+      event.preventDefault ();
+      const formData = new FormData(this);
+      fetch(IP+"map/ajout_actualisation/",{
+         method: 'POST',//définir la method du submit du form
+         mode : 'same-origin',
+         credentials: 'same-origin' ,
+         body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.id != null ) {
+            notificationSuccess('success message', 'l\'actualisation a été effectuée avec succès' );
+            getPinActualisation(data.actualisation, data.surface, data.id); 
+            idEditeur = "{{user.id}}";
+            if(idEditeur != null){
+               getUser(idEditeur, 'editeur');
+            }
+            
+            $("#AjouterActualisation").modal('toggle');
+         }
+         else{
+            notification('Erreur, '+ data['message']);
+         }
+      }); 
+   });
+</script>
+{% endblock %}
+</html>

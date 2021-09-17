@@ -1,0 +1,4 @@
+2021-09-07 11:25:17,604  ERROR  31328  /home/centos/realtysoft/api_map/views.py  delete_my_piece_jointe  1259  DoesNotExist('Documents matching query does not exist.',)  
+2021-09-07 11:25:21,227  ERROR  31328  /home/centos/realtysoft/api_map/views.py  delete_my_piece_jointe  1259  DoesNotExist('Documents matching query does not exist.',)  
+2021-09-07 11:25:21,529  ERROR  31328  /home/centos/realtysoft/api_map/views.py  delete_my_piece_jointe  1259  DoesNotExist('Documents matching query does not exist.',)  
+2021-09-07 11:25:30,788  ERROR  31328  /home/centos/realtysoft/api_map/views.py  delete_my_piece_jointe  1259  DoesNotExist('Documents matching query does not exist.',)  

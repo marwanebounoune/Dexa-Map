@@ -1,0 +1,117 @@
+<div class="sidebar-category">
+    <div class="category-title">
+       <span>Filtrer par Types de validation</span>
+       <ul class="icons-list">
+          <li><a href="#" data-action="collapse"></a></li>
+       </ul>
+    </div>
+    <div class="category-content">
+       <form id="filterFormV_NV">
+          <div class="form-group">
+          <legend class="text-size-mini text-muted no-border no-padding">Type de validation</legend>
+          <div class="checkbox-inline">
+             <label for="valide">
+                <input type="checkbox" class="styled"  name="type_valide_nonValid_Mobile" value="pins-list-2" id="valide" autocomplete="off" checked/>Reférences validées</label>	
+          </div>
+          <br>
+          <div class="checkbox-inline">
+             <label for="nonValide">
+                <input type="checkbox" class="styled"  name="type_valide_nonValid_Mobile" value="list-pin-non-valider" autocomplete="off" id="nonValide"/>Reférences non validées</label>	
+          </div>
+          <br>
+          <div class="checkbox-inline">
+             <label for="nonValideMobile">
+                <input type="checkbox" class="styled"  name="type_valide_nonValid_Mobile" value="list-pin-non-valider-mobile" autocomplete="off" id="nonValideMobile"/>Application mobile non validés</label>	
+          </div>
+          </div>
+          <!--button type="submit" class="btn bg-blue btn-block">Filter</button-->
+       </form>
+    </div>
+ </div>
+ <script>
+        //---------------------------------------------------------get Pins par type de ref valides|mobile|novalide--------------------------------------------------------
+   var checkboxes = document.querySelectorAll("input[type=checkbox][name=type_valide_nonValid_Mobile]");
+   let enabledSettings = []
+   // Use Array.forEach to add an event listener to each checkbox.
+   checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+         enabledSettings = 
+            Array.from(checkboxes) // Convert checkboxes to an array to use filter and map.
+            .filter(i => i.checked) // Use Array.filter to remove unchecked checkboxes.
+            .map(i => i.value) // Use Array.map to extract only the checkbox values from the array of objects.
+            get_filter_pins(enabledSettings)
+      })
+   });
+
+   function get_filter_pins(val){
+      var block = $("#page-content");
+      loaderStart(block);
+      var time_start = new Date(Date.now());
+      var s_start = time_start.getSeconds();
+      var time_end = 0;
+      var s_end = 0;
+      if("{{user.type_map}}" === "Leaflet")
+         markersCluster.clearLayers();
+      else
+         markerCluster.clearMarkers();
+      for(i=0;i<val.length;i++){
+         var url = 'http://127.0.0.1:8000/reference/'+val[i]+'/'
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            $(".line_pin").remove();
+            $('#ul-pins').DataTable().clear().draw();
+            markers=[];
+            if(data.length!=0){
+               if("{{user.type_map}}" === "Leaflet"){
+                  for (var i = 0; i < data.length; i++) {
+                     markers[i]={
+                        coords:{
+                           lat: parseFloat(data[i].lat),
+                           lng: parseFloat(data[i].lng)
+                        },
+                        content:{
+                           typedebien: data[i].type_de_bien,
+                           id: data[i].id,
+                           type_de_reference: data[i].type_de_reference,
+                           is_valid: data[i].is_validate_by_user,
+                           is_localized: data[i].is_localized,
+                           label: data[i].label
+                        }
+                     }
+                     addMarkerLeaflet(markers[i]);
+                  }
+               }
+               else
+                  for (var i = 0; i < data.length; i++) {
+                     markers[i]={
+                        coords:{
+                           lat: parseFloat(data[i].lat),
+                           lng: parseFloat(data[i].lng)
+                        },
+                        content:{
+                           typedebien: data[i].type_de_bien,
+                           id: data[i].id,
+                           type_de_reference: data[i].type_de_reference,
+                           is_valid: data[i].is_validate_by_user,
+                           is_localized: data[i].is_localized,
+                           label: {
+                              text: data[i].label,
+                              color: "#000000",
+                              fontSize: "10px",
+                              fontWeight: "bolder"
+                           },
+                        }
+                     }
+                     addMarkerGoogle(markers[i]);
+                  }
+            }
+            time_end = new Date(Date.now());
+            s_end =time_end.getSeconds();
+         })
+      }
+      time_end = new Date(Date.now());
+      s_end =time_end.getSeconds();
+      $(block).unblock();
+   }
+ </script>

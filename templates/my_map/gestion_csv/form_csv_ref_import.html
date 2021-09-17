@@ -1,0 +1,73 @@
+            <!-- Ajout d'un réference avec importation CSV-->
+            <div class="modal fade center" id="modalCSV" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                   <div class="modal-content">
+                      <div class="modal-header">
+                         <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                         <h5 class="modal-title">Importer votre fichier CSV</h5>
+                      </div>
+                      <!--form--> 
+                      <form action="#" id="importCSV" enctype="multipart/form-data">
+                         {% csrf_token %}
+                         <div class="modal-body">
+                            <!-- description -->
+                            <div class="alert alert-info no-border" role="alert" >
+                               <p class="text-center" style="font-size:20px">Les normes à respecter pour l'import des fichiers CSV</p>
+                               <br>
+                               <p class="text-center" style="font-size:15px;">Les nom des colonnes doivent être conformes aux suivants :<p>
+                               <p class="text-center" style="font-size:14px; color:black">latitude, longitude, type de bien, type terrain, type de reference, ville, contact, surface terrain, surface ponderee, surface construite, prix unitaire, prix total, date de reference, description.<p>
+                            </div>
+                            <!-- /description -->
+                            <!-- csv input-->
+                            <div class="form-group">
+                               <div class="row">
+                                  <div class="col-sm-12">
+                                     <label>Fichier CSV</label>
+                                     <div class="uploader">
+                                     <input type="file" accept=".csv" name="file_CSV" class="file-styled" id="file_CSV"/>
+                                     <span class="filename" style="user-select: none;" id="selected-csv">No file selected</span>
+                                     <span class="action btn bg-info-400" style="user-select: none;">Choose File</span>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                            <!--/csv input-->
+                            <!-- submit form-->
+                            <div class="modal-footer">
+                               <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                               <button type="submit" class="btn btn-primary">Ajouter réference</button>
+                            </div>
+                         </div>
+                      </form>
+                      <!--/form--> 
+                   </div>
+                </div>
+             </div>
+             <!-- /Ajout d'un réference avec importation CSV-->
+
+<script>
+      //---------------------------------------------------------Importer mon fichier CSV---------------------------------------------------------
+      $("#importCSV").submit(function( event ) {
+      event.preventDefault ();
+      var block = $(this).parent();
+      loaderStart(block);
+      const formData = new FormData(this);
+      fetch("http://127.0.0.1:8000/csv/pins-import-2/",{
+        method: 'POST',
+        mode : 'same-origin',
+        credentials: 'same-origin' ,
+        body : formData
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if (data.length != 0 && typeof data.length != 'undefined') {
+            notificationSuccess('success message', 'le fichier a été importé avec succès' );
+            $("#modalCSV").modal('toggle');
+         }
+         else {
+            notification( data['message'] );
+         }
+         $(block).unblock();
+      });
+   });
+</script>

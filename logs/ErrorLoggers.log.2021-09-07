@@ -1,0 +1,7 @@
+2021-09-08 08:35:36,050  ERROR  31329  /home/centos/realtysoft/api_map/views.py  create_my_pin  967  DataError('value too long for type character varying(40)\n',)  
+2021-09-08 08:36:18,097  ERROR  31329  /home/centos/realtysoft/api_map/views.py  create_my_pin  967  DataError('value too long for type character varying(40)\n',)  
+2021-09-08 08:39:11,745  ERROR  31329  /home/centos/realtysoft/api_map/views.py  create_my_pin  967  DataError('value too long for type character varying(40)\n',)  
+2021-09-08 08:42:59,368  ERROR  31329  /home/centos/realtysoft/api_map/views.py  ajoutPhotographies  1359  IntegrityError('duplicate key value violates unique constraint "api_map_photographie_pkey"\nDETAIL:  Key (id)=(10) already exists.\n',)  
+2021-09-08 10:54:04,761  ERROR  31329  /home/centos/realtysoft/api_map/views.py  create_my_pin  967  IntegrityError('duplicate key value violates unique constraint "api_map_photographie_pkey"\nDETAIL:  Key (id)=(13) already exists.\n',)  
+2021-09-08 11:28:50,218  ERROR  31329  /home/centos/realtysoft/api_map/views.py  create_my_pin  967  DataError('value too long for type character varying(40)\n',)  
+2021-09-08 11:30:18,049  ERROR  31329  /home/centos/realtysoft/api_map/views.py  ajoutPhotographies  1359  DataError('value too long for type character varying(40)\n',)  

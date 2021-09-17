@@ -1,0 +1,53 @@
+<div class="panel-body" id="Photographies">
+    <div class="col-sm-12">
+       <div class="content-group-lg">
+          <h6 class="text-semibold"><span><i class="icon-images3"></i></span> Photographies (<span class="photographies_lenght"></span>)</h6>
+             <div id="ajouter-photos" data-nbrPhotos='0'>
+                <a href="#" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal_photographies"><i class="fa fa-plus"></i>&nbsp;Ajouter d'autres photos</a>
+             </div>
+             <br/>
+             <br/>
+             <!-- -->
+             <div class="content"  style="display:none" id="content-photographies">
+                <div class="row" id="PhotographiesDiv"></div>
+             </div>
+             <!---->								
+       </div>
+    </div>
+ </div>
+ <script>
+
+      /* get images per pin*/
+      function getPhotographies(id){
+      var url = 'http://127.0.0.1:8000/map/photo-pin-2/'+id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".photos").remove();
+         $(".photographies_lenght").html(data.length)
+         var supprimerPhotos='';
+         if(data.length!=0){
+            $("#ajouter-photos").data("nbrPhotos", data.length);
+            if(data.length === 12){
+               $("#ajouter-photos").hide();
+            }
+            for(var i=0;i<data.length;i++){
+               if(data[i].pin.is_validate_by_user === false){
+                  supprimerPhotos = "<a onclick='TrashIconOnClick(" +data[i].id + ")' class='btn border-white text-white btn-flat btn-icon btn-rounded ml-5'><i class='icon-trash'></i></a>";
+               }
+               $("#PhotographiesDiv").append("<div class='col-lg-3 col-sm-6 photos'><div class='thumbnail thumbnail-photos'><div class='thumb thumb-photos'>"+
+                  "<img loading=lazy' src="+ data[i].photo+" alt='' class='imageCapture image-thumbnail'>"+
+                  
+                  "<div class='caption-overflow'><span>"+
+                  "<a href="+ data[i].photo+" data-popup='lightbox' rel='gallery' class='btn border-white text-white btn-flat btn-icon btn-rounded imageDisplay'><i class='icon-plus3'></i></a>"+
+                  "<a href="+ data[i].photo+" class='btn border-white text-white btn-flat btn-icon btn-rounded ml-5'><i class='icon-link2'></i></a>"+supprimerPhotos+"</span></div></div></div></div>"
+               )
+            }
+            $("#content-photographies").show();
+         }
+         else{
+            $("#content-photographies").hide();
+         }
+      });
+   }
+ </script>

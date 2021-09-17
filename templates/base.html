@@ -1,0 +1,219 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>A|Value - Expertise immobilière</title>
+	<!-- Global stylesheets -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/icons/icomoon/styles.css'%}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/bootstrap.css'%}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/core.css'%}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/components.css'%}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/colors.css'%}" rel="stylesheet" type="text/css">
+		
+	<script type="text/javascript" src="{% static 'js/plugins/loaders/pace.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/core/libraries/jquery.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/core/libraries/bootstrap.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/loaders/blockui.min.js'%}"></script>
+    
+	<!-- /core JS files -->
+
+	<!-- Theme JS files -->
+	<script type="text/javascript" src="{% static 'js/core/libraries/jasny_bootstrap.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/forms/styling/uniform.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/forms/inputs/autosize.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/forms/inputs/formatter.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/forms/inputs/typeahead/typeahead.bundle.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/forms/inputs/typeahead/handlebars.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/forms/inputs/passy.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/forms/inputs/maxlength.min.js'%}"></script>
+
+	<script type="text/javascript" src="{% static 'js/core/app.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/pages/form_controls_extended.js'%}"></script>	
+		<script type="text/javascript" src="{% static 'js/core/libraries/jquery_ui/interactions.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/plugins/forms/selects/select2.min.js'%}"></script>
+	
+
+	<script type="text/javascript" src="{% static 'js/core/app.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/pages/form_select2.js'%}"></script>
+		
+		
+	
+	<style>
+/* Slider */
+.slick-slide {
+    margin: 0px 20px;
+}
+
+.slick-slide img {
+    width: 100%;
+}
+
+.slick-slider
+{
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+
+    -webkit-touch-callout: none;
+    -khtml-user-select: none;
+    -ms-touch-action: pan-y;
+        touch-action: pan-y;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.slick-list
+{
+    position: relative;
+    display: block;
+    overflow: hidden;
+
+    margin: 0;
+    padding: 0;
+}
+.slick-list:focus
+{
+    outline: none;
+}
+.slick-list.dragging
+{
+    cursor: pointer;
+    cursor: hand;
+}
+
+.slick-slider .slick-track,
+.slick-slider .slick-list
+{
+    -webkit-transform: translate3d(0, 0, 0);
+       -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+         -o-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+}
+
+.slick-track
+{
+    position: relative;
+    top: 0;
+    left: 0;
+
+    display: block;
+}
+.slick-track:before,
+.slick-track:after
+{
+    display: table;
+
+    content: '';
+}
+.slick-track:after
+{
+    clear: both;
+}
+.slick-loading .slick-track
+{
+    visibility: hidden;
+}
+
+.slick-slide
+{
+    display: none;
+    float: left;
+
+    height: 100%;
+    min-height: 1px;
+}
+[dir='rtl'] .slick-slide
+{
+    float: right;
+}
+.slick-slide img
+{
+    display: block;
+}
+.slick-slide.slick-loading img
+{
+    display: none;
+}
+.slick-slide.dragging img
+{
+    pointer-events: none;
+}
+.slick-initialized .slick-slide
+{
+    display: block;
+}
+.slick-loading .slick-slide
+{
+    visibility: hidden;
+}
+.slick-vertical .slick-slide
+{
+    display: block;
+
+    height: auto;
+
+    border: 1px solid transparent;
+}
+.slick-arrow.slick-hidden {
+    display: none;
+}
+	</style>
+	
+	
+	<!-- /global stylesheets -->
+	
+	 
+
+
+
+</head>
+
+<body>
+
+	<!-- Main navbar -->
+	
+	<!-- /main navbar -->
+
+
+	<!-- Page container -->
+<!-- Page container -->
+<div class="page-container">
+
+    <!-- Page content -->
+    <div class="page-content">
+
+
+
+        <!-- Main content -->
+        <div class="content-wrapper">
+
+            <!-- Page header -->
+            {% include 'partials/header.html' %}
+            <!-- /page header -->
+
+
+            <!-- Content area -->
+            {%block content%}{% endblock%}
+            
+            {% include 'partials/footer.html' %}
+           
+            <!-- /content area -->
+    </div>
+        <!-- /main content -->
+</div>
+    <!-- /page content -->
+</div>
+<!-- /page container -->
+	<!-- /page container -->
+
+</body>
+</html>

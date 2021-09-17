@@ -1,0 +1,42 @@
+<div class="col-sm-8" id="actualisation-li">
+    <ul>
+       <li>
+          Actualisation :
+          <table id="actualisation">
+             <thead>
+                <tr>
+                   <th>Date</th>
+                   <th>Prix unitaire</th>
+                   <th>Surface</th>
+                   <th>Prix total</th>
+                   <th>Action</th>
+                </tr>
+             </thead>
+             <tbody></tbody>
+          </table>
+          <div><a id="new_actualisation" class="pull-right" ><i class="fa fa-plus" style="color:blue"></i>&nbsp; Ajouter une actualisation</a></div>
+       </li>
+    </ul>
+ </div>
+ <script>
+       //---------------------------------------------------------get Pin Actualisation---------------------------------------------------------
+   function getPinActualisation(actualisationArray,surface, id){
+      $(".tr-actualisation").remove();
+      if(actualisationArray!= null && actualisationArray.length!=0){
+         for (var i =0; i < actualisationArray.length; i++) {
+            tr="<tr class='tr-actualisation'><td>"+actualisationArray[i][0]+"</td>"+
+               "<td>"+addCommas(actualisationArray[i][1])+"</td>"+
+               "<td>"+addCommas(surface)+"</td>"+
+               "<td>"+addCommas(actualisationArray[i][2])+"</td>"+
+               "<td><button class='editActualisation' style='border-style: none; background-color:transparent;' onclick='editActualisationCLick()'><i class='icon-pencil' style='color: blue; font-size:10erm;'></i></button>&nbsp;<button</td>"+
+               "</tr>"
+               ;
+            $("#actualisation").append(tr);
+         }
+         $("#actualisation-li").show();
+      }
+      else{
+         $("#actualisation-li").hide();
+      }
+   }
+ </script>

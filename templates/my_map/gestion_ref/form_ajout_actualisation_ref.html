@@ -1,0 +1,43 @@
+<!--ajouter une actualisation -->
+<div class="modal fade" id="AjouterActualisation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Ajouter une actualisation à la réference </h5>
+         </div>
+         <form method="POST" id="ajout-actualisation-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-body">
+               <input type="text" class="file-styled" id="pin_id_actualisation" name="pin_id_actualisation" style="display:none" /><!---->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="sidebar-category">
+                        <div class="category-title">
+                           <span><h4><p>Actualisation</p></h4></span>
+                        </div>
+                        <div class="col-sm-6">
+                           <label>nouveau prix unitaire</label>
+                           <input type="text" class="form-control" id="prix_unit1_actualisation" placeholder="prix unitaire" name="prix_unit1_actualisation" onkeypress="return isNumber(event)" />
+                        </div>
+                        
+                        <div class="col-sm-6">
+                           <label>nouveau prix total</label>
+                           <input type="text" class="form-control" id="prix_tot_actualisation" placeholder="prix total" name="prix_tot_actualisation" onkeypress="return isNumber(event)" />
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               
+               <br/>
+               <br/>
+               <div class="form-group">
+                  <button type="submit" class="btn bg-blue btn-block">Enregistrer <i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+               <!---->
+            </div> 
+         </form>
+      </div>
+   </div>
+</div>
+<!--/ajouter une actualisation -->

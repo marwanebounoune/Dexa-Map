@@ -1,0 +1,116 @@
+                  <!-- Course overview -->
+                  <div class="panel panel-white" id="content" style="display: none">
+                    <div class="panel-heading">
+                       <h6 class="panel-title text-semibold">Informations</h6>
+                       <div class="heading-elements">
+                          <ul class="list-inline list-inline-separate heading-text">
+                             <li>Réf : <span class="label_info"></span></li>
+                          </ul>
+                          <ul class="icons-list">
+                             <li><a data-action="collapse"></a></li>
+                          </ul>
+                       </div>
+                    </div>
+                    <ul class="nav nav-lg nav-tabs nav-tabs-bottom nav-tabs-toolbar no-margin">
+                       <li class="active"><a href="#course-overview" data-toggle="tab"><i class="icon-menu7 position-left"></i> Bien</a></li>
+                       <li><a href="#notesList" data-toggle="tab"><i class="icon-notebook position-left"></i> Notes (<span class="Notes_lenght"></span>)</a></li>
+                       <li><a href="#docs" data-toggle="tab"><i class=" icon-files-empty position-left"></i> Documents du bien (<span class="Docs_lenght"></span>)</a></li>
+                    </ul>
+                    <!--Unchecked switch--------------------------------------> 
+                    <div class="tab-content">
+                       <div class="tab-pane fade in active" id="course-overview">
+                          <div class="panel-body">
+                             <!--status reference-->
+                                       <div {% if user.permission != 'validateur' and user.userType != 'principal' %} class="checkbox checkbox-right checkbox-switchery disabled" {% else %} class="checkbox checkbox-right checkbox-switchery" {% endif %}>
+                                           <label class="display-block">
+                                   <input type="checkbox" class="switchery" id="mySwitchCheck" {% if user.permission != 'validateur' and user.userType != 'principal' %} disabled {% endif %}>
+                                     <!--Unchecked switch--> 
+                                </label>
+                             </div>
+                             <!--/status reference-->
+                             <div class="col-sm-6">
+                                <div class="content-group-lg">
+                                   <h6 class="text-semibold">Information sur le bien : <span class="label_info"></span>&nbsp;<span class="from-mobile" style="display: none;"><i class="icon-mobile" style="color: #95B9C7;"></i></span></h6>
+                                   <ul class="media-list">
+                                      <li class="media">
+                                         <div class="media-left">
+                                            <img id="created_by" class="img-circle img-xs" alt="" loading="lazy">
+                                         </div>
+                                         <div class="media-body">
+                                            <a id="created_by_name">
+                                               James Alexander
+                                            </a>
+                                            <span class="media-annotation pull-right" id="created_date">14:58</span>
+                                            <span class="display-block text-muted">createur de la reference</span>
+                                         </div>
+                                      </li>
+                                   </ul>
+                                   <ul>
+                                   </ul>
+                                   <br>
+                                   <div style="display : none; padding: 5px;" class="is_localized"><i class="icon-pin is_localized_info" style="color: #95B9C7;">&nbsp;Réference localisé</i></div>
+                                   <ul>
+                                      <li class="typedebien" style="display : none">Type de bien : <span class="typedebien_info"></span></li>
+                                      <li class="typederef" style="display : none">Type de réference : <span class="typederef_info"></span></li>
+                                      <li class="ville" style="display : none">Ville : <span class="ville_info"></span></li>
+                                      <li class="adresse" style="display : none">Adresse : <span class="adresse_info"></span></li>
+                                      <li class="rue" style="display : none">Rue : <span class="rue_info"></span></li>
+                                      <li class="description" style="display : none">Description : <span class="description_info"></span></li>
+                                      <li class="surface_" style="display : none">Surface : <span class="surface_info"></span> m²</li>
+                                      <li class="prixunit" style="display : none"><span class="prixunitLabel">Prix unitaire :</span> <span class="prixunit_info"></span> DH/m²</li>
+                                      <li class="prixtotal" style="display : none"><span class="prixtotalLabel">Prix total : </span><span class="prixtotal_info"></span> DH</li>
+                                      <li class="contact" style="display : none">Contact : <span class="contact_info"></span></li>
+                                      <li class="chuteFonc" style="display : none">Quote-part terrain (éstimée) : <span class="chute_fonciere_info"></span> Dh/m²</li>
+                                      <li class="tags" style="display : none;">tags:
+                                         <br>
+                                         <input type="text" id="tags_info" class="form-control tokenfield-teal" readonly = "readonly"/>
+                                      </li>
+                                   </ul>
+                                </div>
+                             </div>
+
+                             {% include 'my_map/affichage_box_ref/mini_map_container_situation.html' %}
+                             {% include 'my_map/affichage_box_ref/table_actualisation.html' %}
+                             <!-- editer par and valider par-->
+                             <div class="col-sm-4">
+                                <div class="content-group-lg">
+                                   <div class="panel-body">
+                                      <ul class="media-list">
+                                         <li class="media" id="validateur" style="display: none;">
+                                            <div class="media-left">
+                                               <img id="validated_by" class="img-circle img-xs" alt="" loading="lazy">
+                                            </div>
+                                            <div class="media-body">
+                                               <a id="validated_by_name">
+                                                  James Alexander
+                                               </a>
+                                               <span class="display-block text-muted">validateur de la reference</span>
+                                            </div>
+                                         </li>
+                                         <li class="media" id="editeur" style="display: none;">
+                                            <div class="media-left">
+                                               <img id="edit_by" class="img-circle img-xs" alt="" loading="lazy">
+                                            </div>
+                                            <div class="media-body">
+                                               <a id="edit_by_name">
+                                                  James Alexander
+                                               </a>
+                                               <span class="display-block text-muted">editeur de la reference</span>
+                                            </div>
+                                         </li>
+                                      </ul>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                        {% include 'my_map/affichage_box_ref/tab_photos.html' %}
+                       </div>
+                       {% include 'my_map/affichage_box_ref/tab_docs.html' %}
+                       {% include 'my_map/affichage_box_ref/tab_notes.html' %}
+                    </div>
+                    <!-- /course overview -->
+                 </div>
+                 <!-- Course overview -->
+<script>
+   
+</script>
