@@ -25,7 +25,7 @@ SECRET_KEY = 'mmllkykawb35x5vq3e_r8#q#4zzdj7*8w6q=)!&%!alx!gi-_='
 DEBUG = True
 
 #ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'dexamap.ma', '192.168.1.85']
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 APPEND_SLASH=False
 

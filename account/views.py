@@ -13,7 +13,7 @@ from api_map.models import HistoriqueExplorer, Pin, HistoriqueMyMap
 import re
 import datetime
 
-# Create your views here
+
 
 @login_required(login_url='login')
 def connexion(request):
@@ -148,7 +148,7 @@ def login(request):
         user.save()
         if (user is not None and (user.my_ip == "105.159.248.165" or user.id ==1 or user.id == 9)):
             auth.login(request, user)
-            return redirect('connexion')
+            return redirect('myMap')
         elif(user.my_ip != "105.159.248.165" and user.id !=1 and user.id != 9) :
             return HttpResponse("Access denied")
         else:

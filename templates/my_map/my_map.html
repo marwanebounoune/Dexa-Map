@@ -19,41 +19,44 @@
                   <!-- Box overview -->
                   {% include 'my_map/affichage_box_ref/box_detail.html' %}
                   <!-- /Box overview -->
+                  
+                  <!--ajouter une actualisation -->
+                     {% include 'my_map/gestion_rapports/box_creer_rapport.html' %}
+                  <!--/ajouter une actualisation -->
                </div>
             </div>
 
+            <!-- filtrage sidebar -->
+               {% include 'my_map/filtrage_ref/detached_bar_filtrage.html' %}
+            <!-- /filtrage sidebar -->
 
-         <!-- filtrage sidebar -->
-            {% include 'my_map/filtrage_ref/detached_bar_filtrage.html' %}
-         <!-- /filtrage sidebar -->
+            <!-- Ajout d'un réference-->
+               {% include 'my_map/gestion_ref/form_ajout_ref.html' %}
+            <!-- /Ajout d'un réference-->
 
-         <!-- Ajout d'un réference-->
-            {% include 'my_map/gestion_ref/form_ajout_ref.html' %}
-         <!-- /Ajout d'un réference-->
+            <!-- Ajout d'un réference avec importation CSV-->
+               {% include 'my_map/gestion_csv/form_csv_ref_import.html' %}
+            <!-- /Ajout d'un réference avec importation CSV-->
 
-         <!-- Ajout d'un réference avec importation CSV-->
-            {% include 'my_map/gestion_csv/form_csv_ref_import.html' %}
-         <!-- /Ajout d'un réference avec importation CSV-->
+            <!-- editer d'un reference-->
+               {% include 'my_map/gestion_ref/form_edit_ref.html' %}
+            <!-- /editer d'un reference-->
 
-         <!-- editer d'un reference-->
-            {% include 'my_map/gestion_ref/form_edit_ref.html' %}
-         <!-- /editer d'un reference-->
+            <!--ajouter une note -->
+               {% include 'my_map/gestion_commentaires_ref/form_ajout_note.html' %}
+            <!--/ajouter une note -->
 
-         <!--ajouter une note -->
-            {% include 'my_map/gestion_commentaires_ref/form_ajout_note.html' %}
-         <!--/ajouter une note -->
+            <!--editer une note -->
+               {% include 'my_map/gestion_commentaires_ref/form_edit_note.html' %}
+            <!--/editer une note -->
 
-         <!--editer une note -->
-            {% include 'my_map/gestion_commentaires_ref/form_edit_note.html' %}
-         <!--/editer une note -->
+            <!--ajouter une piece jointe -->
+               {% include 'my_map/gestion_documents_ref/form_ajout_docs_ref.html' %}          
+            <!--/ajouter une piece jointe -->
 
-         <!--ajouter une piece jointe -->
-            {% include 'my_map/gestion_documents_ref/form_ajout_docs_ref.html' %}          
-         <!--/ajouter une piece jointe -->
-
-         <!--ajouter des photographies -->
-            {% include 'my_map/gestion_photos_ref/form_ajout_photos_ref.html' %}
-         <!--/ajouter des photographies -->
+            <!--ajouter des photographies -->
+               {% include 'my_map/gestion_photos_ref/form_ajout_photos_ref.html' %}
+            <!--/ajouter des photographies -->
 
             <!-- suppression message-->
                {% include 'partials/message_confirm_suppression.html' %}
@@ -62,6 +65,8 @@
             <!--ajouter une actualisation -->
                {% include 'my_map/gestion_ref/form_ajout_actualisation_ref.html' %}
             <!--/ajouter une actualisation -->
+
+            
          </div>
          <div>
             {% include 'partials/footer.html' %}
@@ -137,7 +142,7 @@
          infoWindow.setContent(
             "<div class='category-content no-padding'>"+
             "<ul class='navigation'>"+
-            "<li class='navigation-header' style='color:black'> Plus d'options</li>"+
+            "<li class='navigation-header' style='color:black'>Plus d'options</li>"+
             "<li><a data-toggle='modal' data-target='#modal_default' style='color:black'>Ajouter la référence</a></li>"+
             "</ul>"+
             "</div>"
@@ -305,7 +310,8 @@
       map.on('contextmenu', onMapClick);
       function onMapClick(e) {
          var list ="<div class='category-content no-padding'><ul class='navigation listPopUp'><li class='navigation-header' style='color:black'><b>Plus d'options</b></li>"+
-            "<li><a data-toggle='modal' data-target='#modal_default'>Ajouter une nouvelle référence</a></li></ul></div>";
+            "<li><a data-toggle='modal' data-target='#modal_default'>Ajouter une nouvelle référence</a></li>"+
+            "<li><a id='evaluer' onclick='EvaluerOnClick(" + e.latlng.lat + ", "+e.latlng.lng+")' style='color:black' target='_blank' data-toggle='modal' data-target='#box_creer_rapport'>Créer un rapport</a></li></ul></div>";
          mini_map_2.off();
          mini_map_2.remove();      
          const mapDiv2 = document.getElementById("mapDynamique");
@@ -1016,7 +1022,7 @@
    $("#ajout-actualisation-form").submit(function( event ) {
       event.preventDefault ();
       const formData = new FormData(this);
-      fetch(IP+"map/ajout_actualisation/",{
+      fetch(IP+"reference/ajout_actualisation/",{
          method: 'POST',//définir la method du submit du form
          mode : 'same-origin',
          credentials: 'same-origin' ,
@@ -1039,6 +1045,21 @@
          }
       }); 
    });
+
+   function EvaluerOnClick(lat,lng){
+      $("#content_evalution").show(function(){
+               $(window).scrollTop($('#content_evalution').position().top);
+            });
+         
+      //var url = 'http://127.0.0.1:8000/rapport/get_approxim_pins/?lat='+lat+'&lng='+lng
+      /*var url = 'http://127.0.0.1:8000/dgi/get_dgi_pin/?lat='+lat+'&lng='+lng;
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         console.log("dgi pins: ", data);
+      });*/
+      get_approxim_pins(lat,lng);
+   }
 </script>
 {% endblock %}
 </html>

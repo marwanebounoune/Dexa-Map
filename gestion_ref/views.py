@@ -1,4 +1,4 @@
-from api_map.views import user_pinlist
+from api_map.views import user_pinlist, validate_LatAndLng
 from api_map.serializers import PinSerializer, PinSerializerLeger
 from datetime import date
 from rest_framework.decorators import api_view
