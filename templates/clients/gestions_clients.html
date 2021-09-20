@@ -1,0 +1,99 @@
+{% extends "libraries.html" %}
+{%load static%}
+{% block content %}
+	<!-- Page container -->
+	<div class="page-container">
+		<!-- Page content -->
+		<div class="page-content">		
+			<!-- /main sidebar -->
+			<!-- Main content -->
+			<div class="content-wrapper">
+				<!-- Page header -->
+				<div class="page-header">
+					<!-- Header content -->
+					<div class="page-header-content">
+						<div class="page-title">
+							<h4><i class="icon-users4 position-left"></i> <span class="text-semibold">Nos clients</span></h4>
+							{% include 'partials/messages.html' %}
+						</div>
+					</div>
+					<!-- /header content -->
+				</div>
+				<!-- /page header -->
+				<!-- Content area -->
+				<div class="content">
+					<!-- User profile -->
+					<div class="row">
+						<div class="col-lg-9">
+							<div class="panel panel-flat">
+								<div class="panel-heading">
+									<h6 class="panel-title">Gestion des clients</h6>
+									<button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal_creerCli" id="newClient"><i class="fa fa-plus"></i>&nbsp;Ajouter un client</button>
+								</div>
+								<div class="panel-body">			
+								</div>
+								<table id="histoExplorer" class="table datatable-basic display">
+									<thead>
+										<tr>
+											<th>id</th>
+											<th>Nom</th>
+											<th>Prenom</th>
+											<th>CIN</th>
+											<th>Tel</th>
+											<th>E-mail</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for cli in mes_client %}
+										<tr>
+											<td>{{cli.id}}</td>
+											<td>{{cli.nom}}</td>
+											<td>{{cli.prenom}}</td>
+											<td>{{cli.cin}}</td>
+											<td>{{cli.tel}}</td>
+											<td>{{cli.email}}</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="col-lg-3">
+							<!-- User thumbnail -->
+							<div class="thumbnail thumbnail-profil" id="photos-caption">
+								<div id="message-Image" data-erreur='{{erreur}}'> {% include 'partials/messages.html' %} </div>
+								<div class="thumb thumb-rounded thumb-slide rounded-circle thumb-profil">
+									<img {% if user.photoProfile %} src="{{user.photoProfile.url}}" {% else %} src="{% static 'images/placeholder.jpg'%}" {% endif %} alt="" id="imageUser">
+									<div class="caption">
+										<span id="caption-span">
+											<a {% if user.photoProfile %} href="{{user.photoProfile.url}}" {% else %} href="{% static 'images/placeholder.jpg'%}" {% endif %} class="btn bg-success-400 btn-icon btn-xs dispalyTemporaryImage" data-popup="lightbox" ><i class="icon-plus2"></i></a>
+											<a {% if user.photoProfile %} href="{{user.photoProfile.url}}" {% else %} href="{% static 'images/placeholder.jpg'%}" {% endif %} class="btn bg-success-400 btn-icon btn-xs dispalyTemporaryImage"><i class="icon-link"></i></a>
+										</span>
+									</div>
+								</div>
+						    	<div class="caption text-center">
+									<h6 class="text-semibold no-margin"> {{user.last_name}} {{user.first_name}} <small class="display-block">{% if user.entreprise %}{{user.entreprise}}{% endif %}</small></h6>
+								</div>
+					    	</div>
+					    	<!-- /user thumbnail -->
+						</div>
+					</div>
+					<!-- /user profile -->
+				</div>
+				<!-- /content area -->
+				<!-- Footer -->
+				<div>
+					{% include 'partials/footer.html' %}
+				</div>
+				<!-- /footer -->
+			</div>
+			<!-- /main content -->
+		</div>
+		{% include 'clients/ajouter_client.html' %}
+	</div>
+    
+<blockquote>{{ user.content|escape }}</blockquote>
+<script>
+	
+</script>
+{% endblock  %}

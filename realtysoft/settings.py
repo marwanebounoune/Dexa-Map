@@ -42,12 +42,15 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.gis',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sessions',
     'filtrage_ref.apps.FiltrageRefConfig',
+    'gestion_clients.apps.GestionClientsConfig',
     'gestion_commentaires_ref.apps.GestionCommentairesRefConfig',
     'gestion_csv.apps.GestionCsvConfig',
+    'gestion_dgi.apps.GestionDgiConfig',
     'gestion_documents_ref.apps.GestionDocumentsRefConfig',
     'gestion_photos_ref.apps.GestionPhotosRefConfig',
     'gestion_ref.apps.GestionRefConfig',
@@ -99,7 +102,7 @@ WSGI_APPLICATION = 'realtysoft.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'mydb',
         'USER': 'postgres',
         'PASSWORD' : 'admin',
@@ -176,3 +179,15 @@ try:
 except Exception as e:
     # in case of any error, pass silently.
     pass
+
+if os.name == 'nt':
+    OSGEO4W = r"C:\OSGeo4W"
+    #if '64' in platform.architecture()[0]:
+    #    OSGEO4W += "64"
+    assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
+    os.environ['OSGEO4W_ROOT'] = OSGEO4W
+    os.environ['GDAL_DATA'] = OSGEO4W + r"\share\gdal"
+    os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
+    os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+    
+GDAL_LIBRARY_PATH = r'C:\OSGeo4W\bin\gdal303'

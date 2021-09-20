@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Example</title>
+	<link href="{% static 'images/Valactif_SG/style.css'%}" rel="stylesheet" >
+</head>
+
+<style> 
+	#leftbox {
+		float:left; 
+		width:25%;
+		height:50px;
+	}
+	#middlebox{
+		float:left; 
+		width:55%;
+		height:50px;
+	}
+	#rightbox{
+		float:right;
+		width:20%;
+		height:50px;
+	}
+	
+	
+	
+	#leftbox2 {
+		float:left; 
+		width:50%;
+		height:50px;
+	}
+
+	#rightbox2{
+		float:right;
+		width:50%;
+		height:50px;
+	}
+	
+	 #title{
+		float:right;
+		width:100%;
+		height:0px;
+		
+	}
+	table { 
+		width: 360px; 
+		border-collapse: collapse; 
+		margin:50px auto;
+	}
+
+	/* Zebra striping */
+	tr:nth-of-type(odd) { 
+		background: #eee; 
+	}
+
+	th { 
+		background: #000000; 
+		color: white; 
+		font-weight: bold; 
+	}
+	td, th { 
+		padding: 5px; 
+		border: 1px solid #ccc; 
+		text-align: left; 
+		font-size: 10px;
+	}							
+</style> 
+<body>  
+	<div> 
+		<page size="A4">
+            <div class="header" style="height: 65px; border-bottom: dashed red;">
+                <div id = "leftbox" style="margin-top:10px">
+                    <img src="{% static 'images/Valactif_SG/logo-societe-generale.png'%}">
+                </div> 
+                <div id = "middlebox" style="margin-top:10px;color:black; font-family:Arial; font-size:18px">
+                    <center>
+                        <b> Fiche d'évaluation <br/> Immobilière </p> <b/>
+                    </center>
+                </div>
+                <div id = "rightbox" style="margin-top:10px; font-size:11px">
+                    Réf Rapport : 00001 <br/>
+                    Date : 12/03/1993 <br/>
+                    Type de bien : Appartement <br/>
+                    TF : 0000/00
+                </div>
+            </div>
+            <div id="title">
+                <h3 style="margin=none; margin-left : 25px; color:#ea001f"> I- Généralités </h3>
+            </div>
+            <div id = "leftbox2">
+                <table style="margin-left:25px">
+                    <thead>
+                        <tr>
+                            <th colspan="2"> <center>I.1 - Information Dossier</center></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-column="First Name"><b>Réf Dossier</b></td>
+                            <td data-column="Last Name">000001</td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>Réf Client</b></td>
+                            <td data-column="Last Name">010101010</td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>Affaire</b></td>
+                            <td data-column="Last Name">affaire client 1</td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>Crédit Souhaité</b></td>
+                            <td data-column="Last Name">000 000 000,00 Dhs</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id = "rightbox2">
+                <table style="margin-right:25px">
+                    <thead>
+                        <tr>
+                            <th colspan="2"> <center>I.1 - Information Dossier</center></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td data-column="First Name"><b>Réf Dossier</b></td>
+                        <td data-column="Last Name">000001</td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>Réf Client</b></td>
+                            <td data-column="Last Name">010101010</td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>Affaire</b></td>
+                            <td data-column="Last Name">affaire client 1</td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>Crédit Souhaité</b></td>
+                            <td data-column="Last Name">000 000 000,00 Dhs</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="footer" style="color:blue; border: dashed red; height: 50px; width: 20.8cm; position: fixed; bottom: 0;">Footer</div>
+        </page> 
+    </div>
+    <div class="pagebreak"> </div>
+    <div> 
+        <page size="A4">
+            <div class="header" style="height: 65px; border-bottom: dashed red;">
+                <div id = "leftbox" style="margin-top:10px">
+                    <img src="{% static 'images/Valactif_SG/logo-societe-generale.png'%}">
+                </div> 
+                <div id = "middlebox" style="margin-top:10px;color:black; font-family:Arial; font-size:18px">
+                    <center>
+                        <b> Fiche d'évaluation <br/> Immobilière </p> <b/>
+                    </center>
+                </div>
+                <div id = "rightbox" style="margin-top:10px; font-size:11px">
+                    Réf Rapport : 00001 <br/>
+                    Date : 12/03/1993 <br/>
+                    Type de bien : Appartement <br/>
+                    TF : 0000/00
+                </div>
+            </div>
+            <div>Header</div>
+            <div class="footer2" style="color:blue; border: dashed red; height: 50px; width: 20.8cm; position: fixed; bottom: 0;">Footer</div>
+        </page> 
+    </div> 
+        <!-- <page size="A4">
+            
+        <div>Header<div>
+        
+        <div class="footer" 
+        style="color:blue; 
+        border: dashed red;
+        height: 200px;
+        width: 20.7cm;
+        position: fixed;
+        bottom: 0;">
+        Footer
+        </div>
+        
+        </page>  -->
+</body>
+</html>

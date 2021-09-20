@@ -11,12 +11,9 @@ from django.contrib.gis.geos import Point
 @login_required(login_url='login')
 def get_dgi_pin(request):
     latitude = request.GET.get('lat')#-73.9855
-    print("-----", float(latitude), "--------")
     longitude =  request.GET.get('lng')#40.7580
-    print("-----", float(longitude), "--------")
     point = Point(float(longitude),float(latitude))
     #point=geos.GEOSGeometry('POINT(-7.819433212280274 33.52966151776439)')
-    print("-----", point, "--------")
     #for poly in polys:
         #print("-----",poly.poly, "--------")
     #    if point.within(poly.poly):#poly.poly.touches(point):#

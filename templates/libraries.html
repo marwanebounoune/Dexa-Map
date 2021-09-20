@@ -5,7 +5,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title >VALACTIF MAP - Expertise immobilière</title>
+      <title >DEXA|MAP - Expertise immobilière</title>
       <!-- Global stylesheets -->
       <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
       <link href="{% static 'css/icons/icomoon/styles.css'%}" rel="stylesheet" type="text/css">
@@ -76,14 +76,20 @@
    <script type="text/javascript" src="{% static 'js/plugins/tables/datatables/datatables.min.js'%}"></script>
    <script type="text/javascript" src="{% static 'js/pages/datatables_advanced.js'%}"></script>
    <!-- /tables-->
-      <!--switchery-->
+   <!--switchery-->
    <script type="text/javascript" src="{% static 'js/plugins/forms/styling/switchery.min.js' %}"></script>
    <script type="text/javascript" src="{% static 'js/plugins/forms/styling/switch.min.js' %}"></script>
+   <!---->
+
 
    <!-- leafleat fullscreen-->
    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
-
+   <!-- chart -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+   
+   <!-- /chart -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
    </head>
    <style>
       #map{
@@ -123,6 +129,10 @@
       }
       #map_focus{
       height:200px;
+      width:100%;
+      }
+      #map_approximation{
+      height:260px;
       width:100%;
       }
       #mapDynamique{

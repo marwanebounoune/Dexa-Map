@@ -31,7 +31,9 @@ urlpatterns = [
     path('notes/',include('gestion_commentaires_ref.urls')),
     path('docs/',include('gestion_documents_ref.urls')),
     path('pics/',include('gestion_photos_ref.urls')),
+    path('dgi/',include('gestion_dgi.urls')),
     path('tags/',include('gestion_tags_ref.urls')),
+    path('clients/',include('gestion_clients.urls')),
     path('', include('account.urls')),
     path('media/<path:relative_path>', serve_protected_document, name='document-download'),
 ] 

@@ -311,7 +311,7 @@
       function onMapClick(e) {
          var list ="<div class='category-content no-padding'><ul class='navigation listPopUp'><li class='navigation-header' style='color:black'><b>Plus d'options</b></li>"+
             "<li><a data-toggle='modal' data-target='#modal_default'>Ajouter une nouvelle référence</a></li>"+
-            "<li><a id='evaluer' onclick='EvaluerOnClick(" + e.latlng.lat + ", "+e.latlng.lng+")' style='color:black' target='_blank' data-toggle='modal' data-target='#box_creer_rapport'>Créer un rapport</a></li></ul></div>";
+            "<li><a data-toggle='modal' data-target='#modal_creerRapport'>Créer un nouveau rapport</a></li>";
          mini_map_2.off();
          mini_map_2.remove();      
          const mapDiv2 = document.getElementById("mapDynamique");
@@ -1047,17 +1047,10 @@
    });
 
    function EvaluerOnClick(lat,lng){
-      $("#content_evalution").show(function(){
-               $(window).scrollTop($('#content_evalution').position().top);
-            });
-         
-      //var url = 'http://127.0.0.1:8000/rapport/get_approxim_pins/?lat='+lat+'&lng='+lng
-      /*var url = 'http://127.0.0.1:8000/dgi/get_dgi_pin/?lat='+lat+'&lng='+lng;
-      fetch(url)
-      .then((resp) => resp.json())
-      .then(function(data){
-         console.log("dgi pins: ", data);
-      });*/
+      $("#box_creer_rapport").show(function(){
+         $(window).scrollTop($('#box_creer_rapport').position().top);
+      });
+      create_rapport(lat,lng);
       get_approxim_pins(lat,lng);
    }
 </script>

@@ -1,0 +1,65 @@
+<div class="modal fade" id="modal_creerRapport" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&#215;</button>
+             <h5 class="modal-title">Créer un client</h5>
+          </div>
+          <form method="POST" enctype="multipart/form-data" id="creerClient_form" data-role="page">
+             {% csrf_token %}
+             <div class="modal-body">
+                <div id="message" data-erreur='{{erreur}}'> {% include 'partials/messages.html' %} </div>
+                <div class="form-group">
+                   <div class="row">
+                      <div class="col-md-4">
+                         <label>Type de bien :</label>
+                      </div>
+                      <div class="col-md-8">
+                         <input rows="5" cols="3" class="form-control" placeholder="CIN client" name="cin">
+                      </div>
+                   </div>
+                </div>
+                <div class="form-group">
+                   <div class="row">
+                      <div class="col-md-4">
+                         <label>CIN client :</label>
+                      </div>
+                      <div class="col-md-8">
+                         <input rows="5" cols="3" class="form-control" placeholder="Votre nom" name="nom">
+                      </div>
+                   </div>
+                </div>
+                <div class="form-group">
+                   <button type="submit" class="btn bg-blue btn-block" id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+                </div>
+             </div>
+          </form>
+       </div>
+    </div>
+ </div>
+
+ <script>
+    $("#modal_creerRapport").change(function(event){
+        event.preventDefault ();
+        const formData = new FormData(this);
+        var client_id = 0;
+        fetch("http://127.0.0.1:8000/clients/addClient/",{
+           method: 'POST',//définir la method du submit du form
+           mode : 'same-origin',
+           credentials: 'same-origin' ,
+           body : formData//définir la formulaire pour le url
+        })
+        .then((resp) => resp.json())
+        .then(function(data) {
+           if(data.id != null ) {
+              client_id = data.id
+              notificationSuccess('success message', 'Client ajouter avec succès.' );
+              console.log(data)
+           }
+           else{
+              notification('Erreur, '+ data['message']);
+           }
+        });
+        
+     });
+ </script>

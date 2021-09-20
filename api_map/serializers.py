@@ -37,6 +37,11 @@ class PinSerializerLeger(serializers.ModelSerializer):
         model = Pin
         fields = ('id', 'lat', 'lng', 'label', 'type_de_reference','type_de_bien', 'is_validate_by_user', 'is_localized')
 
+class PinSerializerLegerPrix(serializers.ModelSerializer):
+    class Meta:
+        model = Pin
+        fields = ('id', 'lat', 'lng', 'label', 'type_de_reference','type_de_bien', 'is_validate_by_user', 'prix_unit')
+
 #le serializer de la classe Photographie
 class PhotographieSerializer(serializers.ModelSerializer):
     class Meta:
