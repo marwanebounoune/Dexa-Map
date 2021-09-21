@@ -1,206 +1,111 @@
-<!-- Course overview -->
-<div class="panel panel-white" id="box_creer_rapport" style="display: none">
-   <div class="panel-heading">
-      <h6 class="panel-title text-semibold">Informations</h6>
-      <div class="heading-elements">
-         <ul class="list-inline list-inline-separate heading-text">
-            <li>Réf : <span class="label_info"></span></li>
-         </ul>
-         <ul class="icons-list">
-            <li><a data-action="collapse"></a></li>
-         </ul>
+<div class="modal fade" id="modal_creerRapport" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Créer un rapport</h5>
+         </div>
+         <form method="POST" enctype="multipart/form-data" id="creerRapport_form" data-role="page">
+            {% csrf_token %}
+            <div class="modal-body">
+               <div id="message" data-erreur='{{erreur}}'> {% include 'partials/messages.html' %} </div>
+               <!-- lat & lng-->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="category-title">
+                        <span><p>Info génerale de bien</p></span>
+                     </div>
+                     <div id="collapse1" style="margin-bottom:5px;">
+                        <div class="col-sm-6">
+                           <label>Latitude</label> <input type="text" placeholder="latitude" name="lat" class="form-control" id="latInput" onkeypress="return isDecimal(event)"/>
+                        </div>
+                        <div class="col-sm-6">
+                           <label>Longitude</label> <input type="text" placeholder="longitude" name="lng" class="form-control" id="lngInput" onkeypress="return isDecimal(event)"/>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- lat & lng-->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>CIN client :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input rows="5" cols="3" class="form-control" placeholder="CIN client" name="cin">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Type de bien :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <select data-placeholder="Selectionner le type de bien" class="select-size-lg" name="type_de_bien" id="IdTypeBienRapport">
+                           <option></option>
+                           <optgroup label="Types">
+                              <option value="1">Residentiel</option>
+                              <option value="2">Villa</option>
+                              <option value="7">Terrain villa</option>
+                           </optgroup>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <button type="submit" class="btn bg-blue btn-block" onclick=creerRapport() id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div>
+         </form>
       </div>
    </div>
-   <ul class="nav nav-lg nav-tabs nav-tabs-bottom nav-tabs-toolbar no-margin">
-      <li class="active"><a href="#box_cli" data-toggle="tab"><i class="icon-menu7 position-left"></i>Client</a></li>
-      <li><a href="#situationJuridique" data-toggle="tab"><i class="icon-notebook position-left"></i>Situation juridique</a></li>
-      <li><a href="#description" data-toggle="tab"><i class="icon-notebook position-left"></i>Description</a></li>
-      <li><a href="#photos" data-toggle="tab"><i class="icon-notebook position-left"></i>Photos</a></li>
-      <li><a href="#commentaire" data-toggle="tab"><i class="icon-notebook position-left"></i>Commentaire</a></li>
-      <li><a href="#annexes" data-toggle="tab"><i class="icon-notebook position-left"></i>Annexes</a></li>
-      <li><a href="#autorisation" data-toggle="tab"><i class=" icon-files-empty position-left"></i>Autorisation</a></li>
-      <li><a href="#tab_evaluer" data-toggle="tab"><i class="icon-menu7 position-left"></i> Evaluer</a></li>
-   </ul>
-   <!--Unchecked switch--------------------------------------> 
-   <div class="tab-content">
-      {% include 'my_map/gestion_rapports/box_situation_juridique.html' %}
-      {% include 'my_map/gestion_rapports/box_description.html' %}
-      {% include 'my_map/gestion_rapports/box_annexes.html' %}
-      {% include 'my_map/gestion_rapports/box_autorisations.html' %}
-      {% include 'my_map/gestion_rapports/box_commentaire.html' %}
-      {% include 'my_map/gestion_rapports/box_photos.html' %}
-      {% include 'my_map/gestion_rapports/tab_evaluer.html' %}
-   </div>
-   <!-- /course overview -->
 </div>
-<!-- Course overview -->
+
+{% include 'my_map/gestion_rapports/box_rapport.html' %}
+
 <script>
-   var rapport = 0;
-   var map_approximation = new L.map('map_approximation').setView([51.505, -0.09], 12);
-   var myChart = null;
-   var labels_sort = []
-   function create_rapport(lat, lng){
-      fetch('http://127.0.0.1:8000/rapport/createRapport/?lat='+lat+'&lng='+lng)
-      .then((resp) => resp.json())
-      .then(function(data) {
-         if(data.id != null ) {
-            console.log(data)
-            rapport = data.id,
-            console.log("Rapport numero : ", rapport, ".")
-         }
-         else{
-            notification('Erreur, '+ data['message']);
-         }
-      }); 
-   }
-   function get_approxim_pins(lat,lng){
-      var url = 'http://127.0.0.1:8000/rapport/get_approxim_pins/?lat='+lat+'&lng='+lng;
-      var prix=[]
-      var labels=[]
-      var results = []
-      map_approximation.off();
-      map_approximation.remove();
-      const mapDiv = document.getElementById("map_approximation");
-      map_approximation = new L.map('map_approximation').setView([parseFloat(lat), parseFloat(lng)], 12)
-      L.tileLayer('http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
-         attribution: '© OpenStreetMap contributors'
-      }).addTo(map_approximation);
-      const resizeObserver = new ResizeObserver(() => {map_approximation.invalidateSize();});//redIcon
-      resizeObserver.observe(mapDiv);
-      L.marker([parseFloat(lat), parseFloat(lng)],{icon: redIcon()}).addTo(map_approximation);
-      fetch(url)
-      .then((resp) => resp.json())
-      .then(function(data){
-         if (myChart != null){
-            myChart.destroy();
-         }
-         console.log("get_approxim_pins: ", data);
-         data.forEach(element => {
-            obj ={'label':element.label,'prix':element.prix_unit}
-            results.push(obj);
-            //console.log("element: ", element)
-            //prix.push(element.prix_unit);
-            //labels.push(element.label);
-            L.marker([parseFloat(element.lat), parseFloat(element.lng)],{icon: blueIcon(element.label)}).addTo(map_approximation);
+   function creerRapport(){
+      $("#creerRapport_form").off('click').on('click', function( event ) {
+         event.preventDefault ();
+         const formData = new FormData(this);
+         var client_id = 0;
+         fetch("http://127.0.0.1:8000/rapport/createRapport/",{
+            method: 'POST',//définir la method du submit du form
+            mode : 'same-origin',
+            credentials: 'same-origin' ,
+            body : formData//définir la formulaire pour le url
+         })
+         .then((resp) => resp.json())
+         .then(function(data) {
+            if(data.id != null ) {
+               client_id = data.id
+               notificationSuccess('success message', 'Rapport ajouter avec succès.' );
+               console.log(data)
+               $('#modal_creerRapport').modal('toggle');
+               rapportOnClick(data.id)
+            }
+            else{
+               notification('Erreur, '+ data['message']);
+            }
          });
-         labels_sort = labels;
-         console.log("res: ", results);
-         results = _.sortBy(results,"prix").reverse();
-         console.log("res sort: ", results);
-         Object.keys(results).forEach(element => {
-            prix.push(results[element].prix);
-            labels.push(results[element].label);
-         });
-         //prix_sort = prix.sort(function(a, b){labels_sort=labels_sort.sort(function(){console.log("a,b: ", labels_sort.indexOf(a),labels_sort.indexOf(b)); labels_sort.indexOf(b.type) - labels_sort.indexOf(a.type);});return b - a;});
-         console.log("prix array", prix);
-         console.log("label array", labels);
-         get_dgi_info(prix, labels, lat, lng);
       });
    }
-   function get_dgi_info(prix, labels, lat, lng){
-      var url = 'http://127.0.0.1:8000/dgi/get_dgi_pin/?lat='+lat+'&lng='+lng;      
-      fetch(url)
+   
+   function rapportOnClick(id) {
+      fetch('http://127.0.0.1:8000/rapport/rapport_detail/'+id+'/')
       .then((resp) => resp.json())
       .then(function(data){
-         console.log("dgi pins: ", data.name);
-         chartPrix(prix,labels, data.name, data.prix_unit);
-      });
-   }
-   var options = {
-      maintainAspectRatio: false,
-      scales: {
-         y: {
-            stacked: true,
-            grid: {
-               display: true,
-               color: "rgba(255,99,132,0.2)"
-            },
-            ticks: {
-               beginAtZero: true
-            }
-         },
-         x: {
-            grid: {
-               display: false
-            }
-         },
-         yAxes: [{
-               scaleLabel: {
-               display: true,
-               labelString: 'Precipitation in mm'
-            }
-         }],
-         xAxes: [{
-            scaleLabel: {
-               display: true,
-               labelString: 'Month of the Year'
-            }
-         }]
-      },
-      layout: {
-         padding: 10,
-      },
-      legend: {
-         position: 'bottom',
-      },
-      title: {
-         display: true,
-         text: 'Precipitation in Toronto'
-      }
-   };
-   function chartPrix(prix,labels, dgi_name, dgi_prix){
-      var canvas = document.getElementById('mixed-chart');
-      const context = canvas.getContext('2d');
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      var length_data = prix.length;
-      var prix_dgi = Array(length_data).fill(dgi_prix);
-      var label_dgi = Array(length_data).fill(dgi_name);
-      console.log("data_dgi.name: ", dgi_name)
-      myChart = new Chart(canvas, {      
-         type: 'bar',
-         data: {
-            datasets: [{
-               label: 'prix unitaire \''+dgi_name+'\' (Dh)',
-               data: prix_dgi,
-               type: 'line',
-               backgroundColor: '#c45850',
-               // this dataset is drawn on top
-               order: 1,
-               borderDash: [10,5],
-               borderColor: "#c45850",
-               
-               fill:false
-            }, {
-               label: 'Prix unitaire (Dh)',
-               data: prix,
-               backgroundColor: '#66BB6A',
-               // this dataset is drawn below
-               order: 2,
-            }],
-            labels: labels
-         },
-         options: {
-            legend: {
-               position: 'bottom',
-            },
-            title: {
-               display: true,
-               text: 'Precipitation in Toronto'
-            },
-            scales: {
-               yAxes: [{
-                  scaleLabel: {
-                     display: true,
-                     labelString: 'Prix unitaire Dh'
-                  }
-               }],
-               xAxes: [{
-                  scaleLabel: {
-                     display: true,
-                     labelString: 'Références d\'approximation'
-                  }
-               }],
-            }
+         if(data.id != null && typeof data.id != "undefined"){
+            $("#creerRapport_form")[0].reset();
+            $( '#box_creer_rapport' ).show(function(){
+               $(window).scrollTop($('#box_creer_rapport').position().top);
+            });
+            $('.cin_info').html(data.client.cin)
+            $('.nom_info').html(data.client.nom)
+            $('.prenom_info').html(data.client.prenom)
+            $('.tel_info').html(data.client.tel)
+            $('.email_info').html(data.client.email)
          }
       });
    }

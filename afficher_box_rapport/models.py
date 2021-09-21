@@ -23,7 +23,7 @@ class Photographie(models.Model):
   def __str__(self):
     return str(self.descriptif)
   class Meta:
-      db_table = "rapport_photographie"
+      db_table = "Rapport_photographie"
 
 class Rapport(models.Model):
   lat = models.DecimalField(max_digits=20, decimal_places=18, null=True)
@@ -33,8 +33,11 @@ class Rapport(models.Model):
   username = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
   dgi_zone = models.ForeignKey(dgi_appt_casa, on_delete=models.CASCADE, null=True)
   client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
+  type_de_bien = models.IntegerField(null=True, blank=True)
+  descreptif = models.IntegerField(null=True, blank=True)
+  from_table = models.CharField(max_length=1,null=True, default="R")
 
   def __str__(self):
     return str(self.descriptif)
   class Meta:
-      db_table = "rapport_generer"  
+      db_table = "Rapport_generer"  

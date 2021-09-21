@@ -23,6 +23,11 @@
              <label for="nonValideMobile">
                 <input type="checkbox" class="styled"  name="type_valide_nonValid_Mobile" value="list-pin-non-valider-mobile" autocomplete="off" id="nonValideMobile"/>Application mobile non validés</label>	
           </div>
+          <br>
+          <div class="checkbox-inline">
+             <label for="nonValideMobile">
+                <input type="checkbox" class="styled"  name="type_valide_nonValid_Mobile" value="rapports" autocomplete="off" id="rapports"/>rapports</label>	
+          </div>
           </div>
           <!--button type="submit" class="btn bg-blue btn-block">Filter</button-->
        </form>
@@ -65,18 +70,39 @@
             if(data.length!=0){
                if("{{user.type_map}}" === "Leaflet"){
                   for (var i = 0; i < data.length; i++) {
-                     markers[i]={
-                        coords:{
-                           lat: parseFloat(data[i].lat),
-                           lng: parseFloat(data[i].lng)
-                        },
-                        content:{
-                           typedebien: data[i].type_de_bien,
-                           id: data[i].id,
-                           type_de_reference: data[i].type_de_reference,
-                           is_valid: data[i].is_validate_by_user,
-                           is_localized: data[i].is_localized,
-                           label: data[i].label
+                     if(data[i].from_table == 'D'){
+                        console.log(data[i])
+                        markers[i]={
+                           coords:{
+                              lat: parseFloat(data[i].lat),
+                              lng: parseFloat(data[i].lng)
+                           },
+                           content:{
+                              typedebien: data[i].type_de_bien,
+                              id: data[i].id,
+                              type_de_reference: data[i].type_de_reference,
+                              is_valid: data[i].is_validate_by_user,
+                              is_localized: data[i].is_localized,
+                              label: data[i].label,
+                              from_table: data[i].from_table,
+                           }
+                        }
+                     }
+                     else{
+                        markers[i]={
+                           coords:{
+                              lat: parseFloat(data[i].lat),
+                              lng: parseFloat(data[i].lng)
+                           },
+                           content:{
+                              typedebien: data[i].type_de_bien,
+                              id: data[i].id,
+                              type_de_reference: data[i].type_de_reference,
+                              is_valid: data[i].is_validate_by_user,
+                              is_localized: data[i].is_localized,
+                              label: data[i].id,
+                              from_table: data[i].from_table,
+                           }
                         }
                      }
                      addMarkerLeaflet(markers[i]);

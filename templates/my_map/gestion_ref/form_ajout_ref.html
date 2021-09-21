@@ -1,373 +1,373 @@
 <!-- Ajout d'un réference-->
-            <div class="modal fade" id="modal_default" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-               <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
-                        <h5 class="modal-title">Ajouter une reference</h5>
-                     </div>
-                     <!--form--> 
-                     <form action="#" enctype="multipart/form-data" id="create_pin" method='POST'>
-                        {% csrf_token %}
-                        <div class="modal-body">
-                           <div class="modal-split">
-                              <!-- lat & lng-->
-                              <div class="form-group">
-                                 <div class="row">
-                                    <div class="category-title">
-                                       <span><p>Info génerale de bien</p></span>
-                                    </div>
-                                    <div class="panel-body">
-                                       <div id="mapDynamique" class="map-container"></div>
-                                    </div>
-                                    <div id="collapse1" style="margin-bottom:5px;">
-                                       <div class="col-sm-6">
-                                          <label>Latitude</label> <input type="text" placeholder="latitude" name="latitude" class="form-control" id="latitudeInput" onkeypress="return isDecimal(event)"/>
-                                       </div>
-                                       <div class="col-sm-6">
-                                          <label>Longitude</label> <input type="text" placeholder="longitude" name="longitude" class="form-control" id="longitudeInput" onkeypress="return isDecimal(event)"/>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <!-- lat & lng-->
-                              <!-- villes-->
-                              <div class="form-group">
-                                 <div class="row">
-                                    <div class="col-sm-6" style="margin-top:5px;">
-                                       <label>Région *</label>
-                                       <select data-placeholder="Selectionner une région" class="select-size-lg " name="region" id="region_create">
-                                          <option></option>
-                                          <optgroup>
-                                             <option value="1">Tanger-Tétouan-Al Hoceïma (1)</option>
-                                             <option value="2">l'Oriental (2)</option>
-                                             <option value="3">Fès-Meknès (3)</option>
-                                             <option value="4">Rabat-Salé-Kénitra (4)</option>
-                                             <option value="5">Béni Mellal-Khénifra (5)</option>
-                                             <option value="6">Casablanca-Settats (6)</option>
-                                             <option value="7">Marrakech-Safi (7)</option>
-                                             <option value="8">Drâa-Tafilalet (8)</option>
-                                             <option value="9">Souss-Massa (9)</option>
-                                             <option value="10">Guelmim-Oued Noun (10)</option>
-                                             <option value="11">Laâyoune-Sakia El Hamra (11)</option>
-                                             <option value="12">Dakhla-Oued Ed Dahab (12)</option>
-                                          </optgroup>
-                                       </select>
-                                    </div>
-                                    <div class="col-sm-6" style="margin-top:5px;">
-                                       <label>Ville *</label>
-                                       <select data-placeholder="Selectionner une ville" class="select-size-lg " name="ville" id="selected_ville_create">
-                                          <option></option>
-                                          <optgroup>
-                                             {% for ville in villes %}
-                                                <option class = "option_villes_create" value="{{ville.id}}">{{ville.name}}</option>
-                                             {% endfor %}
-                                          </optgroup>
-                                       </select>
-                                    </div>
-                                 </div>
-                              </div>
-                              <!--/villes-->
-                              <!-- type de bien -->
-                              <div class="form-group" id="DivTypeDeBien2">
-                                 <div class="row">
-                                    <div class="col-sm-12">
-                                       <label>Type de bien *</label>
-                                       <select data-placeholder="Selectionner le type de bien" class="select-size-lg" name="type_de_bien" id="IdTypeBienNew">
-                                          <option></option>
-                                          <optgroup label="Types">
-                                             <option value="1">Residentiel</option>
-                                             <option value="2">Villa</option>
-                                             <option value="3">Maison</option>
-                                             <option value="4">Professionnel</option>
-                                             <option value="5">Commercial</option>
-                                             <option value="6">Industriel</option>
-                                             <option value="7">Terrain villa</option>
-                                             <option value="8">Terrain industriel</option>
-                                             <option value="9">Terrain urbain</option>
-                                             <option value="10">Terrain agricole</option>
-                                          </optgroup>
-                                       </select>
-                                    </div>
-                                 </div>
-                              </div>
-                              <!-- /type de bien -->
-                              <!-- /type de reference -->
-                              <div class="form-group">
-                                 <div class="row">
-                                    <div class="col-sm-12" style="margin-top:5px;">
-                                       <label>Type de reference *</label>
-                                       <select data-placeholder="Selectionner le type de reference" class="select-size-lg" name="type_de_reference" id="type_de_reference">
-                                          <option></option>
-                                          <optgroup>
-                                             <option value="1">Vente</option>
-                                             <option value="2">Location</option>
-                                             <option value="3">Rapport</option>
-                                          </optgroup>
-                                       </select>
-                                    </div>
-                                 </div>
-                              </div>
-                              <!-- /type de reference -->
-                              <!-- type de reference localisée ou non localisée-->
-                              <div class="form-group" style="display: none;" id="is_localized">
-                                 <legend class="text-size-mini text-muted no-border no-padding">Localisée/Non localisée</legend>
-                                 <div class="radio-inline">
-                                    <input type="radio" class="styled"  name="localisee_nonLocalisee" id="localisee" checked="checked" value="localisee"/>
-                                    <label for="localisee">Localisée</label>
-                                 </div>
-                                 <div class="radio-inline">
-                                    <input type="radio" class="styled"  name="localisee_nonLocalisee" id="non_localisee"  value="non_localisee"/>
-                                    <label for="non_localisee">Non localisée </label>	
-                                 </div>
-                              </div>
-                              <!-- /type de reference localisée ou non localisée-->
-                              <!-- nom de la rue-->
-                              <div class="form-group">
-                                 <div class="row">
-                                    <div class="col-sm-12">
-                                       <label>Nom de la rue</label>
-                                       <input type="text" placeholder="Le nom de la rue" name="adresseRue" id="adresseRue" class="form-control" />
-                                    </div>
-                                 </div>
-                              </div>
-                              <!--/nom de la rue-->
-                              <!-- chute_fonciere -->
-                              <div class="form-group" style="display:none" id="chute_fonciere_new">
-                                 <div class="row">
-                                    <div class="col-sm-12"> <!--onkeypress="return isNumber(event)"-->
-                                       <label>Quote-part terrain (éstimée) *</label> <input type="text" placeholder="Quote-part terrain" onkeypress="return isNumber(event)"  name="chute_fonciere" id="chute_fonciere" class="form-control" />
-                                    </div>
-                                 </div>
-                              </div>
-                              <!-- /chute_fonciere -->
-                              <!-- surface -->
-                              <div class="form-group" >
-                                 <div class="row">
-                                    <div class="col-sm-12" id="surface_new_div">
-                                       <label>Surface *</label>
-                                       <input type="text" onkeypress="return isNumber(event)"  placeholder="Surface" name="surface_new" id="surface_new" class="form-control" />
-                                    </div>
-                                 </div>
-                              </div>
-                              <!-- /surface -->           
-                              <!-- /surface terrain-->
-                              <!-- prix unitaire du bien-->
-                              <div class="form-group" id="pri_unit_tot_new">
-                                 <div class="row">
-                                    <div class="col-sm-6">
-                                       <label id="label-prix-unitaire-vente-new">Prix unitaire *</label>
-                                       <label id="label-prix-unitaire-loyer-new" style="display: none;">Loyer unitaire *</label>
-                                       <input type="text" onkeypress="return isNumber(event)" placeholder="Prix unitaire du bien"   name="prix_unit" id="prix_unit" class="form-control" />
-                                    </div>
-                                    <div class="col-sm-6">
-                                       <label id="label-prix-total-vente-new">Prix total *</label>
-                                       <label id="label-prix-total-loyer-new" style="display: none;">Loyer total *</label> 
-                                       <input type="text" onkeypress="return isNumber(event)" placeholder="Prix total du bien"  name="prix_total" id="prix_total" class="form-control" />
-                                    </div>                                    
-                                 </div>
-                              </div>
-                              <!--/prix unitaire du bien-->
-                              <!-- Contact-->
-                              <div class="form-group">
-                                 <div class="row">
-                                    <div class="col-sm-12">
-                                       <label>Contact (Optionnel)</label> <input type="text" placeholder="contact" name="contact" id="contact" class="form-control" />
-                                    </div>
-                                 </div>
-                              </div>
-                              <!--/Contact-->
-                              <!-- description-->
-                              <div class="form-group">
-                                 <div class="row">
-                                    <div class="col-sm-12">
-                                       <label>Description *</label> <!--input type="text" placeholder="Description" name="description" class="form-control" /-->
-                                       <textarea type="text" placeholder="Description" name="description" id="description" class="form-control"></textarea>
-                                    </div>
-                                 </div>
-                              </div>
-                              <!--/description-->
-                              <!-- #tag -->
-                              <div class="form-group">
-                                 <div class="row">
-                                    <div class="col-sm-12">
-                                       <span class="text-size-mini text-muted no-border no-padding">Tags (Optionnel)</span>
-                                       <select data-placeholder="#" name="tag" id="tag" multiple="multiple" class="select-multiple-tags form-control"></select>
-                                    </div>
-                                 </div>
-                              </div>
-                              <!--/#tag-->
+<div class="modal fade" id="modal_default" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Ajouter une reference</h5>
+         </div>
+         <!--form--> 
+         <form action="#" enctype="multipart/form-data" id="create_pin" method='POST'>
+            {% csrf_token %}
+            <div class="modal-body">
+               <div class="modal-split">
+                  <!-- lat & lng-->
+                  <div class="form-group">
+                     <div class="row">
+                        <div class="category-title">
+                           <span><p>Info génerale de bien</p></span>
+                        </div>
+                        <div class="panel-body">
+                           <div id="mapDynamique" class="map-container"></div>
+                        </div>
+                        <div id="collapse1" style="margin-bottom:5px;">
+                           <div class="col-sm-6">
+                              <label>Latitude</label> <input type="text" placeholder="latitude" name="latitude" class="form-control" id="latitudeInput" onkeypress="return isDecimal(event)"/>
                            </div>
-                           <div class="modal-split">
-                              <!-- photos-->
-                              <div class="form-group">
-                                 <div class="row">
-                                    <div class="sidebar-category">
-                                       <div class="category-title">
-                                          <span><h4><p>Photographies &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
-                                       </div>
-                                       <div class="col-sm-12">
-                                          <label>Images Description</label> <input type="text" placeholder="images Description" name="descriptionImage" id="descriptionImage" class="form-control"  />
-                                       </div>         
-                                       <div class="col-sm-12">
-                                          <label>Photos</label> 
-                                          <div id="testDropBox" action="" class="dropzone">
-                                             <div class="fallback">
-                                             </div>
-                                          </div>
-                                       </div>      
-                                    </div>
-                                 </div>
-                              </div>
-                              <!-- /photos-->
-                           </div>
-                           <!-- pieces jointe-->
-                           <div class="modal-split">
-                              <input type="file" class="file-styled" id="docs" name="docs" multiple style="display:none"/>
-                              <!--fichier 01-->
-                              <div class="form-group">
-                                 <div class="row">
-                                    <div class="sidebar-category">
-                                       <div class="category-title">
-                                          <span><h4><p>Pièces jointes &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
-                                       </div>
-                                       <div class="col-sm-6">
-                                          <label>Type de la pièce jointe 1</label>
-                                          <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien" id="type_piece_jointe_du_bien">
-                                             <option></option>
-                                                <option value="C_V">Contrat de vente</option>
-                                                <option value="C_L">Contrat de location</option>   
-                                          </select>
-                                       </div>         
-                                       <div class="col-sm-6">
-                                          <label>Fichier pdf</label>
-                                          <div class="uploader">
-                                             <input type="file" class="file-styled" id="input-piece-jointe" name="piece_jointe_1"/>
-                                             <span class="filename" style="user-select: none;" id="selected-file">No file selected</span>
-                                             <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
-                                          </div>
-                                          <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
-                                       </div>  
-                                    </div>
-                                 </div>
-                              </div>
-                              <!--/fichier 01-->
-                              <!--fichier 02-->
-                              <div class="form-group new_piece_jointe" style="display:none">
-                                 <div class="row">
-                                    <div class="sidebar-category">
-                                       <div class="col-sm-6">
-                                          <label>Type de la pièce jointe 2</label>
-                                          <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_2" id="type_piece_jointe_du_bien_2">
-                                             <option></option>
-                                             <option value="C_V">Contrat de vente</option>
-                                             <option value="C_L">Contrat de location</option>  
-                                          </select>
-                                       </div>      
-                                       <div class="col-sm-6">
-                                          <label>Fichier pdf</label>
-                                          <div class="uploader">
-                                             <input type="file" class="file-styled" id="input-piece-jointe-2" name="piece_jointe_2"/>
-                                             <span class="filename" style="user-select: none;" id="selected-file-2">No file selected</span>
-                                             <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
-                                          </div>
-                                          <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
-                                       </div>  
-                                    </div>
-                                 </div>
-                              </div>
-                              <!--/fichier 02-->
-                              <!--fichier 03-->
-                              <div class="form-group new_piece_jointe" style="display:none">
-                                 <div class="row">
-                                    <div class="sidebar-category">
-                                       <div class="col-sm-6">
-                                          <label>type de la pièce jointe 3</label>
-                                          <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_3" id="type_piece_jointe_du_bien_3">
-                                             <option></option>
-                                             <option value="C_V">Contrat de vente</option>
-                                             <option value="C_L">Contrat de location</option>  
-                                          </select>
-                                       </div>
-                                       <div class="col-sm-6">
-                                          <label>Fichier pdf</label>
-                                          <div class="uploader">
-                                             <input type="file" class="file-styled" id="input-piece-jointe-3" name="piece_jointe_3"/>
-                                             <span class="filename" style="user-select: none;" id="selected-file-3">No file selected</span>
-                                             <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
-                                          </div>
-                                          <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
-                                       </div>  
-                                    </div>
-                                 </div>
-                              </div>
-                              <!--/fichier 03-->
-                              <!--fichier 04-->
-                              <div class="form-group new_piece_jointe" style="display:none">
-                                 <div class="row">
-                                    <div class="sidebar-category">
-                                       <div class="col-sm-6">
-                                          <label>type de la pièce jointe 4</label>
-                                          <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_4" id="type_piece_jointe_du_bien_4">
-                                             <option></option>
-                                             <option value="C_V">Contrat de vente</option>
-                                             <option value="C_L">Contrat de location</option>  
-                                          </select>
-                                       </div>         
-                                       <div class="col-sm-6">
-                                          <label>Fichier pdf</label>
-                                          <div class="uploader">
-                                             <input type="file" class="file-styled" id="input-piece-jointe-4" name="piece_jointe_4"/>
-                                             <span class="filename" style="user-select: none;" id="selected-file-4">No file selected</span>
-                                             <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
-                                          </div>
-                                          <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
-                                       </div>  
-                                    </div>
-                                 </div>
-                              </div>
-                              <!--/fichier 04-->
-                              <!--fichier 05-->
-                              <div class="form-group new_piece_jointe" style="display:none">
-                                 <div class="row">
-                                    <div class="sidebar-category">
-                                       <div class="col-sm-6">
-                                          <label>type de la pièce jointe 5</label>
-                                          <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_5" id="type_piece_jointe_du_bien_5">
-                                             <option></option>
-                                             <option value="C_V">Contrat de vente</option>
-                                             <option value="C_L">Contrat de location</option>  
-                                          </select>
-                                       </div>         
-                                       <div class="col-sm-6">
-                                          <label>Fichier pdf</label>
-                                          <div class="uploader">
-                                             <input type="file" class="file-styled" id="input-piece-jointe-5" name="piece_jointe_5"/>
-                                             <span class="filename" style="user-select: none;" id="selected-file-5">No file selected</span>
-                                             <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
-                                          </div>
-                                          <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
-                                       </div>  
-                                    </div>
-                                 </div>
-                              </div>
-                              <!--/fichier 05-->
-                              <a id="new_piece_jointe" class="pull-right" ><i class="fa fa-plus" style="color:blue"></i>&nbsp; Ajouter un autre fichier</a>
-                              <br/>
-                              <br/>
-                           </div>
-                           <!---->
-                           <!-- submit form-->
-                           <div class="modal-footer">
-                              <!--button type="button" class="btn btn-link" data-dismiss="modal">Close</button-->
-                              <!--button type="submit" class="btn btn-primary" id="submit_all">Ajouter réference</button-->
+                           <div class="col-sm-6">
+                              <label>Longitude</label> <input type="text" placeholder="longitude" name="longitude" class="form-control" id="longitudeInput" onkeypress="return isDecimal(event)"/>
                            </div>
                         </div>
-                     </form>
-                     <!--/form-->
+                     </div>
                   </div>
+                  <!-- lat & lng-->
+                  <!-- villes-->
+                  <div class="form-group">
+                     <div class="row">
+                        <div class="col-sm-6" style="margin-top:5px;">
+                           <label>Région *</label>
+                           <select data-placeholder="Selectionner une région" class="select-size-lg " name="region" id="region_create">
+                              <option></option>
+                              <optgroup>
+                                 <option value="1">Tanger-Tétouan-Al Hoceïma (1)</option>
+                                 <option value="2">l'Oriental (2)</option>
+                                 <option value="3">Fès-Meknès (3)</option>
+                                 <option value="4">Rabat-Salé-Kénitra (4)</option>
+                                 <option value="5">Béni Mellal-Khénifra (5)</option>
+                                 <option value="6">Casablanca-Settats (6)</option>
+                                 <option value="7">Marrakech-Safi (7)</option>
+                                 <option value="8">Drâa-Tafilalet (8)</option>
+                                 <option value="9">Souss-Massa (9)</option>
+                                 <option value="10">Guelmim-Oued Noun (10)</option>
+                                 <option value="11">Laâyoune-Sakia El Hamra (11)</option>
+                                 <option value="12">Dakhla-Oued Ed Dahab (12)</option>
+                              </optgroup>
+                           </select>
+                        </div>
+                        <div class="col-sm-6" style="margin-top:5px;">
+                           <label>Ville *</label>
+                           <select data-placeholder="Selectionner une ville" class="select-size-lg " name="ville" id="selected_ville_create">
+                              <option></option>
+                              <optgroup>
+                                 {% for ville in villes %}
+                                    <option class = "option_villes_create" value="{{ville.id}}">{{ville.name}}</option>
+                                 {% endfor %}
+                              </optgroup>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+                  <!--/villes-->
+                  <!-- type de bien -->
+                  <div class="form-group" id="DivTypeDeBien2">
+                     <div class="row">
+                        <div class="col-sm-12">
+                           <label>Type de bien *</label>
+                           <select data-placeholder="Selectionner le type de bien" class="select-size-lg" name="type_de_bien" id="IdTypeBienNew">
+                              <option></option>
+                              <optgroup label="Types">
+                                 <option value="1">Residentiel</option>
+                                 <option value="2">Villa</option>
+                                 <option value="3">Maison</option>
+                                 <option value="4">Professionnel</option>
+                                 <option value="5">Commercial</option>
+                                 <option value="6">Industriel</option>
+                                 <option value="7">Terrain villa</option>
+                                 <option value="8">Terrain industriel</option>
+                                 <option value="9">Terrain urbain</option>
+                                 <option value="10">Terrain agricole</option>
+                              </optgroup>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- /type de bien -->
+                  <!-- /type de reference -->
+                  <div class="form-group">
+                     <div class="row">
+                        <div class="col-sm-12" style="margin-top:5px;">
+                           <label>Type de reference *</label>
+                           <select data-placeholder="Selectionner le type de reference" class="select-size-lg" name="type_de_reference" id="type_de_reference">
+                              <option></option>
+                              <optgroup>
+                                 <option value="1">Vente</option>
+                                 <option value="2">Location</option>
+                                 <option value="3">Rapport</option>
+                              </optgroup>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- /type de reference -->
+                  <!-- type de reference localisée ou non localisée-->
+                  <div class="form-group" style="display: none;" id="is_localized">
+                     <legend class="text-size-mini text-muted no-border no-padding">Localisée/Non localisée</legend>
+                     <div class="radio-inline">
+                        <input type="radio" class="styled"  name="localisee_nonLocalisee" id="localisee" checked="checked" value="localisee"/>
+                        <label for="localisee">Localisée</label>
+                     </div>
+                     <div class="radio-inline">
+                        <input type="radio" class="styled"  name="localisee_nonLocalisee" id="non_localisee"  value="non_localisee"/>
+                        <label for="non_localisee">Non localisée </label>	
+                     </div>
+                  </div>
+                  <!-- /type de reference localisée ou non localisée-->
+                  <!-- nom de la rue-->
+                  <div class="form-group">
+                     <div class="row">
+                        <div class="col-sm-12">
+                           <label>Nom de la rue</label>
+                           <input type="text" placeholder="Le nom de la rue" name="adresseRue" id="adresseRue" class="form-control" />
+                        </div>
+                     </div>
+                  </div>
+                  <!--/nom de la rue-->
+                  <!-- chute_fonciere -->
+                  <div class="form-group" style="display:none" id="chute_fonciere_new">
+                     <div class="row">
+                        <div class="col-sm-12"> <!--onkeypress="return isNumber(event)"-->
+                           <label>Quote-part terrain (éstimée) *</label> <input type="text" placeholder="Quote-part terrain" onkeypress="return isNumber(event)"  name="chute_fonciere" id="chute_fonciere" class="form-control" />
+                        </div>
+                     </div>
+                  </div>
+                  <!-- /chute_fonciere -->
+                  <!-- surface -->
+                  <div class="form-group" >
+                     <div class="row">
+                        <div class="col-sm-12" id="surface_new_div">
+                           <label>Surface *</label>
+                           <input type="text" onkeypress="return isNumber(event)"  placeholder="Surface" name="surface_new" id="surface_new" class="form-control" />
+                        </div>
+                     </div>
+                  </div>
+                  <!-- /surface -->           
+                  <!-- /surface terrain-->
+                  <!-- prix unitaire du bien-->
+                  <div class="form-group" id="pri_unit_tot_new">
+                     <div class="row">
+                        <div class="col-sm-6">
+                           <label id="label-prix-unitaire-vente-new">Prix unitaire *</label>
+                           <label id="label-prix-unitaire-loyer-new" style="display: none;">Loyer unitaire *</label>
+                           <input type="text" onkeypress="return isNumber(event)" placeholder="Prix unitaire du bien"   name="prix_unit" id="prix_unit" class="form-control" />
+                        </div>
+                        <div class="col-sm-6">
+                           <label id="label-prix-total-vente-new">Prix total *</label>
+                           <label id="label-prix-total-loyer-new" style="display: none;">Loyer total *</label> 
+                           <input type="text" onkeypress="return isNumber(event)" placeholder="Prix total du bien"  name="prix_total" id="prix_total" class="form-control" />
+                        </div>                                    
+                     </div>
+                  </div>
+                  <!--/prix unitaire du bien-->
+                  <!-- Contact-->
+                  <div class="form-group">
+                     <div class="row">
+                        <div class="col-sm-12">
+                           <label>Contact (Optionnel)</label> <input type="text" placeholder="contact" name="contact" id="contact" class="form-control" />
+                        </div>
+                     </div>
+                  </div>
+                  <!--/Contact-->
+                  <!-- description-->
+                  <div class="form-group">
+                     <div class="row">
+                        <div class="col-sm-12">
+                           <label>Description *</label> <!--input type="text" placeholder="Description" name="description" class="form-control" /-->
+                           <textarea type="text" placeholder="Description" name="description" id="description" class="form-control"></textarea>
+                        </div>
+                     </div>
+                  </div>
+                  <!--/description-->
+                  <!-- #tag -->
+                  <div class="form-group">
+                     <div class="row">
+                        <div class="col-sm-12">
+                           <span class="text-size-mini text-muted no-border no-padding">Tags (Optionnel)</span>
+                           <select data-placeholder="#" name="tag" id="tag" multiple="multiple" class="select-multiple-tags form-control"></select>
+                        </div>
+                     </div>
+                  </div>
+                  <!--/#tag-->
+               </div>
+               <div class="modal-split">
+                  <!-- photos-->
+                  <div class="form-group">
+                     <div class="row">
+                        <div class="sidebar-category">
+                           <div class="category-title">
+                              <span><h4><p>Photographies &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
+                           </div>
+                           <div class="col-sm-12">
+                              <label>Images Description</label> <input type="text" placeholder="images Description" name="descriptionImage" id="descriptionImage" class="form-control"  />
+                           </div>         
+                           <div class="col-sm-12">
+                              <label>Photos</label> 
+                              <div id="testDropBox" action="" class="dropzone">
+                                 <div class="fallback">
+                                 </div>
+                              </div>
+                           </div>      
+                        </div>
+                     </div>
+                  </div>
+                  <!-- /photos-->
+               </div>
+               <!-- pieces jointe-->
+               <div class="modal-split">
+                  <input type="file" class="file-styled" id="docs" name="docs" multiple style="display:none"/>
+                  <!--fichier 01-->
+                  <div class="form-group">
+                     <div class="row">
+                        <div class="sidebar-category">
+                           <div class="category-title">
+                              <span><h4><p>Pièces jointes &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
+                           </div>
+                           <div class="col-sm-6">
+                              <label>Type de la pièce jointe 1</label>
+                              <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien" id="type_piece_jointe_du_bien">
+                                 <option></option>
+                                    <option value="C_V">Contrat de vente</option>
+                                    <option value="C_L">Contrat de location</option>   
+                              </select>
+                           </div>         
+                           <div class="col-sm-6">
+                              <label>Fichier pdf</label>
+                              <div class="uploader">
+                                 <input type="file" class="file-styled" id="input-piece-jointe" name="piece_jointe_1"/>
+                                 <span class="filename" style="user-select: none;" id="selected-file">No file selected</span>
+                                 <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                              </div>
+                              <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                           </div>  
+                        </div>
+                     </div>
+                  </div>
+                  <!--/fichier 01-->
+                  <!--fichier 02-->
+                  <div class="form-group new_piece_jointe" style="display:none">
+                     <div class="row">
+                        <div class="sidebar-category">
+                           <div class="col-sm-6">
+                              <label>Type de la pièce jointe 2</label>
+                              <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_2" id="type_piece_jointe_du_bien_2">
+                                 <option></option>
+                                 <option value="C_V">Contrat de vente</option>
+                                 <option value="C_L">Contrat de location</option>  
+                              </select>
+                           </div>      
+                           <div class="col-sm-6">
+                              <label>Fichier pdf</label>
+                              <div class="uploader">
+                                 <input type="file" class="file-styled" id="input-piece-jointe-2" name="piece_jointe_2"/>
+                                 <span class="filename" style="user-select: none;" id="selected-file-2">No file selected</span>
+                                 <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                              </div>
+                              <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                           </div>  
+                        </div>
+                     </div>
+                  </div>
+                  <!--/fichier 02-->
+                  <!--fichier 03-->
+                  <div class="form-group new_piece_jointe" style="display:none">
+                     <div class="row">
+                        <div class="sidebar-category">
+                           <div class="col-sm-6">
+                              <label>type de la pièce jointe 3</label>
+                              <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_3" id="type_piece_jointe_du_bien_3">
+                                 <option></option>
+                                 <option value="C_V">Contrat de vente</option>
+                                 <option value="C_L">Contrat de location</option>  
+                              </select>
+                           </div>
+                           <div class="col-sm-6">
+                              <label>Fichier pdf</label>
+                              <div class="uploader">
+                                 <input type="file" class="file-styled" id="input-piece-jointe-3" name="piece_jointe_3"/>
+                                 <span class="filename" style="user-select: none;" id="selected-file-3">No file selected</span>
+                                 <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                              </div>
+                              <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                           </div>  
+                        </div>
+                     </div>
+                  </div>
+                  <!--/fichier 03-->
+                  <!--fichier 04-->
+                  <div class="form-group new_piece_jointe" style="display:none">
+                     <div class="row">
+                        <div class="sidebar-category">
+                           <div class="col-sm-6">
+                              <label>type de la pièce jointe 4</label>
+                              <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_4" id="type_piece_jointe_du_bien_4">
+                                 <option></option>
+                                 <option value="C_V">Contrat de vente</option>
+                                 <option value="C_L">Contrat de location</option>  
+                              </select>
+                           </div>         
+                           <div class="col-sm-6">
+                              <label>Fichier pdf</label>
+                              <div class="uploader">
+                                 <input type="file" class="file-styled" id="input-piece-jointe-4" name="piece_jointe_4"/>
+                                 <span class="filename" style="user-select: none;" id="selected-file-4">No file selected</span>
+                                 <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                              </div>
+                              <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                           </div>  
+                        </div>
+                     </div>
+                  </div>
+                  <!--/fichier 04-->
+                  <!--fichier 05-->
+                  <div class="form-group new_piece_jointe" style="display:none">
+                     <div class="row">
+                        <div class="sidebar-category">
+                           <div class="col-sm-6">
+                              <label>type de la pièce jointe 5</label>
+                              <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_5" id="type_piece_jointe_du_bien_5">
+                                 <option></option>
+                                 <option value="C_V">Contrat de vente</option>
+                                 <option value="C_L">Contrat de location</option>  
+                              </select>
+                           </div>         
+                           <div class="col-sm-6">
+                              <label>Fichier pdf</label>
+                              <div class="uploader">
+                                 <input type="file" class="file-styled" id="input-piece-jointe-5" name="piece_jointe_5"/>
+                                 <span class="filename" style="user-select: none;" id="selected-file-5">No file selected</span>
+                                 <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                              </div>
+                              <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                           </div>  
+                        </div>
+                     </div>
+                  </div>
+                  <!--/fichier 05-->
+                  <a id="new_piece_jointe" class="pull-right" ><i class="fa fa-plus" style="color:blue"></i>&nbsp; Ajouter un autre fichier</a>
+                  <br/>
+                  <br/>
+               </div>
+               <!---->
+               <!-- submit form-->
+               <div class="modal-footer">
+                  <!--button type="button" class="btn btn-link" data-dismiss="modal">Close</button-->
+                  <!--button type="submit" class="btn btn-primary" id="submit_all">Ajouter réference</button-->
                </div>
             </div>
+         </form>
+         <!--/form-->
+      </div>
+   </div>
+</div>
             <!-- /Ajout d'un réference-->
 <script> /*ajouter pin*/
    $("#region_create").change(function(e){

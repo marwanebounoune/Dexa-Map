@@ -55,10 +55,14 @@ class User(AbstractUser):
     permission = models.CharField(max_length=25, null=True, blank=True, choices=PERMISSION_CHOICES)
     my_ip = models.CharField(max_length=50, null=True, blank=True, default='127.0.0.1')
     pass
+    class Meta:
+        db_table = "User" 
     
 class Credit(models.Model):
     credit_journalier = models.IntegerField(null=True)
     credit_monsuel = models.IntegerField(null=True)
+    class Meta:
+        db_table = "Credit" 
 
 class Facture(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -73,5 +77,7 @@ class Facture(models.Model):
     fichier_pdf_justif = models.FileField(upload_to='factures/%Y/%m/%d/',null=True, blank=True, validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
     type_abonnement = models.IntegerField(null=True, blank=True, default=0, choices=Abonnement_CHOICES)
     is_pack_base = models.BooleanField(default=False)
+    class Meta:
+        db_table = "Facture" 
 
 

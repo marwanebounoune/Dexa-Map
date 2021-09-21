@@ -103,7 +103,7 @@ WSGI_APPLICATION = 'realtysoft.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'mydb',
+        'NAME': 'valactif',
         'USER': 'postgres',
         'PASSWORD' : 'admin',
         'HOST': 'localhost'

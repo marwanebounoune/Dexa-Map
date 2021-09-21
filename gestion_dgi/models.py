@@ -16,4 +16,4 @@ class dgi_appt_casa(models.Model):
     def __str__(self):
         return self.name
     class Meta:
-        db_table = "dgi_appt_casa"
+        db_table = "Dgi_appt_casa"

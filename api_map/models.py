@@ -83,6 +83,8 @@ class Pin(models.Model):
   rue  = models.CharField(max_length=500,null=True)
   is_localized = models.BooleanField(default=True, blank=True, null=True)
   from_mobile = models.BooleanField(default=False, blank=True, null=True)
+  from_table = models.CharField(max_length=1,null=True, default="D")
+
   class Meta:
     indexes = [models.Index(fields=['username', ]),
       models.Index(fields=['deleted', ]),
@@ -90,6 +92,7 @@ class Pin(models.Model):
       models.Index(fields=['region', ]),
       models.Index(fields=['type_de_reference', ]),
       models.Index(fields=['type_de_bien', ])]
+    db_table = "DEXA" 
 
   def __str__(self):
     return self.label

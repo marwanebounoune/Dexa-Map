@@ -1,10 +1,12 @@
+from gestion_dgi.models import dgi_appt_casa
+import logging
 from django.contrib import messages
 from afficher_box_rapport.serializers import RapportSerializer
 from afficher_box_rapport.models import Client, Rapport
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from gestion_dgi.views import check_point_inside_polygon, get_dgi_zone
+from gestion_dgi.views import check_point_inside_polygon, get_dgi, get_dgi_zone
 from api_map.serializers import PinSerializerLegerPrix
 from django.shortcuts import render
 from math import cos, asin, sqrt, pi
@@ -12,19 +14,26 @@ from api_map.models import  Pin
 import statistics
 # Create your views here.
 
-@api_view(['GET'])
+@api_view(['POST'])
 @login_required(login_url='login')
 def CreerRapport(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         erreur = 0
-        lat = request.GET['lat']
-        lng = request.GET['lng']
+        lat = request.POST['lat']
+        lng = request.POST['lng']
+        dgi = get_dgi(lat, lng)
+        dgi_zone = dgi_appt_casa.objects.get(id=dgi['id'])
+        type_de_bien = request.POST['type_de_bien']
+        if (Client.objects.filter(cin=request.POST['cin']).exists() == False):
+            erreur=1
+            content = {'message': "Ce client existe déjà."}
+            return Response(content)
         if erreur == 0:
-            rapport = Rapport(lat=lat, lng=lng, username=request.user)
+            client = Client.objects.get(cin= request.POST['cin'])
+            rapport = Rapport(lat=lat, lng=lng, client=client, username=request.user, type_de_bien=type_de_bien, dgi_zone=dgi_zone)
             rapport.save()
             serializer = RapportSerializer(rapport, many=False)
             return Response(serializer.data)
-
 
 
 @api_view(['GET'])
@@ -33,7 +42,6 @@ def updateRapportClient(request):
     if request.method == 'GET':
         id_rapport = request.GET['id']
         client_id = request.GET['client_id']
-        print(client_id)
         my_rapport = Rapport.objects.get(id=id_rapport)
         my_rapport.client = client_id
         my_rapport.save()
@@ -68,3 +76,11 @@ def distance(lat1, lon1, lat2, lon2):
 def estimation_prix(array):
     moyenne = statistics.mean(array)
     return moyenne
+
+@api_view(['GET'])
+@login_required(login_url='login')
+def getRapport(request, pk):
+    if request.method == 'GET':
+        pin = Rapport.objects.get(id=pk)
+        serializer = RapportSerializer(pin, many=False)
+        return Response(serializer.data)

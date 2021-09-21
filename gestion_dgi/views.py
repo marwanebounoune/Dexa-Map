@@ -10,18 +10,19 @@ from django.contrib.gis.geos import Point
 @api_view(['GET'])
 @login_required(login_url='login')
 def get_dgi_pin(request):
-    latitude = request.GET.get('lat')#-73.9855
-    longitude =  request.GET.get('lng')#40.7580
-    point = Point(float(longitude),float(latitude))
-    #point=geos.GEOSGeometry('POINT(-7.819433212280274 33.52966151776439)')
-    #for poly in polys:
-        #print("-----",poly.poly, "--------")
-    #    if point.within(poly.poly):#poly.poly.touches(point):#
+    latitude = request.GET.get('lat')
+    longitude =  request.GET.get('lng')
     serializer = DGISerializer(get_dgi_zone(latitude,longitude), many=False)
     if serializer:
         return Response(serializer.data)
     content = {'message': "dgi non reconnu"}
     return Response(content)
+
+def get_dgi(lat, lng):
+    serializer = DGISerializer(get_dgi_zone(lat,lng), many=False)
+    if serializer:
+        return (serializer.data)
+    return (None)
 
 def check_point_inside_polygon(lat, lng, poly):
     point = Point(lng,lat)#lat and lng doit etre des float

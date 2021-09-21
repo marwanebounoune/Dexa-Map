@@ -1,3 +1,5 @@
+from afficher_box_rapport.serializers import RapportSerializer
+from afficher_box_rapport.models import Rapport
 from api_map.views import user_pinlist, validate_LatAndLng
 from api_map.serializers import PinSerializer, PinSerializerLeger
 from datetime import date
@@ -659,6 +661,21 @@ def pinlist_nonValide_mobile(request):
         else:
             serializer = PinSerializerLeger([], many=True)
             return Response(serializer.data)
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
+        pass
+
+#récuperation des pins non valides
+@api_view(['GET'])
+@login_required(login_url='login')
+def pinlist_rapport(request):
+    try:
+        pins = Rapport.objects.filter(is_locked=False)
+        serializer = RapportSerializer(pins, many=True)
+        print('--------------------Rapport------------------------')
+        print(serializer.data)
+        print('--------------------/Rapport------------------------')
+        return Response(serializer.data)
     except Exception as e:
         logging.getLogger("error_logger").error(repr(e))
         pass

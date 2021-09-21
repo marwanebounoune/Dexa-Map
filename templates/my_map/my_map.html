@@ -33,6 +33,10 @@
             <!-- Ajout d'un réference-->
                {% include 'my_map/gestion_ref/form_ajout_ref.html' %}
             <!-- /Ajout d'un réference-->
+            
+            <!-- Ajout d'un rapport-->
+            {% include 'my_map/gestion_rapports/box_creer_rapport.html' %}
+            <!-- /Ajout d'un rapport-->
 
             <!-- Ajout d'un réference avec importation CSV-->
                {% include 'my_map/gestion_csv/form_csv_ref_import.html' %}
@@ -66,7 +70,6 @@
                {% include 'my_map/gestion_ref/form_ajout_actualisation_ref.html' %}
             <!--/ajouter une actualisation -->
 
-            
          </div>
          <div>
             {% include 'partials/footer.html' %}
@@ -200,18 +203,35 @@
       function markerOnClick(props){
          return function(e) {
             if(content) {
-               var popup = L.popup()
-               .setLatLng(e.latlng)
-               /*le content du popup à ameliorer par la suite cote affichage*/
-               .setContent("<div class='text-center'>"+
-                  "<p class='info'>Info : "+props.content.label+"<p/></div>"+
-                  '<p class=\'content-group-sm\'>Type de bien: '+getTypeDeBien(props.content.typedebien)+'</p>'+
-                  '<p class=\'content-group-sm\'>Type de reference: '+getTypeDeReference(props.content.type_de_reference)+'</p>'+
-                  "<div class='text-center'>"+
-                  '<button class=\'btn btn-info btn-rounded btn-xs\' onclick="pinLinkOnClick(\'' + props.content.id + '\')">Plus d\'informations</button>'+
-                  '</div>'
-               )
-               .openOn(map);
+               if(props.content.from_table == 'D'){
+                  var popup = L.popup()
+                  .setLatLng(e.latlng)
+                  /*le content du popup à ameliorer par la suite cote affichage*/
+                  .setContent("<div class='text-center'>"+
+                     "<p class='info'>Info : "+props.content.label+"<p/></div>"+
+                     '<p class=\'content-group-sm\'>Type de bien: '+getTypeDeBien(props.content.typedebien)+'</p>'+
+                     '<p class=\'content-group-sm\'>Type de reference: '+getTypeDeReference(props.content.type_de_reference)+'</p>'+
+                     "<div class='text-center'>"+
+                     '<button class=\'btn btn-info btn-rounded btn-xs\' onclick="pinLinkOnClick(\'' + props.content.id + '\')">Plus d\'informations</button>'+
+                     '</div>'
+                  )
+                  .openOn(map);
+               }
+               else{
+                  var popup = L.popup()
+                  .setLatLng(e.latlng)
+                  /*le content du popup à ameliorer par la suite cote affichage*/
+                  .setContent("<div class='text-center'>"+
+                     "<p class='info'>Info : "+props.content.label+"<p/></div>"+
+                     '<p class=\'content-group-sm\'>Type de bien: '+getTypeDeBien(props.content.typedebien)+'</p>'+
+                     '<p class=\'content-group-sm\'>Type de reference: '+getTypeDeReference(props.content.type_de_reference)+'</p>'+
+                     "<div class='text-center'>"+
+                     '<button class=\'btn btn-info btn-rounded btn-xs\' onclick="rapportOnClick(\'' + props.content.id + '\')">Plus d\'informations</button>'+
+                     '</div>'
+                  )
+                  .openOn(map);
+               }
+               
             }
          }
       }    
@@ -328,6 +348,8 @@
             var position = marker.getLatLng();
             $("#latitudeInput").val(position.lat);
             $("#longitudeInput").val(position.lng);
+            $("#latInput").val(position.lat);
+            $("#lngInput").val(position.lng);
          });
          var popup = L.popup()
          .setLatLng(e.latlng)
@@ -335,52 +357,67 @@
          .openOn(map);
          $("#latitudeInput").val(e.latlng.lat);
          $("#longitudeInput").val(e.latlng.lng);
+         $("#latInput").val(e.latlng.lat);
+         $("#lngInput").val(e.latlng.lng);
       }     
       get_pins_validees();
    }
    //---------------------------------------------------------addMarkerLeaflet--------------------------------------------------------
    function addMarkerLeaflet(props) {
-      if(props.content.type_de_reference != null){
-         if( props.content.type_de_reference == 2 && props.content.is_localized != false){
-            /* orange icon */
-            var orange_marker = new L.marker(props.coords,{icon: orangeIcon(props.content.label)})
-            .on('click', markerOnClick(props))
-            .on('contextmenu',markerOnRightClick(props));
-            markersCluster.addLayer(orange_marker);
+      if(props.content.from_table == 'D'){
+         console.log("--------------------------1--------------------------")
+         console.log(props)
+         if(props.content.type_de_reference != null){
+            if( props.content.type_de_reference == 2 && props.content.is_localized != false){
+               /* orange icon */
+               var orange_marker = new L.marker(props.coords,{icon: orangeIcon(props.content.label)})
+               .on('click', markerOnClick(props))
+               .on('contextmenu',markerOnRightClick(props));
+               markersCluster.addLayer(orange_marker);
+            }
+            if( props.content.type_de_reference == 1 && props.content.is_localized != false){
+               /* default icon*/
+               var default_marker = new L.marker(props.coords,{icon: blueIcon(props.content.label)})
+               .on('click', markerOnClick(props))
+               .on('contextmenu',markerOnRightClick(props));
+               markersCluster.addLayer(default_marker);
+            }
+            if( props.content.type_de_reference == 3){
+               /* default icon*/
+               var default_marker = new L.marker(props.coords,{icon: yellowIcon(props.content.label)})
+               .on('click', markerOnClick(props))
+               .on('contextmenu',markerOnRightClick(props));
+               markersCluster.addLayer(default_marker);
+            }
+            if(props.content.type_de_reference == 2 && props.content.is_localized === false){
+               var default_marker = new L.marker(props.coords,{icon: orangeStarIcon(props.content.label)})
+               .on('click', markerOnClick(props))
+               .on('contextmenu',markerOnRightClick(props));
+               markersCluster.addLayer(default_marker);
+            }
+            if(props.content.type_de_reference == 1 && props.content.is_localized === false){
+               var default_marker = new L.marker(props.coords,{icon: BlueStarIcon(props.content.label)})
+               .on('click', markerOnClick(props))
+               .on('contextmenu',markerOnRightClick(props));
+               markersCluster.addLayer(default_marker);
+            }
          }
-         if( props.content.type_de_reference == 1 && props.content.is_localized != false){
-            /* default icon*/
-            var default_marker = new L.marker(props.coords,{icon: blueIcon(props.content.label)})
+         else{
+            var default_marker = new L.marker(props.coords,{icon: GrayIcon(props.content.label)})
             .on('click', markerOnClick(props))
             .on('contextmenu',markerOnRightClick(props));
             markersCluster.addLayer(default_marker);
          }
-         if( props.content.type_de_reference == 3){
-            /* default icon*/
+      }
+      else if(props.content.from_table == 'R'){
+         if(props.content.type_de_reference == null){
             var default_marker = new L.marker(props.coords,{icon: yellowIcon(props.content.label)})
             .on('click', markerOnClick(props))
             .on('contextmenu',markerOnRightClick(props));
             markersCluster.addLayer(default_marker);
          }
-         if(props.content.type_de_reference == 2 && props.content.is_localized === false){
-            var default_marker = new L.marker(props.coords,{icon: orangeStarIcon(props.content.label)})
-            .on('click', markerOnClick(props))
-            .on('contextmenu',markerOnRightClick(props));
-            markersCluster.addLayer(default_marker);
-         }
-         if(props.content.type_de_reference == 1 && props.content.is_localized === false){
-            var default_marker = new L.marker(props.coords,{icon: BlueStarIcon(props.content.label)})
-            .on('click', markerOnClick(props))
-            .on('contextmenu',markerOnRightClick(props));
-            markersCluster.addLayer(default_marker);
-         }
       }
-      else{
-         var default_marker = new L.marker(props.coords,{icon: GrayIcon(props.content.label)})
-         .on('click', markerOnClick(props))
-         .on('contextmenu',markerOnRightClick(props));
-         markersCluster.addLayer(default_marker);
-      }
+      
    }
    //---------------------------------------------------------addMarkerGoogle--------------------------------------------------------
    function addMarkerGoogle(props){
@@ -474,7 +511,6 @@
    /*markers collection leaflet*/
    function createMarkersLeaflet(data, region){
       markersCluster.clearLayers();
-
       /*focus sur la ville selectionnée*/
       if(region!=null){
          address = region+' maroc';
@@ -484,19 +520,39 @@
          });
       }
       for (var i = 0; i < data.length; i++) {
-         /* markers recuperation*/
-         markers[i]={
-            coords:{
-               lat: parseFloat(data[i].lat),
-               lng: parseFloat(data[i].lng)
-            },
-            content:{
-               typedebien: data[i].type_de_bien,
-               id: data[i].id,
-               type_de_reference: data[i].type_de_reference,
-               is_valid: data[i].is_validate_by_user,
-               is_localized: data[i].is_localized,
-               label: data[i].label
+         console.log(data[i])
+         if(data[i].from_table == 'D'){
+            markers[i]={
+               coords:{
+                  lat: parseFloat(data[i].lat),
+                  lng: parseFloat(data[i].lng)
+               },
+               content:{
+                  typedebien: data[i].type_de_bien,
+                  id: data[i].id,
+                  type_de_reference: data[i].type_de_reference,
+                  is_valid: data[i].is_validate_by_user,
+                  is_localized: data[i].is_localized,
+                  label: data[i].label,
+                  from_table: data[i].from_table
+               }
+            }
+         }
+         else{
+            markers[i]={
+               coords:{
+                  lat: parseFloat(data[i].lat),
+                  lng: parseFloat(data[i].lng)
+               },
+               content:{
+                  typedebien: data[i].type_de_bien,
+                  id: data[i].id,
+                  type_de_reference: data[i].type_de_reference,
+                  is_valid: data[i].is_validate_by_user,
+                  is_localized: data[i].is_localized,
+                  label: data[i].label,
+                  from_table: data[i].from_table
+               }
             }
          }
          /* Appel de la fonction addMarker() pour l'ajout des markers dans la map */
@@ -722,7 +778,7 @@
             var rue = data.rue
             var adresse = data.adresse
             var is_localized = data.is_localized
-	    var from_mobile = data.from_mobile
+            var from_mobile = data.from_mobile
             $('#pinId').val(data.id)
             if( data.username.photoProfile != null){
                images_profiles = data.username.photoProfile
@@ -747,8 +803,6 @@
             else{
                $(".from-mobile").hide();
             }
-//-------
-            
             if( is_localized != null && is_localized === true){
                $('.is_localized_info').html("&nbsp; Réference localisée");
                $('.is_localized').show();

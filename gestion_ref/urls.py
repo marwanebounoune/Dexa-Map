@@ -11,6 +11,7 @@ urlpatterns = [
     path('list-pin-non-valider/', views.pinlist_nonValide, name='list-pin-non-valider'),
     path('list-pin-non-valider-mobile/', views.pinlist_nonValide_mobile, name='list-pin-non-valider-mobile'),
     path('list-pin-valider/', views.pinlist_Valide, name='list-pin-valider'),
+    path('rapports/', views.pinlist_rapport, name='rapports'),
     path('validate_my_pin/<pin_id>', views.validate_my_pin, name='validate_my_pin'),
     path('ajout_actualisation/', views.ajout_actualisation, name='ajout_actualisation'),
     path('delete_actu/<pk>/<id>/', views.delete_actu, name='delete_actu'),
