@@ -1,86 +1,86 @@
-                  <!-- Course overview -->
-                  <div class="panel panel-white" id="content_evalution" style="display: none">
-                    <div class="panel-heading">
-                       <h6 class="panel-title text-semibold">Informations</h6>
-                       <div class="heading-elements">
-                          <ul class="list-inline list-inline-separate heading-text">
-                             <li>Réf : <span class="label_info"></span></li>
-                          </ul>
-                          <ul class="icons-list">
-                             <li><a data-action="collapse"></a></li>
-                          </ul>
-                       </div>
-                    </div>
-                    <ul class="nav nav-lg nav-tabs nav-tabs-bottom nav-tabs-toolbar no-margin">
-                       <li class="active"><a href="#tab_evaluer" data-toggle="tab"><i class="icon-menu7 position-left"></i> Evaluer</a></li>
-                       <li><a href="#notesList" data-toggle="tab"><i class="icon-notebook position-left"></i> Notes (<span class="Notes_lenght"></span>)</a></li>
-                       <li><a href="#docs" data-toggle="tab"><i class=" icon-files-empty position-left"></i> Documents du bien (<span class="Docs_lenght"></span>)</a></li>
-                    </ul>
-                    <!--Unchecked switch--------------------------------------> 
-                     <div class="tab-content">
-                        <div class="tab-pane fade in active" id="tab_evaluer">
-                          <div class="panel-body">
-                             <div class="col-sm-6">
-                              <div class="content-group-lg">
-                                 <div class="panel-body">
-                                  <div class="col-sm-12" id="actualisation-li">
-                                       <h6 class="text-semibold"><span><i class="icon-pin"></i></span> Valeur vénale estimée </h6>
-                                           <table id="actualisation">
-                                              <thead>
-                                                 <tr>
-                                                    <th>Surface</th>
-                                                    <th>Prix unitaire</th>
-                                                    <th>Prix total</th>
-                                                 </tr>
-                                              </thead>
-                                              <tbody></tbody>
-                                           </table>
+<!-- Course overview -->
+<div class="panel panel-white" id="content_evalution" style="display: none">
+   <div class="panel-heading">
+      <h6 class="panel-title text-semibold">Informations</h6>
+      <div class="heading-elements">
+         <ul class="list-inline list-inline-separate heading-text">
+            <li>Réf : <span class="label_info"></span></li>
+         </ul>
+         <ul class="icons-list">
+            <li><a data-action="collapse"></a></li>
+         </ul>
+      </div>
+   </div>
+   <ul class="nav nav-lg nav-tabs nav-tabs-bottom nav-tabs-toolbar no-margin">
+      <li class="active"><a href="#tab_evaluer" data-toggle="tab"><i class="icon-menu7 position-left"></i> Evaluer</a></li>
+      <li><a href="#notesList" data-toggle="tab"><i class="icon-notebook position-left"></i> Notes (<span class="Notes_lenght"></span>)</a></li>
+      <li><a href="#docs" data-toggle="tab"><i class=" icon-files-empty position-left"></i> Documents du bien (<span class="Docs_lenght"></span>)</a></li>
+   </ul>
+   <!--Unchecked switch--------------------------------------> 
+   <div class="tab-content">
+      <div class="tab-pane fade in active" id="tab_evaluer">
+         <div class="panel-body">
+            <div class="col-sm-6">
+            <div class="content-group-lg">
+               <div class="panel-body">
+                  <div class="col-sm-12" id="actualisation-li">
+                     <h6 class="text-semibold"><span><i class="icon-pin"></i></span> Valeur vénale estimée </h6>
+                           <table id="actualisation">
+                              <thead>
+                                 <tr>
+                                    <th>Surface</th>
+                                    <th>Prix unitaire</th>
+                                    <th>Prix total</th>
+                                 </tr>
+                              </thead>
+                              <tbody></tbody>
+                           </table>
 
-                                  </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+
+            <div class="col-sm-6">
+               <div class="content-group-lg">
+                  <h6 class="text-semibold"><span><i class="icon-pin"></i></span> Situation</h6>
+                  <div class="panel-body">
+                     <div id="map_approximation" class="map-container"></div>
+                  </div>
+               </div>
+            </div>
+            <!-- editer par and valider par-->
+            <div class="col-sm-12">
+            <div class="content-group-lg">
+               <h6 class="text-semibold">Chart : <span class="label_info"></span>&nbsp;<span class="from-mobile" style="display: none;"><i class="icon-mobile" style="color: #95B9C7;"></i></span></h6>
+            </div>
+               <!-- Basic column chart -->
+                              <div class="panel panel-flat">
+                                 <div class="panel-heading">
+                                    <h5 class="panel-title">Basic column chart</h5>
+                                    <div class="heading-elements">
+                                       <ul class="icons-list">
+                                             <li><a data-action="collapse"></a></li>
+                                             <li><a data-action="close"></a></li>
+                                          </ul>
+                                       </div>
                                  </div>
-                              </div>
-                           </div>
 
-
-                             <div class="col-sm-6">
-                                 <div class="content-group-lg">
-                                    <h6 class="text-semibold"><span><i class="icon-pin"></i></span> Situation</h6>
-                                    <div class="panel-body">
-                                       <div id="map_approximation" class="map-container"></div>
+                                 <div class="panel-body">
+                                    <div class="chart-container">
+                                       <canvas id="mixed-chart" width="800" height="450"></canvas>
                                     </div>
                                  </div>
                               </div>
-                             <!-- editer par and valider par-->
-                             <div class="col-sm-12">
-                              <div class="content-group-lg">
-                                 <h6 class="text-semibold">Chart : <span class="label_info"></span>&nbsp;<span class="from-mobile" style="display: none;"><i class="icon-mobile" style="color: #95B9C7;"></i></span></h6>
-                              </div>
-                               <!-- Basic column chart -->
-                                              <div class="panel panel-flat">
-                                                 <div class="panel-heading">
-                                                    <h5 class="panel-title">Basic column chart</h5>
-                                                    <div class="heading-elements">
-                                                       <ul class="icons-list">
-                                                             <li><a data-action="collapse"></a></li>
-                                                             <li><a data-action="close"></a></li>
-                                                          </ul>
-                                                       </div>
-                                                 </div>
-    
-                                                 <div class="panel-body">
-                                                    <div class="chart-container">
-                                                       <canvas id="mixed-chart" width="800" height="450"></canvas>
-                                                    </div>
-                                                 </div>
-                                              </div>
-                               <!-- /basic column chart -->
-                           </div>
-                          </div>
-                       </div>
-                    </div>
-                    <!-- /course overview -->
-                 </div>
-                 <!-- Course overview -->
+               <!-- /basic column chart -->
+         </div>
+         </div>
+      </div>
+   </div>
+   <!-- /course overview -->
+</div>
+<!-- Course overview -->
 <script>
 var map_approximation = new L.map('map_approximation').setView([51.505, -0.09], 12);
 var myChart = null;

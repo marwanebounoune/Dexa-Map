@@ -993,7 +993,7 @@
 
 	$.ajax({
 		type:'POST',
-		url: 'http://192.168.1.11:8000/AjouterSousUser',
+		url: 'http://127.0.0.1:8000/AjouterSousUser',
 		headers: {"X-CSRF-TOKEN": token},
 		processData: false,
 		contentType: false,
@@ -1049,7 +1049,7 @@
 			var token = $("meta[name='_csrf']").attr("content");	
 			$.ajax({
 				type:'GET',
-				url: 'http://192.168.1.11:8000/activerDesactiverUser/'+subUserId,
+				url: 'http://127.0.0.1:8000/activerDesactiverUser/'+subUserId,
 				headers: {"X-CSRF-TOKEN": token},
 				success : function(result,status){
 					var $data = $("<data />").html(result);
@@ -1069,7 +1069,7 @@
 		$("#subuser-confirmer-pswd").val('');
 		$.ajax({
 				type:'GET',
-				url: 'http://192.168.1.11:8000/getSubUserInfo/'+subUserId,
+				url: 'http://127.0.0.1:8000/getSubUserInfo/'+subUserId,
 				headers: {"X-CSRF-TOKEN": token},
 				success : function(data,status){
 			 $('#subuser-nom').val(data.last_name);
@@ -1131,7 +1131,7 @@
 			var token = $("meta[name='_csrf']").attr("content");	
 			$.ajax({
 				type:'POST',
-				url: 'http://192.168.1.11:8000/SubUserUpdate/'+subUserId,
+				url: 'http://127.0.0.1:8000/SubUserUpdate/'+subUserId,
 				headers: {"X-CSRF-TOKEN": token},
 				processData: false,
 				contentType: false,
@@ -1163,7 +1163,7 @@
 
 	$.ajax({
 		type:'POST',
-		url: 'http://192.168.1.11:8000/AjouterFacturation',
+		url: 'http://127.0.0.1:8000/AjouterFacturation',
 		headers: {"X-CSRF-TOKEN": token},
 		processData: false,
 		contentType: false,
@@ -1209,7 +1209,7 @@
 
 			$.ajax({
 				type:'POST',
-				url: 'http://192.168.1.11:8000/updateSte/',
+				url: 'http://127.0.0.1:8000/updateSte/',
 				headers: {"X-CSRF-TOKEN": token},
 				processData: false,
 				contentType: false,
@@ -1243,7 +1243,7 @@
 
 			$.ajax({
 				type:'POST',
-				url: 'http://192.168.1.11:8000/updateUser/',
+				url: 'http://127.0.0.1:8000/updateUser/',
 				headers: {"X-CSRF-TOKEN": token},
 				processData: false,
 				contentType: false,

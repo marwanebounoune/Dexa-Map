@@ -97,6 +97,8 @@
       .then((resp) => resp.json())
       .then(function(data){
          if(data.id != null && typeof data.id != "undefined"){
+            console.log("data : ", data)
+            get_approxim_pins(data.lat, data.lng)
             $("#creerRapport_form")[0].reset();
             $( '#box_creer_rapport' ).show(function(){
                $(window).scrollTop($('#box_creer_rapport').position().top);

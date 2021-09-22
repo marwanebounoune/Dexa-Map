@@ -85,13 +85,21 @@
    <!-- leafleat fullscreen-->
    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+   
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
    <!-- chart -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-   
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.2.0/echarts.common.min.js"></script>
+
+   <script type="text/javascript" src="{% static 'js/plugins/visualization/echarts/echarts.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/charts/echarts/columns_waterfalls.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/charts/echarts/timeline_option.js' %}"></script>
    <!-- /chart -->
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
    </head>
    <style>
+      .chartAreaWrapper {
+         overflow-x: scroll;
+         }
       #map{
          margin: auto;
          height: 500px;
@@ -132,7 +140,7 @@
       width:100%;
       }
       #map_approximation{
-      height:260px;
+      height:300px;
       width:100%;
       }
       #mapDynamique{
@@ -751,7 +759,7 @@
             $("#selected-file-5").html('No file selected');
             $("#localisee").prop("checked", true).trigger("click");
             $("#longitudeInput").val(lng);
-            $("#latitudeInput").val(lat);
+            $("#latitudeInput").val(lat)
             $(".new_piece_jointe").hide();
             var pages = $('.modal-split'); 
             $('#modal_default .btn-split').detach();

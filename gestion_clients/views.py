@@ -2,7 +2,7 @@ from gestion_clients.serializers import ClientSerializer
 from rest_framework.response import Response
 from gestion_clients.models import Client
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view
 
 # Create your views here.
@@ -23,8 +23,7 @@ def AjouterClient(request):
         if erreur == 0:
             cli = Client(nom=nom, prenom=prenom, tel=tel, cin=cin, email=email)
             cli.save()
-            serializer = ClientSerializer(cli, many=False)
-            return Response(serializer.data)
+            return redirect('clients')
     else:
         content = {'message': "permission non accordé"}
         return Response(content)

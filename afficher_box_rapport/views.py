@@ -1,3 +1,4 @@
+from rest_framework import response
 from gestion_dgi.models import dgi_appt_casa
 import logging
 from django.contrib import messages
@@ -56,17 +57,28 @@ def get_approxim_pins(request):
     pins_res=[]
     prix_array = []
     dgi = get_dgi_zone(lat,lng)
+    print("-----dgi----",dgi.name)
     pins= Pin.objects.filter(deleted=False).filter(type_de_reference=1)#.filter(is_validate_by_user=True)
     for pin in pins:
         lat_pin = float(pin.lat)
         lng_pin = float(pin.lng)
         d = distance(float(lat), float(lng), float(lat_pin), float(lng_pin))
         if d<1 and check_point_inside_polygon(lat_pin, lng_pin, dgi.poly):
+            #print("-----------pin----------")
+            #print(pin.id)
             pins_res.append(pin)
             prix_array.append(pin.prix_unit)
+            #print("-----------label----------")
+            #print (pins_res)#km
+    prix_array.append(dgi.prix_unit)
     moy = estimation_prix(prix_array)
+    print("-----------estimation_prix----------")
+    print (moy)
     serializer = PinSerializerLegerPrix(pins_res, many=True)
-    return Response(serializer.data)
+    content = {'pins': serializer.data,
+    'prix_estimer': int(moy)
+    }
+    return response.Response(content)
         
 def distance(lat1, lon1, lat2, lon2):
     p = pi/180
@@ -84,3 +96,8 @@ def getRapport(request, pk):
         pin = Rapport.objects.get(id=pk)
         serializer = RapportSerializer(pin, many=False)
         return Response(serializer.data)
+
+def estimation_prix(array):
+    moyenne = statistics.mean(array)
+    print("---moy--", moyenne)
+    return moyenne
