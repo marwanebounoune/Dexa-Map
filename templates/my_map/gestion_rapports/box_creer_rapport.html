@@ -8,7 +8,6 @@
          <form method="POST" enctype="multipart/form-data" id="creerRapport_form" data-role="page">
             {% csrf_token %}
             <div class="modal-body">
-               <div id="message" data-erreur='{{erreur}}'> {% include 'partials/messages.html' %} </div>
                <!-- lat & lng-->
                <div class="form-group">
                   <div class="row">
@@ -54,7 +53,7 @@
                   </div>
                </div>
                <div class="form-group">
-                  <button type="submit" class="btn bg-blue btn-block" onclick=creerRapport() id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+                  <button type="submit" class="btn bg-blue btn-block" id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
                </div>
             </div>
          </form>
@@ -65,10 +64,11 @@
 {% include 'my_map/gestion_rapports/box_rapport.html' %}
 
 <script>
-   function creerRapport(){
-      $("#creerRapport_form").off('click').on('click', function( event ) {
+
+      $("#editInfoPerso-submit").off('click').on('click', function( event ) {
          event.preventDefault ();
-         const formData = new FormData(this);
+         var form = $("#creerRapport_form")[0];
+         const formData = new FormData(form);
          var client_id = 0;
          fetch("http://127.0.0.1:8000/rapport/createRapport/",{
             method: 'POST',//définir la method du submit du form
@@ -83,6 +83,7 @@
                notificationSuccess('success message', 'Rapport ajouter avec succès.' );
                console.log(data)
                $('#modal_creerRapport').modal('toggle');
+               form.reset();
                rapportOnClick(data.id)
             }
             else{
@@ -90,7 +91,7 @@
             }
          });
       });
-   }
+   
    
    function rapportOnClick(id) {
       fetch('http://127.0.0.1:8000/rapport/rapport_detail/'+id+'/')

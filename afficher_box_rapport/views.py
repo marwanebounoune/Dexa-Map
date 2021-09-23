@@ -27,7 +27,7 @@ def CreerRapport(request):
         type_de_bien = request.POST['type_de_bien']
         if (Client.objects.filter(cin=request.POST['cin']).exists() == False):
             erreur=1
-            content = {'message': "Ce client existe déjà."}
+            content = {'message': "Ce client n'existe pas."}
             return Response(content)
         if erreur == 0:
             client = Client.objects.get(cin= request.POST['cin'])

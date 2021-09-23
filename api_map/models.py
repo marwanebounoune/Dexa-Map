@@ -92,7 +92,6 @@ class Pin(models.Model):
       models.Index(fields=['region', ]),
       models.Index(fields=['type_de_reference', ]),
       models.Index(fields=['type_de_bien', ])]
-    db_table = "DEXA" 
 
   def __str__(self):
     return self.label

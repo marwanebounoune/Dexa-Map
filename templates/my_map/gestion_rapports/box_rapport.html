@@ -37,6 +37,7 @@
  <!-- Course overview -->
  <script>
    var rapport = 0;
+   var map_approximation = new L.map('map_approximation').setView([51.505, -0.09], 12);;
    function create_rapport(lat, lng){
       fetch('http://127.0.0.1:8000/rapport/createRapport/?lat='+lat+'&lng='+lng)
       .then((resp) => resp.json())
@@ -224,7 +225,7 @@
       var basic_columns = echarts.init(document.getElementById("basic_columns"));
       basic_columns.setOption(basic_columns_options);
       }
-   var map_approximation = new L.map('map_approximation').setView([51.505, -0.09], 12);
+   
    var myChart = null;
    var labels_sort = []
    function get_approxim_pins(lat,lng){

@@ -13,6 +13,3 @@ class Client(models.Model):
   def __str__(self):
     return str(self.nom)
  
-class SituationJuridique(models.Model):
-    class Meta:
-        db_table = "rapport_situation_juridique"
