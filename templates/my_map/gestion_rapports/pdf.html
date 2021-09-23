@@ -1,11 +1,18 @@
+{%load static%}
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Example</title>
-	<link href="{% static 'images/Valactif_SG/style.css'%}" rel="stylesheet" >
+	<link href="{% static 'Valactif_SG/style.css'%}" rel="stylesheet" >
+    <link href="{% static 'css/icons/fontawesome/styles.min.css'%}" rel="stylesheet" type="text/css">
 </head>
 
-<style> 
+<style>
+    @media print {
+        .noprint {
+            visibility: hidden;
+        }
+    }
 	#leftbox {
 		float:left; 
 		width:25%;
@@ -63,14 +70,29 @@
 		border: 1px solid #ccc; 
 		text-align: left; 
 		font-size: 10px;
-	}							
+	}	
+    .float_valider{
+          position:fixed;
+          width:60px;
+          height:60px;
+          bottom:110px;
+          right:40px;
+          background-color:#0C9;
+          color:#FFF;
+          border-radius:50px;
+          text-align:center;
+          box-shadow: 2px 2px 3px #999;
+        }
+    .fa-arrow-circle-down, .fa-lock{
+        font-size: 25px;
+    }						
 </style> 
 <body>  
 	<div> 
 		<page size="A4">
             <div class="header" style="height: 65px; border-bottom: dashed red;">
                 <div id = "leftbox" style="margin-top:10px">
-                    <img src="{% static 'images/Valactif_SG/logo-societe-generale.png'%}">
+                    <img src="{% static 'Valactif_SG/logo-societe-generale.png'%}">
                 </div> 
                 <div id = "middlebox" style="margin-top:10px;color:black; font-family:Arial; font-size:18px">
                     <center>
@@ -151,7 +173,7 @@
         <page size="A4">
             <div class="header" style="height: 65px; border-bottom: dashed red;">
                 <div id = "leftbox" style="margin-top:10px">
-                    <img src="{% static 'images/Valactif_SG/logo-societe-generale.png'%}">
+                    <img src="{% static 'Valactif_SG/logo-societe-generale.png'%}">
                 </div> 
                 <div id = "middlebox" style="margin-top:10px;color:black; font-family:Arial; font-size:18px">
                     <center>
@@ -167,7 +189,27 @@
             </div>
             <div>Header</div>
             <div class="footer2" style="color:blue; border: dashed red; height: 50px; width: 20.8cm; position: fixed; bottom: 0;">Footer</div>
-        </page> 
+        </page>
+
+    <!--button de creation rapport-->
+        <a id="generatePDF" class="float noprint">
+            <i class="fa fa-arrow-circle-down my-float"></i>
+          </a>
+          <div class="label-container">
+            <div class="label-text noprint">Générer le rapport</div>
+            <i class="fa fa-play label-arrow"></i>
+          </div>
+    <!-- /button de creation rapport-->
+
+    <!--button de validation rapport-->
+      <a id="validerRapport" class="float_valider noprint">
+        <i class="fa fa-lock my-float"></i>
+      </a>
+      <div class="label-container">
+        <div class="label-text noprint">valider le rapport</div>
+        <i class="fa fa-play label-arrow"></i>
+      </div>
+    <!--/button de validation rapport-->
     </div> 
         <!-- <page size="A4">
             
@@ -185,4 +227,10 @@
         
         </page>  -->
 </body>
+<script>
+    function downloadPDFWithjsPDF() {
+        print();
+  }
+    document.querySelector('#generatePDF').addEventListener('click', downloadPDFWithjsPDF);
+</script>
 </html>

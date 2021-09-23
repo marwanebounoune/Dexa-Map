@@ -4,9 +4,37 @@
       <div class="col-sm-12">
           <div class="content-group-lg">
              <div class="panel-body">
-               <a type="button" target="_blank" href="" class="btn btn-default btn-sm pull-right" ><i class="fa fa-plus"></i>&nbsp;Aperçu rapport</a>
+               <div class="row">
+                  <div class="col-lg-7">
+                    <!-- Example Bar Chart Card-->
+                    <div class="card mb-3">
+                      <div class="card-header">
+                        <i class="fa fa-bar-chart"></i> Bar Chart Example</div>
+                      <div class="card-body">
+                            <canvas id="basic_columns"  width="100%" height="100"></canvas>
+                            <!--div class="chart has-fixed-height" id="basic_columns" width="100%" height="50"></div-->
+                      </div>
+                      <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                    </div>
+                  </div>
+                  <div class="col-lg-5">
+                    <!-- Example Pie Chart Card-->
+                    <div class="card mb-3">
+                      <div class="card-header">
+                        <i class="fa fa-pie-chart"></i> Pie Chart Example</div>
+                      <div class="card-body">
+                        <div id="map_approximation" width="100%" height="200" class="map-container"></div>
+                      </div>
+                      <!--div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div-->
+                    </div>
+                  </div>
+                </div>
+              
+               <!--div class="row">
+                  </div><a type="button" target="_blank" href="{% url 'preview_pdf' %}" class="btn btn-default btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;Aperçu rapport</a>
+               </div-->   
                   <!-- Basic column chart -->
-                  <div class="col-sm-7">
+                  <!--div class="col-sm-7">
                      <div class="panel-heading">
                         <h5 class="panel-title">Basic column chart</h5>
                         <div class="heading-elements">
@@ -20,22 +48,55 @@
                            <div class="chart has-fixed-height" id="basic_columns" style="height: 250px;width: 600px;"></div>
                         </div>
                      </div>
-                  </div>
-                  
-                  <!-- /basic column chart -->
-                  <!--mini map preview-->
-                  <div class="col-sm-5">
+                  </div-->
+                  <!--div class="row">
+                     <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="card">
+                        <div class="card-header">
+                        
+                        <h5 class="mb-0"> Product Sales</h5>
+                        </div>
+                        <div class="card-header">
+                         <div class="card-body"-->
+                               <!--canvas id="myBarChart" width="100" height="50"></canvas-->
+                               <!--div  class="chart has-fixed-height" id="basic_columns" width="100" height="50"></div>
+                         </div>
+                         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                        </div>
+                     </div>
+
+
+                     
+                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="card">
+                        <h5 class="card-header"><span><i class="icon-pin"></i></span> Situation *</h5>
+                        <div class="card-body"-->
+                           <!--div class="ct-chart-category ct-golden-section" style="height: 315px;"></div-->
+                           <!--div class="text-center">
+                              <div id="map_approximation" class="map-container"></div>
+                           </div>
+                        </div>
+                        </div>
+                     </div>
+                     
+                     <div class="col-md-6 col-sm-6">
                         <div class="content-group-lg">
                            <h6 class="text-semibold"><span><i class="icon-pin"></i></span> Situation</h6>
                            <div class="panel-body">
                               <div id="map_approximation" class="map-container"></div>
                            </div>
-                        </div>
+                        </div>                      
+                      </div>
+                      
+                   </div-->
+                  <!-- /basic column chart -->
+                  <!--mini map preview-->
+                  <!--div class="col-sm-5">
                      </div>
-                     <div class="col-sm-12">
+                     <div class="col-sm-12"-->
                         <!---tableau -->
 
-                        <div class="col-sm-12" id="actualisation-li">
+                        <!--div class="col-sm-12" id="actualisation-li">
                               <h6 class="text-semibold"><span><i class="icon-pin"></i></span> Valeur vénale estimée </h6>
                               <table id="actualisation">
                                  <thead>
@@ -56,7 +117,7 @@
                         </div>
                 </div>
 
-                     <div class="col-sm-12">
+                     <div class="col-sm-12"-->
                      <!---tableau -->
 
                      

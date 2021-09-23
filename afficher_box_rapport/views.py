@@ -101,3 +101,14 @@ def estimation_prix(array):
     moyenne = statistics.mean(array)
     print("---moy--", moyenne)
     return moyenne
+
+@api_view(['GET'])
+@login_required(login_url='login')
+def preview_pdf(request):
+    data = {
+            #'today': datetime.date.today(), 
+        'amount': 39.99,
+        'customer_name': 'Cooper Mann',
+        'order_id': 1233434,
+    }
+    return render(request,'my_map/gestion_rapports/pdf.html', data)
