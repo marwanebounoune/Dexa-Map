@@ -21,10 +21,10 @@
       <div class="tab-pane fade in active" id="course-overview">
          <div class="panel-body">
             <!--status reference-->
-                     <div {% if user.permission != 'validateur' and user.userType != 'principal' %} class="checkbox checkbox-right checkbox-switchery disabled" {% else %} class="checkbox checkbox-right checkbox-switchery" {% endif %}>
-                           <label class="display-block">
+            <div {% if user.permission != 'validateur' and user.userType != 'principal' %} class="checkbox checkbox-right checkbox-switchery disabled" {% else %} class="checkbox checkbox-right checkbox-switchery" {% endif %}>
+               <label class="display-block">
                   <input type="checkbox" class="switchery" id="mySwitchCheck" {% if user.permission != 'validateur' and user.userType != 'principal' %} disabled {% endif %}>
-                     <!--Unchecked switch--> 
+                  <!--Unchecked switch--> 
                </label>
             </div>
             <!--/status reference-->
@@ -41,7 +41,7 @@
                               James Alexander
                            </a>
                            <span class="media-annotation pull-right" id="created_date">14:58</span>
-                           <span class="display-block text-muted">createur de la reference</span>
+                           <span class="display-block text-muted">Createur de la reference</span>
                         </div>
                      </li>
                   </ul>

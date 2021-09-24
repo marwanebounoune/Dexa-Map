@@ -62,7 +62,7 @@ class Credit(models.Model):
     credit_journalier = models.IntegerField(null=True)
     credit_monsuel = models.IntegerField(null=True)
     class Meta:
-        db_table = "Credit" 
+        db_table = "User_credit" 
 
 class Facture(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -78,6 +78,6 @@ class Facture(models.Model):
     type_abonnement = models.IntegerField(null=True, blank=True, default=0, choices=Abonnement_CHOICES)
     is_pack_base = models.BooleanField(default=False)
     class Meta:
-        db_table = "Facture" 
+        db_table = "User_facture" 
 
 

@@ -92,6 +92,7 @@ class Pin(models.Model):
       models.Index(fields=['region', ]),
       models.Index(fields=['type_de_reference', ]),
       models.Index(fields=['type_de_bien', ])]
+    db_table = "Dexa_pin"
 
   def __str__(self):
     return self.label
@@ -131,6 +132,8 @@ class Photographie(models.Model):
     #return instance
   def __str__(self):
     return str(self.descriptif)
+  class Meta:
+    db_table = "Dexa_photographies"
 
 #La classe représentant les Notes des biens
 class Note(models.Model):
@@ -140,18 +143,23 @@ class Note(models.Model):
   pin = models.ForeignKey(Pin, on_delete=models.CASCADE, null=True)
   class Meta:
     unique_together = ('editer_par', 'pin')
+    db_table = "Dexa_notes"
 
 #La classe représentant les historiques des utilisateurs
 class HistoriqueExplorer(models.Model):
   username = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
   pin = models.ForeignKey(Pin, on_delete=models.CASCADE, null=True) 
   date_consultation = models.DateField(default=date.today, null=True)
+  class Meta:
+    db_table = "Dexa_historique_explorer"
 
 #La classe représentant les historiques des references modifiees
 class HistoriqueMyMap(models.Model):
-    username = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    pin = models.ForeignKey(Pin, on_delete=models.CASCADE, null=True)
-    date_consultation = models.DateField(default=date.today, null=True)
+  username = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+  pin = models.ForeignKey(Pin, on_delete=models.CASCADE, null=True)
+  date_consultation = models.DateField(default=date.today, null=True)
+  class Meta:
+    db_table = "Dexa_historique_my_map"
 
 #La classe représentant les documents des biens
 class Documents(models.Model):
@@ -161,9 +169,13 @@ class Documents(models.Model):
   fichier = models.FileField(upload_to='doc_pins_my_map/',null=True, blank=True, validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
   def _str_(self):
     return str(self.type_file)
+  class Meta:
+    db_table = "Dexa_documents"
 
 #La classe représentant les tags des biens
 class Tags(models.Model):
   label = models.CharField(max_length=250, null=True, blank=True)
   def _str_(self):
     return str(self.label)
+  class Meta:
+    db_table = "Dexa_tags"

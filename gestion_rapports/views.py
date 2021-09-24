@@ -2,8 +2,8 @@ from rest_framework import response
 from gestion_dgi.models import dgi_appt_casa
 import logging
 from django.contrib import messages
-from afficher_box_rapport.serializers import RapportSerializer
-from afficher_box_rapport.models import Client, Rapport
+from .serializers import RapportSerializer
+from .models import Client, Rapport
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
 from rest_framework.decorators import api_view

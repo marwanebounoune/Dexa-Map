@@ -1,5 +1,5 @@
-from afficher_box_rapport.serializers import RapportSerializer
-from afficher_box_rapport.models import Rapport
+from gestion_rapports.serializers import RapportSerializer
+from gestion_rapports.models import Rapport
 from api_map.views import user_pinlist, validate_LatAndLng
 from api_map.serializers import PinSerializer, PinSerializerLeger
 from datetime import date

@@ -1,22 +1,331 @@
 <div class="tab-pane fade" id="situationJuridique">
-    <div class="panel-body">
-        <legend class="text-semibold"><i class="icon-reading position-left"></i>La situation juridique du bien</legend>
-        <div class="form-group">
-          <legend class="text-size-mini text-muted no-border no-padding">Type de validation</legend>
-          <div class="checkbox-inline">
-             <label for="valide">
-                <input type="radio" class="styled"  name="type_valide_nonValid_Mobile" value="pins-list-2" id="valide" autocomplete="off" checked/>Reférences validées</label>	
-          </div>
-          <br>
-          <div class="checkbox-inline">
-             <label for="nonValide">
-                <input type="radio" class="styled"  name="type_valide_nonValid_Mobile" value="list-pin-non-valider" autocomplete="off" id="nonValide"/>Reférences non validées</label>	
-          </div>
-          <br>
-          <div class="checkbox-inline">
-             <label for="nonValideMobile">
-                <input type="radio" class="styled"  name="type_valide_nonValid_Mobile" value="list-pin-non-valider-mobile" autocomplete="off" id="nonValideMobile"/>Application mobile non validés</label>	
-          </div>
-        </div>			
-    </div>
- </div>
+   <div class="panel-body">
+      <legend class="text-semibold"><i class=" icon-balance position-left"></i>La situation juridique du bien</legend>
+      <div class="form-group">
+         <div class="row">
+            <div class="col-md-4">
+               <label>Titre Foncier : </label>
+               <b>XXXXXX/XX</b>
+            </div>
+         </div>
+      </div>
+      <div class="form-group">
+         <div class="row">
+            <div class="col-md-4">
+               <label>Date CP : </label>
+               <b>XX/XX/XXXX</span></b>
+            </div>
+         </div>
+      </div>
+      <div class="form-group">
+         <div class="row">
+            <div class="col-md-4">
+               <label>Surface titrée : </label>
+               <b>........m2</b>
+            </div>
+         </div>
+      </div>
+      <div class="form-group">
+         <div class="row">
+            <div class="col-md-4">
+               <label>Conservation : </label>
+               <b>............</b>
+            </div>
+         </div>
+      </div>
+      <div class="text-right">
+         <ul><a href="#" class='btn btn-default btn-sm' data-toggle='modal' data-target='#modal_editInfoJuridique'>Editer info<i class="icon-pen position-right"></i><span class="modal_editInfoJuridique"></span></a></ul>
+      </div>
+      <div class="form-group">
+         <div class="row">
+            <div class="col-md-4">
+               <label>Fractions : </label>
+               <b>
+                  <table id="actualisation">
+                     <thead>
+                        <tr>
+                           <th>Fraction</th>
+                           <th>Consistance</th>
+                           <th>Surface</th>
+                           <th>Action</th>
+                        </tr>
+                     </thead>
+                     <tbody></tbody>
+                  </table>
+               </b>
+            </div>
+         </div>
+         <div><a id="new_fraction" class="pull-right" ><i class="fa fa-plus" style="color:blue"></i>&nbsp; Ajouter une fraction</a></div>
+      </div>
+      <div class="form-group">
+         <div class="row">
+            <div class="col-md-4">
+               <label>Hypothèques : </label>
+               <b>
+                  <table id="actualisation">
+                     <thead>
+                        <tr>
+                           <th>Montant</th>
+                           <th>Au profit de</th>
+                           <th>Date</th>
+                           <th>Action</th>
+                        </tr>
+                     </thead>
+                     <tbody></tbody>
+                  </table>
+               </b>
+            </div>
+         </div>
+      
+         <div><a id="new_hypotheqye" class="pull-right" ><i class="fa fa-plus" style="color:blue"></i>&nbsp; Ajouter un hypothèque</a></div>
+      </div>
+      <div class="form-group">
+         <div class="row">
+            <div class="col-md-4">
+               <label>Inscription Particulière : </label>
+               <b>--------</b>
+            </div>
+         </div>
+      </div>
+      <div class="text-right">
+         <ul><a href="#" class='btn btn-default btn-sm' data-toggle='modal' data-target='#modal_editComment'>Editer le commentaire<i class="icon-pen position-right"></i><span class="modal_editComment"></span></a></ul>
+      </div>	
+   </div>
+</div>
+
+<div class="modal fade" id="modal_editInfoJuridique" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Editer les informations juridiques</h5>
+         </div>
+         <form method="POST" enctype="multipart/form-data" id="editInfoJuridique_form" data-role="page">
+            {% csrf_token %}
+            <div class="modal-body">
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Titre Foncier :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input rows="5" cols="3" class="form-control" placeholder="Titre Foncier" name="titre_foncier">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Date CP :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="date" rows="5" cols="3" class="form-control" placeholder="Date CP" name="date_cp">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Surface titrée :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="number" rows="5" cols="3" class="form-control" placeholder="Surface titrée" name="surface_titrée">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Conservation :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input  rows="5" cols="3" class="form-control" placeholder="Conservation" name="conservation">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <button type="submit" class="btn bg-blue btn-block" id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="modal_addFraction" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Ajouter une fraction</h5>
+         </div>
+         <form method="POST" enctype="multipart/form-data" id="addFraction_form" data-role="page">
+            {% csrf_token %}
+            <div class="modal-body">
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Fraction :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input rows="5" cols="3" class="form-control" placeholder="Fraction" name="fraction">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Consistance :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="date" rows="5" cols="3" class="form-control" placeholder="Consistance" name="consistance">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Surface :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="number" rows="5" cols="3" class="form-control" placeholder="Surface" name="surface">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <button type="submit" class="btn bg-blue btn-block" id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="modal_addHypotheques" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Editer les informations juridiques</h5>
+         </div>
+         <form method="POST" enctype="multipart/form-data" id="addHypotheques_form" data-role="page">
+            {% csrf_token %}
+            <div class="modal-body">
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Titre Foncier :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input rows="5" cols="3" class="form-control" placeholder="Titre Foncier" name="titre_foncier">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Date CP :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="date" rows="5" cols="3" class="form-control" placeholder="Date CP" name="date_cp">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Surface titrée :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="number" rows="5" cols="3" class="form-control" placeholder="Surface titrée" name="surface_titrée">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Conservation :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input  rows="5" cols="3" class="form-control" placeholder="Conservation" name="conservation">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <button type="submit" class="btn bg-blue btn-block" id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="modal_editComment" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Editer les informations juridiques</h5>
+         </div>
+         <form method="POST" enctype="multipart/form-data" id="editInfoJuridique_form" data-role="page">
+            {% csrf_token %}
+            <div class="modal-body">
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Titre Foncier :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="text" rows="5" cols="3" class="form-control" placeholder="Titre Foncier" name="titre_foncier">
+                     </div>
+                  </div>
+               </div>
+               
+               <div class="form-group">
+                  <button type="submit" class="btn bg-blue btn-block" id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+ <script>
+
+   $("#new_fraction").on('click', function(event){
+      $("#modal_addFraction").modal('toggle');
+   });
+
+   $("#new_hypotheqye").on('click', function(event){
+      $("#modal_addHypotheques").modal('toggle');
+   });
+
+   
+   $("#addFraction_form").submit(function( event ) {
+      event.preventDefault ();
+      const formData = new FormData(this);
+      fetch("http://127.0.0.1:8000/reference/ajout_actualisation/",{
+         method: 'POST',//définir la method du submit du form
+         mode : 'same-origin',
+         credentials: 'same-origin' ,
+         body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.id != null ) {
+            notificationSuccess('success message', 'l\'actualisation a été effectuée avec succès' );
+            getPinActualisation(data.actualisation, data.surface, data.id); 
+            idEditeur = "{{user.id}}";
+            if(idEditeur != null){
+               getUser(idEditeur, 'editeur');
+            }
+            
+            $("#modal_addFraction").modal('toggle');
+         }
+         else{
+            notification('Erreur, '+ data['message']);
+         }
+      }); 
+   });
+   
+ </script>

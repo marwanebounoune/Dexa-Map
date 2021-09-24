@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class AfficherBoxRapportConfig(AppConfig):
+class GestionRapportsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'afficher_box_rapport'
+    name = 'gestion_rapports'

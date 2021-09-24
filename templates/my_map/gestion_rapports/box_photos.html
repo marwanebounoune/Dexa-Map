@@ -1,13 +1,142 @@
-<div class="tab-pane fade" id="photos">
-    <div class="panel-body">
-       <legend class="text-semibold"><i class="icon-reading position-left"></i>Photos</legend>
-       <div class="form-group">
-          <div class="row">
-             <div class="col-md-4">
-                <label>Nom : </label>
-                <b> </b>
-             </div>
-          </div>
-       </div>
-    </div>
- </div>
+<div class="tab-pane fade in active" id="photos">
+   <div class="panel-body">
+      <div class="col-sm-12">
+         <div class="content-group-lg">
+            <h6 class="text-semibold"><span><i class="icon-images3"></i></span> Photographies (<span class="photographies_lenght"></span>)</h6>
+            <div id="ajouter-photos-rapport" data-nbrPhotos='0'>
+               <a href="#" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal_photographies_rapport"><i class="fa fa-plus"></i>&nbsp;Ajouter d'autres photos</a>
+            </div>
+            <br/>
+            <br/>
+            <div class="content"  style="display:none" id="content-photographies">
+               <div class="row" id="PhotographiesDiv"></div>
+            </div>							
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<div class="modal fade" id="modal_photographies_rapport" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Ajouter des photographies</h5>
+         </div>
+         <form method="POST" id="photographies_modif" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" placeholder="images Description" name="pinId-photographies" id="pinId-photographies" class="form-control" style="display:none"/> 
+            <div class="modal-body">
+               <!-- photos-->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="sidebar-category">
+                        <div class="category-title">
+                           <span><h4><p>Photographies</p></h4></span>
+                        </div>
+                        <div class="col-sm-12">
+                           <label>images Description</label> <input type="text" placeholder="images Description" name="descriptionImage" id="descriptionImage-modif" class="form-control"/>
+                        </div>         
+                        <div class="col-sm-12">
+                           <label>Photos</label> 
+                           <div id="modify-DropBox" action="" class="dropzone">
+                              <div class="fallback">
+                              </div>
+                           </div>
+                        </div>      
+                     </div>
+                  </div>
+               </div>
+               <!-- /photos-->
+               <br/>
+               <br/>
+               <div class="form-group">
+                  <button type="submit" class="btn bg-blue btn-block">Ajouter <i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div> 
+         </form>
+      </div>
+   </div>
+</div>
+
+
+<script>
+   let dzClosure_modification = null;
+   let token_dropZone= $('meta[name="csrf-token"]').attr('content');
+   storedFiles_modif=[];
+   let existant = $("#ajouter-photos-rapport").data("nbrPhotos")
+   let nbrPhotos= 12 - parseInt(existant);
+   var myDropzone_modification = new Dropzone("div#modify-DropBox",{
+      url: "http://127.0.0.1:8000/pics/ajoutPhotographies/"+$("#pinId-photographies").val(),
+      autoProcessQueue: false,
+      uploadMultiple: true,
+      parallelUploads: 5,
+      maxFiles: 12,
+      maxFilesize: 2,
+      acceptedFiles: 'image/*',
+      paramName: "file",
+      addRemoveLinks: true,
+      param: {
+        _token: token_dropZone
+      },
+      init: function() {
+         dzClosure_modification = this; // Makes sure that 'this' is understood inside the functions below.
+         const formData = new FormData($("#photographies_modif")[0]);  
+         this.on("addedfile", function(file) {
+            storedFiles_modif.push(file);
+         });
+         this.on("removedfile", function(file) {
+            removeFile(storedFiles_modif,file);
+         });
+         this.on('error', function(file, response) {
+            notification("les images avec une taille > 2Mo ne sont pas considérées !");
+            removeFile(storedFiles_modif,file);
+            this.removeFile(file);
+         });
+         $("#photographies_modif").submit(function( event ) {
+            event.preventDefault ();
+            formData.delete('file');
+            appendFiles(formData, storedFiles_modif);
+            formData.append("descriptionImage", $("#descriptionImage-modif").val());
+            fetch("http://127.0.0.1:8000/pics/ajoutPhotographies/"+ $("#pinId-photographies").val(),{
+               method: 'POST',//définir la method du submit du form
+               mode : 'same-origin',
+               credentials: 'same-origin' ,
+               body : formData//définir la formulaire pour le url
+            })
+            .then((resp) => resp.json())
+            .then(function(data) {
+               if(data.length == null){
+               notification( data['message'] );
+               }
+               else{
+                  notificationSuccess('success message', 'les images ont été ajoutées avec succès' );
+                  $('#modal_photographies_rapport').modal('toggle');
+                  getPhotographies( $("#pinId-photographies").val() );
+               }
+            });
+         });
+      }//fin init function
+   });
+   //---------------------------------------------------------trash icon click---------------------------------------------------------
+   function TrashIconOnClick(photo_id){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+         var url = 'http://127.0.0.1:8000/pics/delete_my_photo_pin/'+photo_id
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0){
+               notificationSuccess('success message', 'la photos a été supprimée avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               getPhotographies(data.pin.id);
+            }
+            else{
+               notification("desole, un probleme est survenu lors de la suppression")
+            }
+         });
+      });
+   }
+</script>

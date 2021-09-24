@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     #'accounts',
     'account.apps.AccountConfig',
     'afficher_box_plus_info.apps.AfficherBoxPlusInfoConfig',
-    'afficher_box_rapport.apps.AfficherBoxRapportConfig',
     'api_map.apps.ApiMapConfig',
     'apis.apps.ApisConfig',
     'corsheaders',
@@ -53,6 +52,7 @@ INSTALLED_APPS = [
     'gestion_dgi.apps.GestionDgiConfig',
     'gestion_documents_ref.apps.GestionDocumentsRefConfig',
     'gestion_photos_ref.apps.GestionPhotosRefConfig',
+    'gestion_rapports.apps.GestionRapportsConfig',
     'gestion_ref.apps.GestionRefConfig',
     'gestion_tags_ref.apps.GestionTagsRefConfig',
     'quotes.apps.QuotesConfig',
@@ -103,9 +103,9 @@ WSGI_APPLICATION = 'realtysoft.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'newDb',
+        'NAME': 'mydb2',
         'USER': 'postgres',
-        'PASSWORD' : 'root',
+        'PASSWORD' : 'admin',
         'HOST': 'localhost'
 
     }

@@ -1076,7 +1076,7 @@
    $("#ajout-actualisation-form").submit(function( event ) {
       event.preventDefault ();
       const formData = new FormData(this);
-      fetch(IP+"reference/ajout_actualisation/",{
+      fetch("http://127.0.0.1:8000/reference/ajout_actualisation/",{
          method: 'POST',//définir la method du submit du form
          mode : 'same-origin',
          credentials: 'same-origin' ,

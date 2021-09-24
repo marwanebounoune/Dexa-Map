@@ -24,7 +24,7 @@ urlpatterns = [
     path('map/',include('api_map.urls')),
     path('apis/',include('apis.urls')),
     path('plusInfo/',include('afficher_box_plus_info.urls')),
-    path('rapport/',include('afficher_box_rapport.urls')),
+    path('rapport/',include('gestion_rapports.urls')),
     path('filtrageRef/',include('filtrage_ref.urls')),
     path('csv/',include('gestion_csv.urls')),
     path('reference/',include('gestion_ref.urls')),
