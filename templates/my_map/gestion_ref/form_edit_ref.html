@@ -252,7 +252,7 @@
    });
    
       //---------------------------------------------------------editLinkOnClick---------------------------------------------------------
-      function editLinkOnClick(id){
+   function editLinkOnClick(id){
       //$(".leaflet-popup").remove();
       var url = 'http://127.0.0.1:8000/reference/pins-detail-2/'+id+'/'
       fetch(url)
@@ -293,8 +293,8 @@
             var tags=(data.tags).split(",");
             getTags();
             List_of_all_tags = all_tags.concat(tags.filter(function (item) {
-        return all_tags.indexOf(item) === -1;
-    }));
+               return all_tags.indexOf(item) === -1;
+            }));
             console.log("tags",List_of_all_tags)
             $('#tag_update').select2({tags: List_of_all_tags});
             $("#tag_update").val(tags).trigger("change");

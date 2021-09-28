@@ -22,10 +22,10 @@
 </div>
 <!-- /document -->
 <script>
-          function getDocs(pin_id){
+   function getDocs(pin_id){
       $("#pin_id_fichier").val(pin_id);
       $("#ul-docs").hide();
-      var url = 'http://127.0.0.1:8000/map/list-docs-pin/'+pin_id
+      var url = 'http://127.0.0.1:8000/docs/list-docs-pin/'+pin_id
       fetch(url)
       .then((resp) => resp.json())
       .then(function(data){
@@ -64,8 +64,8 @@
       });
    }
 
-      /* DocsAddRow to datatable*/
-      function DocsAddRow(type_doc,username,fichierPdf,actions) {
+   /* DocsAddRow to datatable*/
+   function DocsAddRow(type_doc,username,fichierPdf,actions) {
       $('#ul-docs').dataTable().fnAddData([type_doc, username, fichierPdf, actions]);
    }
 </script>

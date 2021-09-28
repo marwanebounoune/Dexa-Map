@@ -108,7 +108,6 @@ function get_approxim_pins(lat,lng){
          if (myChart != null){
             myChart.destroy();
          }
-         console.log("get_approxim_pins: ", data);
          data.forEach(element => {
             obj ={'label':element.label,'prix':element.prix_unit}
             results.push(obj);
@@ -121,17 +120,13 @@ function get_approxim_pins(lat,lng){
          });
          
          labels_sort = labels;
-         console.log("res: ", results);
          results = _.sortBy(results,"prix").reverse();
-         console.log("res sort: ", results);
 
          Object.keys(results).forEach(element => {
             prix.push(results[element].prix);
             labels.push(results[element].label);
             });
          //prix_sort = prix.sort(function(a, b){labels_sort=labels_sort.sort(function(){console.log("a,b: ", labels_sort.indexOf(a),labels_sort.indexOf(b)); labels_sort.indexOf(b.type) - labels_sort.indexOf(a.type);});return b - a;});
-         console.log("prix array", prix);
-         console.log("label array", labels);
          get_dgi_info(prix, labels, lat, lng);
          
          
@@ -142,7 +137,6 @@ function get_dgi_info(prix, labels, lat, lng){
    fetch(url)
       .then((resp) => resp.json())
       .then(function(data){
-         console.log("dgi pins: ", data.name);
          chartPrix(prix,labels, data.name, data.prix_unit);
                });
 }
@@ -197,7 +191,6 @@ function chartPrix(prix,labels, dgi_name, dgi_prix){
    var length_data = prix.length;
    var prix_dgi = Array(length_data).fill(dgi_prix);
    var label_dgi = Array(length_data).fill(dgi_name);
-   console.log("data_dgi.name: ", dgi_name)
    myChart = new Chart(canvas, {
    
    type: 'bar',

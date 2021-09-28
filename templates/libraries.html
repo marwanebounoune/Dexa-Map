@@ -19,9 +19,15 @@
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
       <link rel="stylesheet" type="text/css" href="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css">
       <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
-      <!-- /global stylesheets -->
+
       
+   
+
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
+      <!-- /global stylesheets -->
       <!-- Core JS files -->
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/8.3.2/handsontable.full.min.js" integrity="sha512-QKxTQfGv2U/EFV8WPXb0i/TtwNzacYyd6JE0bP1LHhSYu0aivteQYaE7uNi3IvyF6h+Z2oo7GUWXbYhlGrXUng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
       <script type="text/javascript" src="{% static 'js/plugins/loaders/pace.min.js'%}"></script>
       <script type="text/javascript" src="{% static 'js/core/libraries/jquery.min.js'%}"></script>
       <script type="text/javascript" src="{% static 'js/core/libraries/bootstrap.min.js'%}"></script>
@@ -32,7 +38,7 @@
       <!-- Theme JS files-->
       <script type="text/javascript" src="{% static 'js/core/libraries/jquery_ui/interactions.min.js'%}"></script>
       <script type="text/javascript" src="{% static 'js/plugins/forms/selects/select2.min.js'%}"></script>
-      <script type="text/javascript" src="{% static 'js/core/app.js'%}"></script>
+      <script type="text/javascript" src="{% static 'js/core/app.js' %}"></script>
       <script type="text/javascript" src="{% static 'js/pages/form_select2.js'%}"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js" defer></script>
       <script type="text/javascript" src="{% static 'js/plugins/forms/styling/uniform.min.js'%}"></script>
@@ -96,8 +102,27 @@
 	<script type="text/javascript" src="{% static 'js/charts/echarts/columns_waterfalls.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/charts/echarts/timeline_option.js' %}"></script>
    <!-- /chart -->
+
+   <!--wizard_stepy-->
+   <script type="text/javascript" src="{% static 'js/plugins/forms/wizards/stepy.min.js' %}"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-steps/1.1.0/jquery.steps.min.js" integrity="sha512-bE0ncA3DKWmKaF3w5hQjCq7ErHFiPdH2IGjXRyXXZSOokbimtUuufhgeDPeQPs51AI4XsqDZUK7qvrPZ5xboZg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <!--/wizard_stepy-->
    </head>
    <style>
+      /*steps panel */
+      
+      /* /steps panel */
+      .div-info-space{
+         padding-top: 10px;
+         padding-bottom: 10px;
+      }
+
+      .card-header-space{
+         font-weight: bold;
+      }
+      hr{
+         margin-top: 0%;
+      }
       .chartAreaWrapper {
          overflow-x: scroll;
          }
@@ -188,22 +213,34 @@
       td, th { 
          text-align: center
       }
-      #actualisation {
+      #actualisation, #fractions, #hypotheques  {
          font-family: Arial, Helvetica, sans-serif;
          border-collapse: collapse;
          width: 100%;
       }
-      #actualisation td, #actualisation th {
+      #actualisation td, #actualisation th, #fractions td, #hypotheques td, #fractions th, #hypotheques th {
          border: 1px solid #ddd;
          padding: 5px;
       }
       #actualisation tr:nth-child(even){
          background-color: #f2f2f2;
       }
+      #fractions tr:nth-child(even){
+         background-color: #f2f2f2;
+      }
+      #hypotheques tr:nth-child(even){
+         background-color: #f2f2f2;
+      }
       #actualisation tr:hover {
          background-color: #ddd;
       }
-      #actualisation th {
+      #hypotheques tr:hover {
+         background-color: #ddd;
+      }
+      #fractions tr:hover {
+         background-color: #ddd;
+      }
+      #actualisation th, #fractions th, #hypotheques th {
          padding-top: 5px;
          padding-bottom: 5px;
          background-color: #95B9C7;

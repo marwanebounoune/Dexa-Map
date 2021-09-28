@@ -1,45 +1,424 @@
-<div id="modal_description" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="tab-pane fade" id="modal_description">
     <div class="panel-body">
-        <legend class="text-semibold"><i class="icon-reading position-left"></i>Informations personnelles du client</legend>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-4">
-                    <label>Score : </label>
-                    <b><span class="score_info"></span></b>
-                </div>
-           </div>
-        </div>
-        <div class="text-right">
-           <ul><a href="#" class='btn btn-default btn-sm' data-toggle='modal' data-target='#modal_'>Editer info<i class="icon-pen position-right"></i><span class="modal_editInfoCli"></span></a></ul>
-        </div>					
+		<div class="panel panel-white">
+		<form id="example-basic" class="stepy-clickable">
+			<h3> Facteurs liés à l'immeuble </h3>
+			<section>
+				<br>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Age de l'immeuble:</label>
+							<select name="location" data-placeholder="Select position" class="select">
+								<option></option>
+								<optgroup>
+									<option value="1"> < 5 ans</option>
+									<option value="2">entre 5 et 10 ans</option>
+									<option value="2">entre 10 et 20 ans</option>
+									<option value="2">Supérieur à 20 ans</option>
+								</optgroup>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+					
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Nombre de niveaux:</label>
+								<input type="email" name="email" class="form-control" placeholder="your@email.com">
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Niveau(étage):</label>
+								<input type="email" name="email" class="form-control" placeholder="your@email.com">
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Nombre d'appartements par étages:</label>
+								<input type="email" name="email" class="form-control" placeholder="your@email.com">
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<label>Stationnement:</label>
+							<select name="position" data-placeholder="Select position" class="select">
+								<option></option>
+								<optgroup label="Parking" >
+									<option value="1">Parking titré</option>
+									<option value="2">Parking dans l'indivision</option>
+									<option value="3">Pas de Parking</option>
+								</optgroup>
+							</select>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Ascenceur:</label>
+							<br>
+							<div class="radio-inline">
+								<label>Oui
+								<input type="radio" class="styled"  name="radio-unstyled-inline" checked="checked" /></label>
+							  </div>
+							  <div class="radio-inline">
+								<label>Non
+								<input type="radio" class="styled"  name="radio-unstyled-inline" /></label>
+							  </div>
+						</div>
+					</div>
+
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Exploitation en étages:</label>
+							<br>
+							<div class="radio-inline">
+								<label>Résidentiel
+								<input type="radio" class="styled"  name="radio-unstyled-inline" checked="checked" /></label>
+							  </div>
+							  <div class="radio-inline">
+								<label>Mixte
+								<input type="radio" class="styled"  name="radio-unstyled-inline" /></label>
+							  </div>
+						</div>
+					</div>
+
+					
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Exploitation en RDC:</label>
+							<br>
+							<div class="radio-inline">
+								<label>Résidentiel
+								<input type="radio" class="styled"  name="radio-unstyled-inline" checked="checked" /></label>
+							  </div>
+							  <div class="radio-inline">
+								<label>Commercial
+								<input type="radio" class="styled"  name="radio-unstyled-inline" /></label>
+							  </div>
+						</div>
+					</div>
+
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Accès à mobilité réduite:</label>
+							<br>
+							<div class="radio-inline">
+								<label>Oui
+								<input type="radio" class="styled"  name="radio-unstyled-inline" checked="checked" /></label>
+							  </div>
+							  <div class="radio-inline">
+								<label>Non
+								<input type="radio" class="styled"  name="radio-unstyled-inline" /></label>
+							  </div>
+						</div>
+					</div>
+
+					
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Sécurité</label>
+							<br>
+							<div class="row">
+								<div class="col-md-6">
+							<div class="form-group">
+								<label>Accès interphone:</label>
+								<br>
+								<div class="radio-inline">
+									<label>Oui
+									<input type="radio" class="styled"  name="radio-unstyled-inline" checked="checked" /></label>
+								  </div>
+								  <div class="radio-inline">
+									<label>Non
+									<input type="radio" class="styled"  name="radio-unstyled-inline" /></label>
+								  </div>
+							</div>
+							</div>
+							<div class="col-md-6">
+							<div class="form-group">
+								<label>Résidence sécurisée :</label>
+								<br>
+								<div class="radio-inline">
+									<label>Oui
+									<input type="radio" class="styled"  name="radio-unstyled-inline" checked="checked" /></label>
+								  </div>
+								  <div class="radio-inline">
+									<label>Non
+									<input type="radio" class="styled"  name="radio-unstyled-inline" /></label>
+								  </div>
+							</div>
+						</div>
+						</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<h3> Facteurs liés à l'appartemnent </h3>
+			<section>
+				<br>
+				<div class="row">
+					<label>Composition:</label>
+					<div class="col-md-12">
+					
+					<div class="row">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Nombre de Cuisine:</label>
+								<input type="email" name="email" class="form-control" placeholder="your@email.com">
+							</div>
+						</div>
+
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Nombre de SDB:</label>
+								<input type="email" name="email" class="form-control" placeholder="your@email.com">
+							</div>
+						</div>
+
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Nombre de Salon:</label>
+								<input type="email" name="email" class="form-control" placeholder="your@email.com">
+							</div>
+						</div>
+
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Nombre de Chambres:</label>
+								<input type="email" name="email" class="form-control" placeholder="your@email.com">
+							</div>
+						</div>
+					</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label>Donne sur:</label>
+								<br>
+								<div class="radio-inline">
+									<label>
+									<input type="checkbox" class="styled"  name="radio-unstyled-inline" checked="checked" />&nbsp; Rue</label>
+								  </div>
+								  <div class="radio-inline">
+									<label>
+									<input type="checkbox" class="styled"  name="radio-unstyled-inline" />&nbsp; Cour</label>
+								  </div>
+								  <div class="radio-inline">
+									<label>
+									<input type="checkbox" class="styled"  name="radio-unstyled-inline" />&nbsp; Espace commun (jardin)</label>
+								  </div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label>Orientation:</label>
+								<br>
+								<div class="radio-inline">
+									<label>
+									<input type="radio" class="styled"  name="radio-unstyled-inline" checked="checked" />&nbsp; Nord</label>
+								  </div>
+								  <div class="radio-inline">
+									<label>
+									<input type="radio" class="styled"  name="radio-unstyled-inline" />&nbsp; Sud</label>
+								  </div>
+								  <div class="radio-inline">
+									<label>
+									<input type="radio" class="styled"  name="radio-unstyled-inline" />&nbsp; Neutre</label>
+								  </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<h3> Standing </h3>
+			<section>
+				<br>
+				<div class="row">
+					<div class="col-md-12">
+						<div id="example-grid"></div>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+						<label>Fenêtres:</label>
+							<select name="position" data-placeholder="Select position" class="select" multiple>
+								<option></option>
+								<optgroup label="Parking" >
+									<option value="1">Aluminum</option>
+									<option value="2">Menuiserie bois peint</option>
+									<option value="3">menuiserie massif vernis</option>
+								</optgroup>
+								<optgroup>
+									<option value="4">PVC</option>
+									<option value="5">Aluminum</option>
+								</optgroup>
+								<optgroup>
+									<option value="6">Manuel</option>
+									<option value="7">Electrique </option>
+								</optgroup>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+						<label class="form-label select-label">Portes</label>
+						<select class="select" multiple data-placeholder="Select position">
+							<option value="1">sapin rouge peint</option>
+							<option value="2">Préfabriqué simple</option>
+							<option value="3">Préfabriqué avec relief</option>
+							<option value="4">Bois massif noble vernis</option>
+							<option value="5">Isoplane avec contreplaqué vernis</option>
+						  </select>
+						</div>
+					</div>
+				</div>
+			</section>
+			<h3> Equipements </h3>
+			<section>
+				<br>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Climatiseurs:</label>
+							<br>
+							<div class="radio-inline">
+								<label>
+								<input type="checkbox" class="styled"  name="radio-unstyled-inline" checked="checked" />&nbsp; Salon</label>
+							</div>
+							  
+							<br>
+							<div class="radio-inline">
+								<label>
+								<input type="checkbox" class="styled"  name="radio-unstyled-inline" />&nbsp; Chambre</label>
+							</div>
+							
+							<br>
+							<div class="radio-inline">
+								<label>
+								<input type="checkbox" class="styled"  name="radio-unstyled-inline" />&nbsp; Néant</label>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>SDB:</label>
+							<br>
+							<div class="radio-inline">
+								<label>
+								<input type="checkbox" class="styled"  name="radio-unstyled-inline" checked="checked" />&nbsp; Baignoire</label>
+							</div>
+							
+							<br>
+							<div class="radio-inline">
+								<label>
+								<input type="checkbox" class="styled"  name="radio-unstyled-inline" />&nbsp; Douche</label>
+							  </div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Cuisine équipée:</label>
+							<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<div class="radio-inline">
+								<label>
+								<input type="radio" class="styled"  name="radio-unstyled-inline" checked="checked" />&nbsp; Oui</label>
+							</div>
+							
+							<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<div class="radio-inline">
+								<label>
+								<input type="radio" class="styled"  name="radio-unstyled-inline" />&nbsp; Non</label>
+							  </div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+				</div>
+			</section>
+			<button type="submit" class="btn btn-primary stepy-finish" style="margin: 15px;float: right;">Submit <i class="icon-check position-right"></i></button>
+		</form>
+	</div>
     </div>
-    <div class="modal fade" id="modal_editDescription" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&#215;</button>
-                    <h5 class="modal-title">Créer un client</h5>
-                </div>
-                <form method="POST" enctype="multipart/form-data" id="editDescription_form" data-role="page">
-                    {% csrf_token %}
-                    <div class="modal-body">
-                        <div id="message" data-erreur='{{erreur}}'>{% include 'partials/messages.html' %}</div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label>Score :</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input rows="5" cols="3" class="form-control" placeholder="Score client" name="score">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn bg-blue btn-block" id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
- </div>
+</div>
+
+<script>
+
+var data_test = [
+  ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
+  ['2019', 10, 11, 12, 13],
+  ['2020', 20, 11, 14, 13],
+  ['2021', 30, 15, 12, 13]
+];
+
+var container = document.getElementById('example-grid');
+/*var hot = new Handsontable(container, {
+  data: data_test,
+  rowHeaders: true,
+  colHeaders: true,
+  height: 'auto',
+  licenseKey: 'non-commercial-and-evaluation'
+});*/
+
+var hot_ac_strict_init = new Handsontable(container, {
+    data: data_test,
+    
+    stretchH: 'all',
+	rowHeaderWidth: 180,
+	rowHeaders: ['Chambres', 'Cuisine', 'WC', 'Hall-Salon'],
+    colHeaders: ['Sol', 'Mur', 'Plafond'],
+	outsideClickDeselects: false,
+    columns: [
+        {
+            data: 'Sol',
+            type: 'autocomplete',
+            source: ['Carreau', 'Marbre', 'Parquet', 'Granito'],
+           // strict: true
+        },
+        {
+            data: 'Mur',
+            type: 'autocomplete',
+            source: ['peinture simple', 'peinture décorative', 'carreau', 'carreau à mi hauteur', 'carreau à 100%', 'marbre', 'tadellakt', 'chiffoné', 'paillette', 'khayal','papier peint']
+        },
+        {
+            data: 'Plafond',
+            type: 'autocomplete',
+			source: ['staff simple', 'staff déco', 'corniche plate', 'enduit peinture', 'ennduit']
+        }
+    ],
+  licenseKey: 'non-commercial-and-evaluation'
+});
+window.setTimeout(function(){ hot_ac_strict_init.render();hot_ac_strict_init.refreshDimensions(); },100);
+
+$(".stepy-clickable").stepy();
+$("#example-basic").steps({
+    headerTag: "h3",
+    bodyTag: "section",
+    transitionEffect: "fade"
+});
+
+
+
+
+</script>

@@ -5,7 +5,7 @@
          <div class="row">
             <div class="col-md-4">
                <label>Titre Foncier : </label>
-               <b>XXXXXX/XX</b>
+               <b><span class="titreFoncierInfo"></span></b>
             </div>
          </div>
       </div>
@@ -13,7 +13,7 @@
          <div class="row">
             <div class="col-md-4">
                <label>Date CP : </label>
-               <b>XX/XX/XXXX</span></b>
+               <b><span class="dateCpInfo"></span></b>
             </div>
          </div>
       </div>
@@ -21,7 +21,7 @@
          <div class="row">
             <div class="col-md-4">
                <label>Surface titrée : </label>
-               <b>........m2</b>
+               <b><span class="surfaceTitreeInfo"></span></b>
             </div>
          </div>
       </div>
@@ -29,7 +29,7 @@
          <div class="row">
             <div class="col-md-4">
                <label>Conservation : </label>
-               <b>............</b>
+               <b><span class="conservationInfo"></span></b>
             </div>
          </div>
       </div>
@@ -41,7 +41,7 @@
             <div class="col-md-4">
                <label>Fractions : </label>
                <b>
-                  <table id="actualisation">
+                  <table id="fractions">
                      <thead>
                         <tr>
                            <th>Fraction</th>
@@ -55,14 +55,14 @@
                </b>
             </div>
          </div>
-         <div><a id="new_fraction" class="pull-right" ><i class="fa fa-plus" style="color:blue"></i>&nbsp; Ajouter une fraction</a></div>
+         <div><a id="add_fraction" class="pull-right" ><i class="fa fa-plus" style="color:blue"></i>&nbsp; Ajouter une fraction</a></div>
       </div>
       <div class="form-group">
          <div class="row">
             <div class="col-md-4">
                <label>Hypothèques : </label>
                <b>
-                  <table id="actualisation">
+                  <table id="hypotheques">
                      <thead>
                         <tr>
                            <th>Montant</th>
@@ -109,6 +109,7 @@
                         <label>Titre Foncier :</label>
                      </div>
                      <div class="col-md-8">
+                        <input type="text" class="form-control" id="rapport_id_situation_juridique" name="rapport_id_situation_juridique" style="display: none;"/>
                         <input rows="5" cols="3" class="form-control" placeholder="Titre Foncier" name="titre_foncier">
                      </div>
                   </div>
@@ -129,7 +130,7 @@
                         <label>Surface titrée :</label>
                      </div>
                      <div class="col-md-8">
-                        <input type="number" rows="5" cols="3" class="form-control" placeholder="Surface titrée" name="surface_titrée">
+                        <input type="number" rows="5" cols="3" class="form-control" placeholder="Surface titrée" name="surface_titree">
                      </div>
                   </div>
                </div>
@@ -144,7 +145,7 @@
                   </div>
                </div>
                <div class="form-group">
-                  <button type="submit" class="btn bg-blue btn-block" id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+                  <button type="submit" class="btn bg-blue btn-block" id="editInfoJuridique_submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
                </div>
             </div>
          </form>
@@ -152,7 +153,7 @@
    </div>
 </div>
 
-<div class="modal fade" id="modal_addFraction" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_addNewFraction" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
    <div class="modal-dialog" role="document">
       <div class="modal-content">
          <div class="modal-header">
@@ -168,6 +169,7 @@
                         <label>Fraction :</label>
                      </div>
                      <div class="col-md-8">
+                        <input type="text" class="form-control" id="rapport_id_fraction" name="rapport_id_fraction" style="display: none;"/>
                         <input rows="5" cols="3" class="form-control" placeholder="Fraction" name="fraction">
                      </div>
                   </div>
@@ -178,7 +180,17 @@
                         <label>Consistance :</label>
                      </div>
                      <div class="col-md-8">
-                        <input type="date" rows="5" cols="3" class="form-control" placeholder="Consistance" name="consistance">
+                        <select data-placeholder="Selectionner la consistance" class="select-size-lg" name="consistance" id="consistance">
+                           <option></option>
+                           <optgroup label="Types">
+                              <option value="1">Appartement</option>
+                              <option value="2">Box</option>
+                              <option value="3">Parking</option>
+                              <option value="4">Terasse non couverte</option>
+                              <option value="5">Terasse couverte</option>
+                              <option value="6">Cour</option>
+                           </optgroup>
+                        </select>
                      </div>
                   </div>
                </div>
@@ -188,12 +200,12 @@
                         <label>Surface :</label>
                      </div>
                      <div class="col-md-8">
-                        <input type="number" rows="5" cols="3" class="form-control" placeholder="Surface" name="surface">
+                        <input type="number" rows="5" cols="3" class="form-control" placeholder="Surface" name="surfaceFraction">
                      </div>
                   </div>
                </div>
                <div class="form-group">
-                  <button type="submit" class="btn bg-blue btn-block" id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+                  <button type="submit" class="btn bg-blue btn-block" id="addFraction_submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
                </div>
             </div>
          </form>
@@ -201,58 +213,49 @@
    </div>
 </div>
 
-<div class="modal fade" id="modal_addHypotheques" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_addHypotheques" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
    <div class="modal-dialog" role="document">
       <div class="modal-content">
          <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&#215;</button>
-            <h5 class="modal-title">Editer les informations juridiques</h5>
+            <h5 class="modal-title">Ajouter une hypothèque</h5>
          </div>
-         <form method="POST" enctype="multipart/form-data" id="addHypotheques_form" data-role="page">
+         <form method="POST" enctype="multipart/form-data" id="addHypotheque_form" data-role="page">
             {% csrf_token %}
             <div class="modal-body">
                <div class="form-group">
                   <div class="row">
                      <div class="col-md-4">
-                        <label>Titre Foncier :</label>
+                        <label>Montant :</label>
                      </div>
                      <div class="col-md-8">
-                        <input rows="5" cols="3" class="form-control" placeholder="Titre Foncier" name="titre_foncier">
+                        <input type="text" class="form-control" id="rapport_id_hypotheque" name="rapport_id_hypotheque" style="display: none;"/>
+                        <input rows="5" cols="3" class="form-control" placeholder="Hypothèque" name="montantHypotheque">
                      </div>
                   </div>
                </div>
                <div class="form-group">
                   <div class="row">
                      <div class="col-md-4">
-                        <label>Date CP :</label>
+                        <label>Au profit de :</label>
                      </div>
                      <div class="col-md-8">
-                        <input type="date" rows="5" cols="3" class="form-control" placeholder="Date CP" name="date_cp">
+                        <input rows="5" cols="3" class="form-control" placeholder="Au profit de" name="au_profit_de">
                      </div>
                   </div>
                </div>
                <div class="form-group">
                   <div class="row">
                      <div class="col-md-4">
-                        <label>Surface titrée :</label>
+                        <label>Date :</label>
                      </div>
                      <div class="col-md-8">
-                        <input type="number" rows="5" cols="3" class="form-control" placeholder="Surface titrée" name="surface_titrée">
+                        <input type="date" rows="5" cols="3" class="form-control" placeholder="Date" name="dateHypo">
                      </div>
                   </div>
                </div>
                <div class="form-group">
-                  <div class="row">
-                     <div class="col-md-4">
-                        <label>Conservation :</label>
-                     </div>
-                     <div class="col-md-8">
-                        <input  rows="5" cols="3" class="form-control" placeholder="Conservation" name="conservation">
-                     </div>
-                  </div>
-               </div>
-               <div class="form-group">
-                  <button type="submit" class="btn bg-blue btn-block" id="editInfoPerso-submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+                  <button type="submit" class="btn bg-blue btn-block" id="addHypotheque_submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
                </div>
             </div>
          </form>
@@ -265,18 +268,18 @@
       <div class="modal-content">
          <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&#215;</button>
-            <h5 class="modal-title">Editer les informations juridiques</h5>
+            <h5 class="modal-title">Editer l'inscription Particulière</h5>
          </div>
-         <form method="POST" enctype="multipart/form-data" id="editInfoJuridique_form" data-role="page">
+         <form method="POST" enctype="multipart/form-data" id="editInscriptionParticuliere_form" data-role="page">
             {% csrf_token %}
             <div class="modal-body">
                <div class="form-group">
                   <div class="row">
                      <div class="col-md-4">
-                        <label>Titre Foncier :</label>
+                        <label>Inscription Particulière :</label>
                      </div>
                      <div class="col-md-8">
-                        <input type="text" rows="5" cols="3" class="form-control" placeholder="Titre Foncier" name="titre_foncier">
+                        <input type="text" rows="5" cols="3" class="form-control" placeholder="Inscription Particulière" name="inscription_particuliere">
                      </div>
                   </div>
                </div>
@@ -291,20 +294,16 @@
 </div>
 
  <script>
-
-   $("#new_fraction").on('click', function(event){
-      $("#modal_addFraction").modal('toggle');
+   //Fraction
+   $("#add_fraction").off('click').on('click', function(event){
+      $("#modal_addNewFraction").modal('toggle');
    });
-
-   $("#new_hypotheqye").on('click', function(event){
-      $("#modal_addHypotheques").modal('toggle');
-   });
-
-   
-   $("#addFraction_form").submit(function( event ) {
+   $("#addFraction_submit").off('click').on('click', function( event ) {
       event.preventDefault ();
-      const formData = new FormData(this);
-      fetch("http://127.0.0.1:8000/reference/ajout_actualisation/",{
+      var form = $("#addFraction_form")[0];
+      const formData = new FormData(form);
+      var rapport_id = $("#rapport_id_fraction").val();
+      fetch("http://127.0.0.1:8000/rapport/addFraction/"+rapport_id+'/',{
          method: 'POST',//définir la method du submit du form
          mode : 'same-origin',
          credentials: 'same-origin' ,
@@ -313,14 +312,66 @@
       .then((resp) => resp.json())
       .then(function(data) {
          if(data.id != null ) {
-            notificationSuccess('success message', 'l\'actualisation a été effectuée avec succès' );
-            getPinActualisation(data.actualisation, data.surface, data.id); 
-            idEditeur = "{{user.id}}";
-            if(idEditeur != null){
-               getUser(idEditeur, 'editeur');
-            }
-            
-            $("#modal_addFraction").modal('toggle');
+            notificationSuccess('success message', 'La fraction a été ajoutée avec succès!' );
+            getPinActualisation(data.actualisation, data.surface, data.id);
+            $("#modal_addNewFraction").modal('toggle');
+            getFractionRapport(data.fraction);
+         }
+         else{
+            notification('Erreur, '+ data['message']);
+         }
+      }); 
+   });
+
+   //Hypoteque
+   $("#new_hypotheqye").off('click').on('click', function(event){
+      $("#modal_addHypotheques").modal('toggle');
+   });
+   $("#addHypotheque_submit").off('click').on('click', function( event ) {
+      event.preventDefault ();
+      var form = $("#addHypotheque_form")[0];
+      const formData = new FormData(form);
+      var rapport_id = $("#rapport_id_fraction").val();
+      fetch("http://127.0.0.1:8000/rapport/addHypotheque/"+rapport_id+'/',{
+         method: 'POST',//définir la method du submit du form
+         mode : 'same-origin',
+         credentials: 'same-origin' ,
+         body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.id != null ) {
+            notificationSuccess('success message', 'L\'hyphotèque a été ajoutée avec succès!' );
+            getPinActualisation(data.actualisation, data.surface, data.id);
+            $("#modal_addHypotheques").modal('toggle');
+            getHypothequeRapport(data.hypotheque);
+         }
+         else{
+            notification('Erreur, '+ data['message']);
+         }
+      }); 
+   });
+
+   //Info juridique
+   $("#editInfoJuridique_submit").off('click').on('click', function( event ) {
+      event.preventDefault ();
+      var form = $("#editInfoJuridique_form")[0];
+      const formData = new FormData(form);
+      var rapport_id = $("#rapport_id_situation_juridique").val();
+      fetch("http://127.0.0.1:8000/rapport/situationJuridique/"+rapport_id+'/',{
+         method: 'POST',
+         mode : 'same-origin',
+         credentials: 'same-origin' ,
+         body : formData
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.id != null ) {
+            $("#modal_editInfoJuridique").modal('toggle');
+            $('.titreFoncierInfo').html(data.titre_foncier)
+            $('.dateCpInfo').html(data.date_cp)
+            $('.surfaceTitreeInfo').html(data.surface_titree)
+            $('.conservationInfo').html(data.conservation)
          }
          else{
             notification('Erreur, '+ data['message']);

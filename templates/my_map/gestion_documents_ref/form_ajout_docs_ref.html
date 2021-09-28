@@ -1,58 +1,52 @@
-            <!--ajouter une piece jointe -->
-            <div class="modal fade" id="modal_doc"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                   <div class="modal-content">
-                      <div class="modal-header">
-                         <button type="button" class="close" data-dismiss="modal">&#215;</button>
-                         <h5 class="modal-title">Ajouter un document</h5>
-                      </div>
-                      <form method="POST" id="piece_jointe_modif" enctype="multipart/form-data">
-                         {% csrf_token %}
-                         <div class="modal-body">
-                            <!-- pieces jointe-->
-                            <input type="text" class="file-styled" id="pin_id_fichier" name="pin_id_fichier" style="display:none"/>
-                            <!--fichier 01-->
-                            <div class="form-group">
-                               <div class="row">
-                                  <div class="sidebar-category">
-                                     <div class="category-title">
-                                        <span><h4><p>Pièces jointes &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
-                                     </div>
-                                     <div class="col-sm-6">
-                                        <label>Type de la pièce jointe</label>
-                                        <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_new">
-                                           <option></option>
-                                           <option value="C_V">Contrat de vente</option>
-                                           <option value="C_L">Contrat de location</option>  
-                                        </select>
-                                     </div>         
-                                     <div class="col-sm-6">
-                                        <label>Fichier pdf</label>
-                                        <div class="uploader">
-                                           <input type="file" class="file-styled" id="input-piece-jointe-modify" name="piece_jointe_new"/>
-                                           <span class="filename" style="user-select: none;" id="selected-file-modify-pj">No file selected</span>
-                                           <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
-                                        </div>
-                                        <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
-                                     </div>  
-                                  </div>
-                               </div>
-                            </div>
-                            <!--/fichier 01-->
-                            <br/>
-                            <br/>
-                            <div class="form-group">
-                               <button type="submit" class="btn bg-blue btn-block">Ajouter <i class="icon-arrow-right14 position-right"></i></button>
-                            </div>
-                            <!---->
-                         </div> 
-                      </form>
-                   </div>
-                </div>
-             </div>
-             <!--/ajouter une piece jointe -->
-             <script>
-                  //---------------------------------------------------------supprimer un document-------------------------------------------------------
+<div class="modal fade" id="modal_doc"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Ajouter un document</h5>
+         </div>
+         <form method="POST" id="piece_jointe_modif" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-body">
+               <input type="text" class="file-styled" id="pin_id_fichier" name="pin_id_fichier" style="display:none"/>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="sidebar-category">
+                        <div class="category-title">
+                           <span><h4><p>Pièces jointes &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
+                        </div>
+                        <div class="col-sm-6">
+                           <label>Type de la pièce jointe</label>
+                           <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_piece_jointe_du_bien_new">
+                              <option></option>
+                              <option value="C_V">Contrat de vente</option>
+                              <option value="C_L">Contrat de location</option>  
+                           </select>
+                        </div>         
+                        <div class="col-sm-6">
+                           <label>Fichier pdf</label>
+                           <div class="uploader">
+                              <input type="file" class="file-styled" id="input-piece-jointe-modify" name="piece_jointe_new"/>
+                              <span class="filename" style="user-select: none;" id="selected-file-modify-pj">No file selected</span>
+                              <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                           </div>
+                           <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                        </div>  
+                     </div>
+                  </div>
+               </div>
+               <br/>
+               <br/>
+               <div class="form-group">
+                  <button type="submit" class="btn bg-blue btn-block">Ajouter <i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div> 
+         </form>
+      </div>
+   </div>
+</div>
+<script>
+   //---------------------------------------------------------supprimer un document-------------------------------------------------------
    function delete_piece_jointe_OnClick(idPieceJointe){
       $('#myDeleteMessage').modal('toggle');
       $('#confirm').off('click').on('click', function(event){
@@ -96,5 +90,5 @@
          }
       });
    });
-             </script>
+</script>
  

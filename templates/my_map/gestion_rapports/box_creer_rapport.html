@@ -65,41 +65,48 @@
 
 <script>
 
-      $("#editInfoPerso-submit").off('click').on('click', function( event ) {
-         event.preventDefault ();
-         var form = $("#creerRapport_form")[0];
-         const formData = new FormData(form);
-         var client_id = 0;
-         fetch("http://127.0.0.1:8000/rapport/createRapport/",{
-            method: 'POST',//définir la method du submit du form
-            mode : 'same-origin',
-            credentials: 'same-origin' ,
-            body : formData//définir la formulaire pour le url
-         })
-         .then((resp) => resp.json())
-         .then(function(data) {
-            if(data.id != null ) {
-               client_id = data.id
-               notificationSuccess('success message', 'Rapport ajouter avec succès.' );
-               console.log(data)
-               $('#modal_creerRapport').modal('toggle');
-               form.reset();
-               rapportOnClick(data.id)
-            }
-            else{
-               notification('Erreur, '+ data['message']);
-            }
-         });
+   $("#editInfoPerso-submit").off('click').on('click', function( event ) {
+      event.preventDefault ();
+      var form = $("#creerRapport_form")[0];
+      const formData = new FormData(form);
+      var client_id = 0;
+      fetch("http://127.0.0.1:8000/rapport/createRapport/",{
+         method: 'POST',//définir la method du submit du form
+         mode : 'same-origin',
+         credentials: 'same-origin' ,
+         body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.id != null ) {
+            client_id = data.id
+            notificationSuccess('success message', 'Rapport ajouter avec succès.' );
+            $('#modal_creerRapport').modal('toggle');
+            form.reset();
+            rapportOnClick(data.id)
+            $("#rapport_id_situation_juridique").val(data.id);
+            $("#rapport_id_client").val(data.id);
+         }
+         else{
+            notification('Erreur, '+ data['message']);
+         }
       });
-   
-   
+   });
    function rapportOnClick(id) {
+      $("#rapport_id_situation_juridique").val(id);
+      $("#rapport_id_client").val(id);
+      $("#rapport_id_fraction").val(id);
+      $("#rapport_id_file").val(id);
+      $("#rapport_id_photo").val(id);
       fetch('http://127.0.0.1:8000/rapport/rapport_detail/'+id+'/')
       .then((resp) => resp.json())
       .then(function(data){
          if(data.id != null && typeof data.id != "undefined"){
-            console.log("data : ", data)
-            get_approxim_pins(data.lat, data.lng)
+            getFractionRapport(data.fraction)
+            getHypothequeRapport(data.hypotheque);
+            get_approxim_pins(data.lat, data.lng);
+            getDocsRapport(data.id);
+            getPhotographiesRapport(data.id);
             $("#creerRapport_form")[0].reset();
             $( '#box_creer_rapport' ).show(function(){
                $(window).scrollTop($('#box_creer_rapport').position().top);
@@ -109,8 +116,128 @@
             $('.prenom_info').html(data.client.prenom)
             $('.tel_info').html(data.client.tel)
             $('.email_info').html(data.client.email)
+            $('.gsm_info').html(data.client.gsm)
+            $('.ville_info').html(data.client.ville)
+            $('.adr_info').html(data.client.adresse)
+            //Update les infos juridique
+            $('.titreFoncierInfo').html(data.titre_foncier)
+            $('.dateCpInfo').html(data.date_cp)
+            $('.surfaceTitreeInfo').html(data.surface_titree)
+            $('.conservationInfo').html(data.conservation)
+            //Update les info du rapport
+            $('.id_rapport').html(data.id)
+            $('.ref_dossier_interne_info').html(data.ref_dossier_interne)
+            if(data.type_de_bien != null && data.type_de_bien != ''){
+               $('.type_bien_info_rapport').html(getTypeDeBien(data.type_de_bien))
+               $('.typedebienRapport').show();
+            }
+            else{
+               $('.typedebienRapport').hide();
+            }
+            $('.asking_price_info').html(data.asking_price)
+            $('.montant_demande_info').html(data.montant_demande)
+            $('.loan_to_value').html(data.montant_demande/data.asking_price)
+            $('.comment_info').html(data.comment)
          }
       });
    }
+   function getDocsRapport(rapport_id){
+      $("#rapport_id_file").val(rapport_id);
+      $("#ul_docsRapport").hide();
+      var url = 'http://127.0.0.1:8000/rapport/getPieceJointeByIdPin/'+rapport_id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".docs_pin").remove();
+         $(".Docs_lenght").html(data.length);
+         $('#ul_docsRapport').DataTable().clear().draw();
+         var typeFile = '';
+         var supprimerDocs = '';
+         if(data.length!=0){ 
+            $("#ul_docsRapport").show();
+            if(data.length === 5 ){
+               $("#ajouterDocsRapport").hide();
+            }
+            for(var i=0;i<data.length;i++){
+               typeFile = data[i].type_file;
+               if(typeFile === 'C_V'){
+                  typeFile = 'Contrat de vente';
+               }
+               if(typeFile === 'C_P'){
+                  typeFile = 'Certificat de propriété';
+               }
+               if(typeFile === 'P_C'){
+                  typeFile = 'Plan de cadastre';
+               }
+               filePath = data[i].fichier;
+               filePathSplited =  filePath.split("/");
+               fileName = filePathSplited[filePathSplited.length - 1]
+               fichier = "<a href='"+data[i].fichier+"'>"+fileName+"</a>";
+               actions ="<td class='text-center'><ul class='icons-list'><li class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='icon-menu9'></i>"+
+                  "</a><ul class='dropdown-menu dropdown-menu-right'><li><a onclick='show_pdf(" + data[i].id + ")'><i class=' icon-file-plus2'></i> Show</a></li>"+supprimerDocs+
+                  "</ul></li></ul></td>";
+               DocsRapportAddRow(typeFile, data[i].username.username, fichier, actions);
+            }
+         }
+      });
+   }
+   function DocsRapportAddRow(type_doc,username,fichierPdf,actions) {
+      $('#ul_docsRapport').dataTable().fnAddData([type_doc, username, fichierPdf, actions]);
+   }
+
+   function getPhotographiesRapport(id){
+      var url = 'http://127.0.0.1:8000/rapport/getPhotographiesRapport/'+id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".photos").remove();
+         $(".photographiesRapport_lenght").html(data.length)
+         var supprimerPhotos='';
+         if(data.length!=0){
+            $("#ajouter-photos-rapport").data("nbrPhotos", data.length);
+            if(data.length === 12){
+               $("#ajouter-photos-rapport").hide();
+            }
+            for(var i=0;i<data.length;i++){
+               
+               if(data[i].rapport.is_locked === false){
+                  supprimerPhotos = "<a onclick='dropPhotoRapport(" +data[i].id + ")' class='btn border-white text-white btn-flat btn-icon btn-rounded ml-5'><i class='icon-trash'></i></a>";
+               }
+               $("#PhotographiesRapportDiv").append("<div class='col-lg-3 col-sm-6 photos'><div class='thumbnail thumbnail-photos'><div class='thumb thumb-photos'>"+
+                  "<img loading=lazy' src="+ data[i].photo+" alt='' class='imageCapture image-thumbnail'>"+
+                  "<div class='caption-overflow'><span>"+
+                  "<a href="+ data[i].photo+" data-popup='lightbox' rel='gallery' class='btn border-white text-white btn-flat btn-icon btn-rounded imageDisplay'><i class='icon-plus3'></i></a>"+
+                  "<a href="+ data[i].photo+" class='btn border-white text-white btn-flat btn-icon btn-rounded ml-5'><i class='icon-link2'></i></a>"+supprimerPhotos+"</span></div></div></div></div>"
+               )
+            }
+            $("#content_photographiesRapport").show();
+         }
+         else{
+            $("#content_photographiesRapport").hide();
+         }
+      });
+   }
+
+   function dropPhotoRapport(rapport_id){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+         var url = 'http://127.0.0.1:8000/rapport/dropPhotoRapport/'+rapport_id
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0){
+               console.log(data)
+               notificationSuccess('success message', 'la photos a été supprimée avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               getPhotographiesRapport(data.rapport.id);
+            }
+            else{
+               notification("desole, un probleme est survenu lors de la suppression")
+            }
+         });
+      });
+   }
+
    
 </script>

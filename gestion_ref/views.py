@@ -394,7 +394,7 @@ def update_my_pin(request):
             type_de_bien = data['type_de_bien']
             ville=data['ville']
             region = data['region']
-        # terrain_nu_affectation = data['terrain_nu_affectation']
+            # terrain_nu_affectation = data['terrain_nu_affectation']
             type_de_reference = data['type_de_reference']
             contact = data['contact-update']
             prix_unit = data['prix_unit_update']
@@ -672,9 +672,6 @@ def pinlist_rapport(request):
     try:
         pins = Rapport.objects.filter(is_locked=False)
         serializer = RapportSerializer(pins, many=True)
-        print('--------------------Rapport------------------------')
-        print(serializer.data)
-        print('--------------------/Rapport------------------------')
         return Response(serializer.data)
     except Exception as e:
         logging.getLogger("error_logger").error(repr(e))

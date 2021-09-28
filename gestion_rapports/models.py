@@ -1,4 +1,4 @@
-from gestion_clients.models import Client
+from gestion_clients.models import ClientPhysique
 from gestion_dgi.models import dgi_appt_casa
 from account.models import User
 from django.db import models
@@ -8,33 +8,26 @@ import PIL
 from datetime import date
 from django.contrib.postgres.fields import ArrayField
  
+TypeFile_CHOICES = (
+  ('C_V','Contrat de vente'),
+  ('C_P','Certificat de propriété'),
+  ('P_C', 'Plan de cdastre')
+)
 
 
-
-class Photographie(models.Model):
-  #pin = models.ForeignKey(Pin, on_delete=models.CASCADE, null=True)
-  photo = models.ImageField(upload_to='images/rapport/%Y/%m/%d',null=True, blank=True, validators=[FileExtensionValidator(allowed_extensions=['png','jpeg','jpg','tiff'])])
-  descriptif = models.CharField(max_length=200, null=True)
-  def save(self, *args, **kwargs):
-    super().save(*args, **kwargs)
-    image = Image.open(self.photo.path)
-    width, height = image.size
-    print("width: --",width)
-    print("height: --",height)
-    image=image.resize((width, height), PIL.Image.ANTIALIAS)
-    image.save(self.photo.path)
-    #return instance
-  def __str__(self):
-    return str(self.descriptif)
 
 class Rapport(models.Model):
+  ref_dossier_interne = models.CharField(max_length=10, unique=True, null=True, blank=True)
   lat = models.DecimalField(max_digits=20, decimal_places=18, null=True)
   lng = models.DecimalField(max_digits=20, decimal_places=18, null=True)
+  montant_demande = models.BigIntegerField(null=True, blank=True)
   prix_unit_estime = models.BigIntegerField(null=True, blank=True)
+  asking_price = models.BigIntegerField(null=True, blank=True)
   is_locked = models.BooleanField(default=False, blank=True, null=True)
+  comment = models.TextField(null=True, blank=True)
   username = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
   dgi_zone = models.ForeignKey(dgi_appt_casa, on_delete=models.CASCADE, null=True)
-  client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
+  client = models.ForeignKey(ClientPhysique, on_delete=models.CASCADE, null=True)
   type_de_bien = models.IntegerField(null=True, blank=True)
   descreptif = models.IntegerField(null=True, blank=True)
   from_table = models.CharField(max_length=1,null=True, default="R")
@@ -80,8 +73,8 @@ class Rapport(models.Model):
   date_cp = models.DateField(default=date.today, null=True)
   surface_titree = models.IntegerField(null=True, blank=True)
   conservation = models.CharField(max_length=50,null=True)
-  fraction = ArrayField(ArrayField(models.CharField(max_length=25, null=True)), blank=True, null=True)
-  hypotheque = ArrayField(ArrayField(models.CharField(max_length=25, null=True)), blank=True, null=True)
+  fraction = ArrayField(ArrayField(models.CharField(max_length=25, null=True)), blank=True, null=True, default='{}')
+  hypotheque = ArrayField(ArrayField(models.CharField(max_length=25, null=True)), blank=True, null=True, default='{}')
   def __str__(self):
     return str(self.score)
 
@@ -93,3 +86,29 @@ class Commentaire(models.Model):
   reponse_pour = models.IntegerField(null=True, blank=True)
   class Meta:
     unique_together = ('username', 'rapport')
+
+class DocumentsRapport(models.Model):
+  rapport = models.ForeignKey(Rapport, on_delete=models.CASCADE, null=True)
+  username = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+  type_file = models.CharField(max_length=40, null=True, choices=TypeFile_CHOICES)
+  fichier = models.FileField(upload_to='doc_pins_my_map/',null=True, blank=True, validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+  def _str_(self):
+    return str(self.type_file)
+  class Meta:
+    db_table = "Rapport_documents"
+
+class PhotographieRapport(models.Model):
+  rapport = models.ForeignKey(Rapport, on_delete=models.CASCADE, null=True)
+  photo = models.ImageField(upload_to='images/rapport/%Y/%m/%d',null=True, blank=True, validators=[FileExtensionValidator(allowed_extensions=['png','jpeg','jpg','tiff'])])
+  descriptif = models.CharField(max_length=200, null=True)
+  def save(self, *args, **kwargs):
+    super().save(*args, **kwargs)
+    image = Image.open(self.photo.path)
+    width, height = image.size
+    print("width: --",width)
+    print("height: --",height)
+    image=image.resize((width, height), PIL.Image.ANTIALIAS)
+    image.save(self.photo.path)
+    #return instance
+  def __str__(self):
+    return str(self.descriptif)

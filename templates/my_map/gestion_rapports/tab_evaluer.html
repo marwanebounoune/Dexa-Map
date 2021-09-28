@@ -1,4 +1,3 @@
-
 <div class="tab-pane fade" id="tab_evaluer">
    <div class="panel-body">
       <div class="col-sm-12">
@@ -8,28 +7,117 @@
                   <div class="col-lg-7">
                     <!-- Example Bar Chart Card-->
                     <div class="card mb-3">
-                      <div class="card-header">
-                        <i class="fa fa-bar-chart"></i> Bar Chart Example</div>
-                      <div class="card-body">
-                            <canvas id="basic_columns"  width="100%" height="100"></canvas>
-                            <!--div class="chart has-fixed-height" id="basic_columns" width="100%" height="50"></div-->
-                      </div>
-                      <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-                    </div>
+                           <div class="row">
+                              <div class="col-sm-12 my-auto">
+                                 <div class="card-header card-header-space"><i class="fa fa-bar-chart"></i> Référentiel de la DGI<hr></div>
+                                   <div class="card-body">
+                                       <div> <span >Type : </span><span class="mb-0 type_bien_rapport" > Appartement (Habitation) </span></div>
+                                       <div > <span>Zone DGI : </span><span class="mb-0 zone_dgi" > CE-32 B </span></div>
+                                       <div > <span>Prix DGI : </span><span class="mb-0 prix_dgi" > 16 000 </span> dhs/m² </div>
+                                   </div>
+                              </div>
+                              <br><br><br><br>
+                              <div class="col-sm-12 my-auto">
+                                 <div class="card-header card-header-space" style="padding-top: 25px;"><i class="fa fa-bar-chart"></i> Comparables<hr></div>
+                                   <div class="card-body">          
+                                      <table id="actualisation">
+                                          <thead>
+                                             <tr>
+                                                <th>Référence</th>
+                                                <th>Type</th>
+                                                <th>Situation</th>
+                                                <th>Surface</th>
+                                                <th>PU</th>
+                                                <th>PT</th>
+                                                <th>Action</th>
+                                             </tr>
+                                          </thead>
+                                          <tbody></tbody>
+                                    </table>
+                                   </div>
+                              </div>
+                              <!--diagramme-->
+                              <div class="col-sm-12 my-auto">
+                                 <div class="card-header card-header-space" style="padding-top: 25px;"><i class="fa fa-bar-chart"></i> Diagramme de positionnement<hr></div>
+                                   <div class="card-body chartAreaWrapper">
+                                       <div class="chart-container">
+                                          <div class="chart has-fixed-height" id="basic_columns" style="height: 250px;width: 600px;"></div>
+                                       </div>
+                                   </div>
+                              </div>
+                              <!--/diagramme-->
+                              <!--tableau d'evaluation -->
+                                 <div class="col-sm-12 my-auto">
+                                    <div class="card-header card-header-space" style="padding-top: 25px;"><i class="fa fa-bar-chart"></i> Tableau d'évaluation<hr></div>
+                                    <div class="card-body">          
+                                       <table id="actualisation">
+                                             <thead>
+                                                <tr>
+                                                   <th>Titre foncier</th>
+                                                   <th>Surface pondérée</th>
+                                                   <th>PU</th>
+                                                   <th>PT</th>
+                                                </tr>
+                                             </thead>
+                                             <tbody></tbody>
+                                       </table>
+                                    </div>
+                                 </div>
+                              <!--/tableau d'evaluation -->
+                           </div>
+                     </div>
                   </div>
+
                   <div class="col-lg-5">
                     <!-- Example Pie Chart Card-->
                     <div class="card mb-3">
-                      <div class="card-header">
-                        <i class="fa fa-pie-chart"></i> Pie Chart Example</div>
+                      <div class="card-header card-header-space">
+                        <i class="icon-pin"></i> Situation<hr></div>
                       <div class="card-body">
                         <div id="map_approximation" width="100%" height="200" class="map-container"></div>
                       </div>
                       <!--div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div-->
                     </div>
                   </div>
-                </div>
+               </div>
+               <div class="row">
+                  <!--Valeur Générée-->
+                  <div class="col-sm-4 my-auto">
+                     <div class="card-header card-header-space" style="padding-top: 25px;"><i class="fa fa-bar-chart"></i> Valeur Générée<hr></div>
+                     
+                       <div class="card-body">
+                           <div class="col-sm-12 text-center my-auto">       
+                              <div class="h4 mb-0 text-primary">34,693 Dhs</div>
+                              <div class="small text-muted">YTD Revenue</div>
+                           </div>
+                       </div>
+                  </div>
+                  <!--/Valeur Générée-->
+                  <!--decision-->
+                  <div class="col-sm-8 my-auto">
+                     <div class="card-header card-header-space" style="padding-top: 25px;"><i class="fa fa-bar-chart"></i> Valeur Générée<hr></div>
+                       <div class="card-body">
+                          
+                          <div class="checkbox-inline">
+                              <label for="accepted">
+                                 <input type="checkbox" class="styled"  name="accepted" value="accepted" id="accepted" autocomplete="off" checked/>
+                                    Cette Valorisation permet de couvrir le crédit demandé par le client (+15%)
+                              </label>
+                           </div>
+                           <br>
+                           <div class="checkbox-inline">
+                              <label for="no_accepted">
+                                 <input type="checkbox" class="styled"  name="no_accepted" value="no_accepted" id="no_accepted" autocomplete="off"/>
+                                    Cette Valorisation ne permet pas de couvrir le crédit demandé par le client (-17%)
+                              </label>	
+                           </div>
+                       </div>
+                  </div>
+                  <!--/decision-->
+               </div>
               
+
+               
                <!--div class="row">
                   </div><a type="button" target="_blank" href="{% url 'preview_pdf' %}" class="btn btn-default btn-sm pull-right"><i class="fa fa-plus"></i>&nbsp;Aperçu rapport</a>
                </div-->   
@@ -64,8 +152,6 @@
                          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
                         </div>
                      </div>
-
-
                      
                      <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                         <div class="card">
@@ -116,7 +202,6 @@
                               </table>
                         </div>
                 </div>
-
                      <div class="col-sm-12"-->
                      <!---tableau -->
 
@@ -139,7 +224,6 @@
                                   </ul>
                                </div>
                          </div>
-
                          <div class="panel-body">
                             <div class="chart-container">
                                <canvas id="mixed-chart" width="800" height="450"></canvas>
@@ -149,9 +233,3 @@
                       -->
        <!-- /basic column chart -->
    </div>
-
-
-<script>
-   //////////////////////////////
-
-</script>

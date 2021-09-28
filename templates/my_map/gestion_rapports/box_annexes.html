@@ -1,11 +1,11 @@
 <div class="tab-pane fade" id="annexes">
    <div class="panel-body">
-      <ul id="ajouterDocs" >
-         <a href="#" class="btn btn-default btn-sm pull-right" data-toggle='modal' data-target='#modal_doc'>
+      <ul id="ajouterDocsRapport" >
+         <a href="#" class="btn btn-default btn-sm pull-right" data-toggle='modal' data-target='#modal_addDocRapport'>
             <i class="fa fa-plus"></i>&nbsp;Ajouter des documents
          </a>
       </ul>
-      <table class="table table-striped media-library table-lg" id="ul-docs" style="display:none">
+      <table class="table table-striped media-library table-lg" id="ul_docsRapport" style="display:none">
          <thead>
             <tr>
                <th>type de document</th>
@@ -19,3 +19,86 @@
       </table>
    </div>
 </div>
+
+<div class="modal fade" id="modal_addDocRapport"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Ajouter un document</h5>
+         </div>
+         <form method="POST" id="addDocRapport_form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-body">
+               <!-- pieces jointe-->
+               <input type="text" class="file-styled" id="rapport_id_file" name="rapport_id_file" style="display:none"/>
+               <!--fichier 01-->
+               <div class="form-group">
+                  <div class="row">
+                     <div class="sidebar-category">
+                        <div class="category-title">
+                           <span><h4><p>Pièces jointes &nbsp;<span class="text-size-mini text-muted no-border no-padding">(Optionnel)</span></p></h4></span>
+                        </div>
+                        <div class="col-sm-6">
+                           <label>Type de la pièce jointe</label>
+                           <select data-placeholder="Selectionner le type du fichier" class="select-size-lg form-control" name="type_annexe_rapport">
+                              <option></option>
+                              <option value="C_V">Contrat de vente</option>
+                              <option value="C_P">Certificat de propriété</option>
+                              <option value="P_C">Plan de cadastre</option>
+                           </select>
+                        </div>         
+                        <div class="col-sm-6">
+                           <label>Fichier pdf</label>
+                           <div class="uploader">
+                              <input type="file" accept=".pdf" class="file-styled" id="input-piece-jointe-modify" name="annexe_rapport"/>
+                              <span class="filename" style="user-select: none;" id="selected-file-modify-pj">No file selected</span>
+                              <span class="action btn bg-primary-400" style="user-select: none;">Choose File</span>
+                           </div>
+                           <span class="help-block">Accepted formats: pdf. Max file size 2Mb</span>
+                        </div>  
+                     </div>
+                  </div>
+               </div>
+               <!--/fichier 01-->
+               <br/>
+               <br/>
+               <div class="form-group">
+                  <button type="submit" id="addDocRapport_submit" class="btn bg-blue btn-block">Ajouter<i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+               <!---->
+            </div> 
+         </form>
+      </div>
+   </div>
+</div>
+
+<script>
+
+   $("#addDocRapport_submit").off('click').on('click', function( event ) {
+      event.preventDefault ();
+      /* récupération du formulaire à transmettre */
+      var rapport_id = $("#rapport_id_file").val();
+      var form = $("#addDocRapport_form")[0];
+      const formData = new FormData(form);
+      fetch("http://127.0.0.1:8000/rapport/create_docs_rapport/"+rapport_id,{
+        method: 'POST',//définir la method du submit du form
+        mode : 'same-origin',
+        credentials: 'same-origin' ,
+        body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.id != null){
+            notificationSuccess('success message', 'Document ajouté avec succès' );
+            getDocsRapport(rapport_id);
+            $("#modal_addDocRapport").modal('toggle');
+         }
+         else{
+            notification( data['message'] );
+         }
+      });
+   });
+
+   
+</script>

@@ -17,9 +17,9 @@
  </div>
  <script>
 
-      /* get images per pin*/
-      function getPhotographies(id){
-      var url = 'http://127.0.0.1:8000/map/photo-pin-2/'+id
+   /* get images per pin*/
+   function getPhotographies(id){
+      var url = 'http://127.0.0.1:8000/pics/photo-pin/'+id
       fetch(url)
       .then((resp) => resp.json())
       .then(function(data){

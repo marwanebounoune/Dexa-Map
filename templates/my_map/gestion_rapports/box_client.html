@@ -1,67 +1,184 @@
-<div class="tab-pane fade" id="box_client">
+<div class="tab-pane fade in active" id="box_client">
    <div class="panel-body">
-      <legend class="text-semibold"><i class="icon-reading position-left"></i>Informations personnelles du client</legend>
-      <ul class="media-list">
-         <li class="media">
-            <div class="media-left">
-               <img id="created_by" class="img-circle img-xs" alt="" loading="lazy">
-            </div>
-            <div class="media-body">
-               <a id="created_by_name">
-                  James Alexander
-               </a>
-               <span class="media-annotation pull-right" id="created_date">14:58</span>
-               <span class="display-block text-muted">Createur de la reference</span>
-            </div>
-         </li>
-      </ul>
-      <div class="form-group">
-         <div class="row">
-            <div class="col-md-4">
-               <label>CIN : </label>
-               <b><span class="cin_info"></span></b>
+      <!--creer et valider par -->
+      <div class="row">
+         <!--createur de la reference-->
+         <div class="col-sm-6 my-auto">
+            <div class="card-header card-header-space" style="padding-top: 25px;"><i class="fa fa-bar-chart"></i> créateur de la référence<hr></div>
+              <div class="card-body">
+                  <div class="media-left">
+                     <img id="validated_by" class="img-circle img-xs" alt="" loading="lazy">
+                  </div>
+                  <div class="media-body">
+                     <a id="validated_by_name">
+                        James Alexander
+                     </a>
+                     <span class="display-block text-muted">créateur de la reference</span>
+                  </div>
+              </div>
+         </div>
+         <!--/createur de la reference-->
+         <!--validateur de la reference-->
+         <div class="col-sm-6 my-auto">
+            <div class="card-header card-header-space" style="padding-top: 25px;"><i class="fa fa-bar-chart"></i> Validé par<hr></div>
+            <div class="card-body">
+               <div class="media-left">
+                  <img id="validated_by" class="img-circle img-xs" alt="" loading="lazy">
+               </div>
+               <div class="media-body">
+                  <a id="validated_by_name">
+                     James Alexander
+                  </a>
+                  <span class="display-block text-muted">validateur de la reference</span>
+               </div>
             </div>
          </div>
+         <!--/validateur de la reference-->
       </div>
-      <div class="form-group">
-         <div class="row">
-            <div class="col-md-4">
-               <label>Nom : </label>
-               <b><span class="nom_info"></span></b>
-            </div>
+      <!--/creer et valider par-->
+      <!--information client-->
+      <div class="row">
+         <div class="col-sm-12 my-auto">
+            <div class="card-header card-header-space" style="padding-top: 25px;"><i class="fa fa-bar-chart"></i> Client <hr></div>
+            <div class="div-info-space"> <span >Nom : </span><span class="mb-0 nom_info" ></span></div>
+            <div class="div-info-space"> <span >Prenom : </span><span class="mb-0 prenom_info" ></span></div>
+            <div class="div-info-space"> <span >Tél : </span><span class="mb-0 tel_info" ></span></div>
+            <div class="div-info-space"> <span >GSM : </span><span class="mb-0 gsm_info" ></span></div>
+            <div class="div-info-space"> <span >Ville : </span><span class="mb-0 ville_info" ></span></div>
+            <div class="div-info-space"> <span >Adresse : </span><span class="mb-0 adr_info" ></span></div>
+            <div class="div-info-space"> <span >CIN / ICE : </span><span class="mb-0 cin_info" ></span></div>
+            <div class="div-info-space"> <span >E-mail : </span><span class="mb-0 email_info" ></span></div>
          </div>
       </div>
-      <div class="form-group">
-         <div class="row">
-            <div class="col-md-4">
-               <label>Prénom : </label>
-               <b><span class="prenom_info"></span></b>
-            </div>
+      <!--/information client-->
+
+      <!--Information dossier-->
+      <div class="row">
+         <div class="col-sm-12 my-auto">
+            <div class="card-header card-header-space" style="padding-top: 25px;"><i class="fa fa-bar-chart"></i> Information dossier <hr></div>
+            <div class="card-body">
+               <div class="div-info-space"> <span >Réf_dossier_syst : </span><span class="mb-0 id_rapport" ></span></div>
+               <div class="div-info-space"> <span>Réf_dossier_interne : </span><span class="mb-0 ref_dossier_interne_info" ></span></div>
+               <div class="div-info-space typedebienRapport" style="display : none"> <span>Type_de_bien : </span><span class="mb-0 type_bien_info_rapport" ></span></div>
+               <div class="div-info-space"> <span>Montant crédit demandé : </span><span class="mb-0 montant_demande_info" ></span> dhs/m² </div>
+               <div class="div-info-space"> <span>Asking Price : </span><span class="mb-0 asking_price_info" ></span> dhs/m² </div>
+               <div class="div-info-space"> <span>Loan To Value :  Montant_crédit/Asking_price : </span><span class="mb-0 loan_to_value" ></span> % </div>
+               <div class="div-info-space"> <span>Commentaire : </span><span class="mb-0 comment_info" ></span></div>
+               <div class="text-right">
+                  <ul><a href="#" class='btn btn-default btn-sm' data-toggle='modal' data-target='#modal_editInfoDossierCli'>Editer info dossier<i class="icon-pen position-right"></i><span class="modal_editInfoDossierCli"></span></a></ul>
+               </div>	
+           </div>
          </div>
       </div>
-      <div class="form-group">
-         <div class="row">
-            <div class="col-md-4">
-               <label>Telephone : </label>
-               <b><span class="tel_info"></span></b>
-            </div>
-         </div>
-      </div>
-      <div class="form-group">
-         <div class="row">
-            <div class="col-md-4">
-               <label>E-mail : </label>
-               <b><span class="email_info"></span></b>
-            </div>
-         </div>
-      </div>
-      <div class="text-right">
-         <ul><a href="#" class='btn btn-default btn-sm' data-toggle='modal' data-target='#modal_editInfoCli'>Editer info<i class="icon-pen position-right"></i><span class="modal_editInfoCli"></span></a></ul>
-      </div>					
+      <!--/Information dossier-->	
    </div>
-  
+</div>
+
+<div class="modal fade" id="modal_editInfoDossierCli" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Editer les informations du dossier</h5>
+         </div>
+         <form method="POST" enctype="multipart/form-data" id="editInfoDossierCli_form" data-role="page">
+            {% csrf_token %}
+            <div class="modal-body">
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Réf_dossier_interne :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="text" class="form-control" id="rapport_id_client" name="rapport_id_client" style="display: none;"/>
+                        <input rows="5" cols="3" class="form-control" placeholder="Réf_dossier_interne" name="ref_dossier_interne">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Type_de_bien :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <select data-placeholder="Selectionner le type de bien." class="select-size-lg" name="type_de_bien_edit_rapport" id="IdTypeBienRapportEdit">
+                           <option></option>
+                           <optgroup label="Types">
+                              <option value="1">Residentiel</option>
+                              <option value="2">Villa</option>
+                              <option value="7">Terrain villa</option>
+                           </optgroup>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Montant crédit demandé :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="number" rows="5" cols="3" class="form-control" placeholder="Montant crédit demandé" name="montant_credit_demande">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Asking Price :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="number" rows="5" cols="3" class="form-control" placeholder="Asking Price" name="asking_price">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <label>Commentaire :</label>
+                     </div>
+                     <div class="col-md-8">
+                        <input type="text" rows="5" cols="3" class="form-control" placeholder="Commentaire" name="commentaire">
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <button type="submit" class="btn bg-blue btn-block" id="editInfoRapport_submit">Sauvegarder<i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
 </div>
 
 <script>
-   
+   $("#editInfoRapport_submit").off('click').on('click', function( event ) {
+      event.preventDefault ();
+      var form = $("#editInfoDossierCli_form")[0];
+      const formData = new FormData(form);
+      var rapport_id = $("#rapport_id_client").val();
+      fetch("http://127.0.0.1:8000/rapport/editRapport/"+rapport_id+'/',{
+         method: 'POST',//définir la method du submit du form
+         mode : 'same-origin',
+         credentials: 'same-origin' ,
+         body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.id != null ) {
+            $("#modal_editInfoDossierCli").modal('toggle');
+            
+            $('.id_rapport').html(data.id)
+            $('.ref_dossier_interne_info').html(data.ref_dossier_interne)
+            $('.type_bien_info_rapport').html(data.type_de_bien)
+            $('.asking_price_info').html(data.asking_price)
+            $('.montant_demande_info').html(data.montant_demande)
+            $('.loan_to_value').html(data.montant_demande/data.asking_price)
+            $('.comment_info').html(data.comment)
+         }
+         else{
+            notification('Erreur, '+ data['message']);
+         }
+      }); 
+   });
 </script>
