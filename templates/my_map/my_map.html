@@ -646,6 +646,62 @@
          }
       });
    }
+   function getCommentRapport(rapport_id){
+      var url = 'http://127.0.0.1:8000/rapport/getCommentRapport/'+rapport_id
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         $(".media-note").remove();
+         var has_note=false;
+         var has_photos=false;
+         $(".comment_lenght").html(data.length);
+         if(data.length!=0){ 
+            for(var i=0;i<data.length;i++){
+               var id={{user.id}};
+               var userType = '{{user.userType}}';
+               var editer_option='';
+               var note_delete='';
+               var images_profiles='';   
+               if( id == data[i].username.id || userType === 'principal'){
+                  has_note=true
+                  note_delete="<li><a onclick='delete_note(" + data[i].id + ")'><i class='icon-trash-alt'></i>   Supprimer</a></li>";
+                  editer_option = "<li><a href='#' id='editerNote' data-toggle='modal' data-target='#edit_note'><i class='icon-quill2'></i>Edit</a></li>";
+                  $("#OldcontentNote").html(data[i].note);
+                  $('#NoteId').val(data[i].id)
+               }
+               if( data[i].username.photoProfile != null){
+                  images_profiles = data[i].username.photoProfile
+               }
+               else{
+                  images_profiles = "{% static 'images/placeholder.jpg' %}"
+               }
+               $("#ul_comment").append("<li class='media-note'>"+
+               "<div class='media-left'>"+
+               "<img loading=lazy' src="+images_profiles+" class='img-circle img-sm' alt='' >"+
+               "</div>"+
+               "<div class='media-body'>"+
+               "<div class='media-heading'>"+
+               " <a href='#' class='text-semibold'>"+ data[i].username.last_name +" "+data[i].username.first_name+"</a>"+
+               "<span class='media-annotation dotted'>"+ data[i].date +"</span>"+
+               "</div>"+
+               "<input type='text' class='form-control' class='noteContent' value='"+data[i].note+"' style='border-style: none;background-color:white' readonly='readonly'>"+
+               "<ul class='list-inline list-inline-separate text-size-small'>"+
+               editer_option+
+               note_delete+
+               "</ul>"+
+               "</div>"+
+               "</li>"
+               )
+            }
+         }
+         if (has_note==false){
+            $("#ajouterNoteLink").show();
+         }
+         else{
+            $("#ajouterNoteLink").hide();
+         }
+      });
+   }
 
    var mini_map_2 = new L.map('mapDynamique').setView([51.505, -0.09], 15);
    function setSwitchery(switchElement, checkedBool) {

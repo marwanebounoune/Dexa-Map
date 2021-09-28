@@ -98,6 +98,7 @@
       $("#rapport_id_fraction").val(id);
       $("#rapport_id_file").val(id);
       $("#rapport_id_photo").val(id);
+      $("#rapport_id_commentaire").val(id);
       fetch('http://127.0.0.1:8000/rapport/rapport_detail/'+id+'/')
       .then((resp) => resp.json())
       .then(function(data){
@@ -107,6 +108,7 @@
             get_approxim_pins(data.lat, data.lng);
             getDocsRapport(data.id);
             getPhotographiesRapport(data.id);
+            getCommentRapport(data.id);
             $("#creerRapport_form")[0].reset();
             $( '#box_creer_rapport' ).show(function(){
                $(window).scrollTop($('#box_creer_rapport').position().top);
@@ -184,7 +186,6 @@
    function DocsRapportAddRow(type_doc,username,fichierPdf,actions) {
       $('#ul_docsRapport').dataTable().fnAddData([type_doc, username, fichierPdf, actions]);
    }
-
    function getPhotographiesRapport(id){
       var url = 'http://127.0.0.1:8000/rapport/getPhotographiesRapport/'+id
       fetch(url)
@@ -217,7 +218,6 @@
          }
       });
    }
-
    function dropPhotoRapport(rapport_id){
       $('#myDeleteMessage').modal('toggle');
       $('#confirm').off('click').on('click', function(event){

@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import viewsCommentaire
 
 
 urlpatterns = [
@@ -17,4 +18,6 @@ urlpatterns = [
     path('ajoutPhotographiesRapport/<pk>', views.ajoutPhotographiesRapport, name='ajoutPhotographiesRapport'),
     path('getPhotographiesRapport/<pk>', views.getPhotographiesRapport, name='getPhotographiesRapport'),
     path('dropPhotoRapport/<pk>', views.dropPhotoRapport, name='dropPhotoRapport'),
+    path('addCommentRapport/', viewsCommentaire.addCommentRapport, name='addCommentRapport'),
+    path('getCommentRapport/<pk>', viewsCommentaire.getCommentRapport, name='getCommentRapport'),
 ]

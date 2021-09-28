@@ -83,9 +83,9 @@ class Commentaire(models.Model):
   date = models.DateField(default=date.today, null=True)
   username = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
   rapport = models.ForeignKey(Rapport, on_delete=models.CASCADE, null=True)
-  reponse_pour = models.IntegerField(null=True, blank=True)
+  reponse_pour = models.IntegerField(null=True, blank=True, default='0')
   class Meta:
-    unique_together = ('username', 'rapport')
+    db_table = "Rapport_commentaire"
 
 class DocumentsRapport(models.Model):
   rapport = models.ForeignKey(Rapport, on_delete=models.CASCADE, null=True)

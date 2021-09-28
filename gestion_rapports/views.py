@@ -3,8 +3,8 @@ from rest_framework import response
 from gestion_dgi.models import dgi_appt_casa
 import logging
 from django.contrib import messages
-from .serializers import DocumentsRapportSerializer, PhotographieRapportSerializer, RapportSerializer
-from .models import DocumentsRapport, PhotographieRapport, Rapport
+from .serializers import CommentaireSerializer, DocumentsRapportSerializer, PhotographieRapportSerializer, RapportSerializer
+from .models import Commentaire, DocumentsRapport, PhotographieRapport, Rapport
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -331,3 +331,4 @@ def dropPhotoRapport(request,pk):
     except Exception as e:
         logging.getLogger("error_logger").error(repr(e))
         pass
+

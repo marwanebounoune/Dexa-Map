@@ -1,9 +1,59 @@
 <div class="tab-pane fade" id="commentaire">
    <div class="panel-body">
-      <ul id="ajouterNoteLink" style="display:none"><a href="#" class="btn btn-default btn-sm pull-right" data-toggle='modal' data-target='#modal_note'><i class="fa fa-plus"></i>&nbsp;ajouter note<span class="note_info"></span></a></ul>
-      <ul class="media-list stack-media-on-mobile" id="ul-Notes">
+      <ul id="ajouterCommentLink"><a href="#" class="btn btn-default btn-sm pull-right" data-toggle='modal' data-target='#modal_commentaire'><i class="fa fa-plus"></i>&nbsp;Ajouter un commentaire<span class="info_comment"></span></a></ul>
+      <ul class="media-list stack-media-on-mobile" id="ul_comment">
          <!-- get all notes-->
          <!-- /get all notes -->
       </ul>
    </div>
 </div>
+
+<div class="modal fade" id="modal_commentaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Ajouter un commentaire</h5>
+         </div>
+         <form method="POST" id="ajoutComment_form">
+            {% csrf_token %}
+            <input type = "text"  id="rapport_id_commentaire" name="rapport_id_commentaire" style="display:none">
+            <input type = "text"  name="user_id" value="{{ user.id }}" style="display:none">
+            <div class="modal-body">
+               <div class="form-group">
+                  <textarea rows="5" cols="5" class="form-control" placeholder="Votre commentaire" name="comment_content" id="comment_content"></textarea>
+               </div>
+               <div class="form-group login-options">
+                  <div class="row">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <button type="submit" id="addComment_submit" class="btn bg-blue btn-block">Envoyer le commentaire <i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+<script>
+   $("#addComment_submit").off('click').on('click', function( event ) {
+      event.preventDefault ();
+      var form = $("#ajoutComment_form")[0];
+      const formData = new FormData(form);
+      fetch("http://127.0.0.1:8000/rapport/addCommentRapport/",{
+        method: 'POST',//définir la method du submit du form
+        mode : 'same-origin',
+        credentials: 'same-origin' ,
+        body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.length!=0) {
+            //getCommentRapport(data.rapport.id);
+            $("#modal_commentaire").modal('toggle');
+            getCommentRapport(data.rapport.id)
+         }
+      }); 
+   });
+</script>

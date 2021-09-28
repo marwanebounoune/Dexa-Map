@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import DocumentsRapport, PhotographieRapport, Rapport
+from .models import Commentaire, DocumentsRapport, PhotographieRapport, Rapport
 from account.serializers import UserSerializer
 
 
@@ -31,4 +31,13 @@ class PhotographieRapportSerializer(serializers.ModelSerializer):
         pin = RapportSerializer()
         fields = ('id', 'rapport', 'photo', 'descriptif')
         #pour la représentation imbriquée avec le model Pin
+        depth = 1
+
+class CommentaireSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Commentaire
+        editer_par = UserSerializer()
+        pin = RapportSerializer()
+        fields = ('id', 'note','date','username','rapport')
+        #pour la représentation imbriquée avec le model Pin & User
         depth = 1
