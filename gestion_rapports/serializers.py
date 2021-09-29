@@ -38,6 +38,6 @@ class CommentaireSerializer(serializers.ModelSerializer):
         model = Commentaire
         editer_par = UserSerializer()
         pin = RapportSerializer()
-        fields = ('id', 'note','date','username','rapport')
+        fields = ('id', 'note','date','username','rapport', 'reponse_pour')
         #pour la représentation imbriquée avec le model Pin & User
         depth = 1

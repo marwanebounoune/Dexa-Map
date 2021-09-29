@@ -18,6 +18,11 @@ urlpatterns = [
     path('ajoutPhotographiesRapport/<pk>', views.ajoutPhotographiesRapport, name='ajoutPhotographiesRapport'),
     path('getPhotographiesRapport/<pk>', views.getPhotographiesRapport, name='getPhotographiesRapport'),
     path('dropPhotoRapport/<pk>', views.dropPhotoRapport, name='dropPhotoRapport'),
+    #Commentaires
     path('addCommentRapport/', viewsCommentaire.addCommentRapport, name='addCommentRapport'),
     path('getCommentRapport/<pk>', viewsCommentaire.getCommentRapport, name='getCommentRapport'),
+    path('delete_Comment/<pk>', viewsCommentaire.delete_Comment, name='delete_Comment'),
+    path('getComment/<pk>', viewsCommentaire.getComment, name='getComment'),
+    path('rep_Comment/<pk>', viewsCommentaire.rep_Comment, name='rep_Comment'),
+    path('updateComment/', viewsCommentaire.updateComment, name='updateComment'),
 ]

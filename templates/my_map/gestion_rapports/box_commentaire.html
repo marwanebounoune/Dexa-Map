@@ -7,7 +7,7 @@
       </ul>
    </div>
 </div>
-
+<!--ajouter un commentaire -->
 <div class="modal fade" id="modal_commentaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
    <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -35,8 +35,67 @@
       </div>
    </div>
 </div>
+<!--/ajouter un commentaire -->
+<!--repondre à un commentaire -->
+<div class="modal fade" id="modal_repCommentaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Repondre sur commentaire</h5>
+         </div>
+         <form method="POST" id="repComment_form">
+            {% csrf_token %}
+            <input type = "text"  id="rapport_id_repCommentaire" name="rapport_id_repCommentaire" style="display:none">
+            <input type = "text"  name="user_id" value="{{ user.id }}" style="display:none">
+            <div class="modal-body">
+               <div class="form-group">
+                  <textarea rows="5" cols="5" class="form-control" placeholder="Votre commentaire" name="repComment_content" id="repComment_content"></textarea>
+               </div>
+               <div class="form-group login-options">
+                  <div class="row">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <button type="submit" id="repComment_submit" class="btn bg-blue btn-block">Envoyer le commentaire<i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+<!--/repondre à un commentaire -->
+<!--editer un commentaire -->
+<div class="modal fade" id="edit_Comment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+            <h5 class="modal-title">Editer le commentaire</h5>
+         </div>
+         <form method="POST" id="EditComment_form">
+            {% csrf_token %}
+            <input type = "text"  id="CommentId" name="CommentId" style="display: none;">
+            <div class="modal-body">
+               <div class="form-group">
+                  <textarea rows="5" cols="5" class="form-control" placeholder="Votre commentaire" name="NewContentComment" id="OldContentComment"></textarea>
+               </div>
+               <div class="form-group login-options">
+                  <div class="row">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <button type="submit" id="submit_editComment" class="btn bg-blue btn-block">Enregistrer les modifications <i class="icon-arrow-right14 position-right"></i></button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+<!--/editer un commentaire -->
 
 <script>
+   var comm = 0
    $("#addComment_submit").off('click').on('click', function( event ) {
       event.preventDefault ();
       var form = $("#ajoutComment_form")[0];
@@ -53,6 +112,93 @@
             //getCommentRapport(data.rapport.id);
             $("#modal_commentaire").modal('toggle');
             getCommentRapport(data.rapport.id)
+         }
+      }); 
+   });rep_Comment
+   function rep_Comment(pk){
+      $('#modal_repCommentaire').modal('toggle');
+      comm = pk
+   }
+   $('#repComment_submit').off('click').on('click', function(event){
+      event.preventDefault();
+      var form = $("#repComment_form")[0];
+      const formData = new FormData(form);
+      var url = 'http://127.0.0.1:8000/rapport/rep_Comment/'+comm
+      fetch(url,{
+         method: 'POST',//définir la method du submit du form
+         mode : 'same-origin',
+         credentials: 'same-origin' ,
+         body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data){
+         if(data.id!=0  && typeof data.id != 'undefined'){
+            notificationSuccess('success message', 'Votre reponse a été ajouté avec succès' );
+            $('#modal_repCommentaire').modal('toggle');
+            $("#content").hide();
+            getCommentRapport(data.rapport.id)
+            console.log(data)
+         }
+         else{
+            notification(data['message']);
+         }
+      });
+   });
+   function delete_Comment(pk){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+         checkbox_status = true;
+         var url = 'http://127.0.0.1:8000/rapport/delete_Comment/'+pk
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0  && typeof data.id != 'undefined'){
+               notificationSuccess('Success message', 'La note est supprimér avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               $("#content").hide();
+               getCommentRapport(data.rapport.id)
+               console.log(data)
+            }
+            else{
+               notification(data['message']);
+            }
+         });
+      });
+   }
+   function edit_Comment(pk){
+      event.preventDefault();
+      var url = 'http://127.0.0.1:8000/rapport/getComment/'+pk
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+         if(data.id!=0  && typeof data.id != 'undefined'){
+            $("#OldContentComment").html(data.note);
+            $('#CommentId').val(data.id);
+            $("#edit_Comment").modal('toggle');
+            console.log(data)
+            getCommentRapport(data.rapport.id)
+         }
+         else{
+            notification(data['message']);
+         }
+      });
+   }
+   $("#submit_editComment").off('click').on('click', function( event ) {
+      event.preventDefault ();
+      var form = $("#EditComment_form")[0];
+      const formData = new FormData(form);
+      fetch("http://127.0.0.1:8000/rapport/updateComment/",{
+         method: 'POST',//définir la method du submit du form
+         mode : 'same-origin',
+         credentials: 'same-origin' ,
+         body : formData//définir la formulaire pour le url
+      })
+      .then((resp) => resp.json())
+      .then(function(data) {
+         if(data.length!=0) {
+            getCommentRapport(data.rapport.id)
+            $("#edit_Comment").modal('toggle');
          }
       }); 
    });

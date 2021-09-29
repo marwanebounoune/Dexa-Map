@@ -28,7 +28,7 @@
 <!--/editer une note -->
 <script>
       //---------------------------------------------------------Editer la note---------------------------------------------------------
-     $("#EditNoteForm").submit(function( event ) {
+   $("#EditNoteForm").submit(function( event ) {
       event.preventDefault ();
       const formData = new FormData(this);
       fetch("http://127.0.0.1:8000/notes/update-note-2/",{
@@ -45,25 +45,25 @@
          }
       }); 
    });
-         /* Delete note*/
-         function delete_note(pk){
-         $('#myDeleteMessage').modal('toggle');
-         $('#confirm').off('click').on('click', function(event){
-            event.preventDefault();
-            checkbox_status = true;
-            var url = 'http://127.0.0.1:8000/notes/delete_note/'+pk
-            fetch(url)
-            .then((resp) => resp.json())
-            .then(function(data){
-               if(data.id!=0  && typeof data.id != 'undefined'){
-                  notificationSuccess('Success message', 'La note est supprimér avec succès' );
-                  $('#myDeleteMessage').modal('toggle');
-                  $("#content").hide();
-               }
-               else{
-                  notification(data['message']);
-               }
-            });
+   /* Delete note*/
+   function delete_note(pk){
+      $('#myDeleteMessage').modal('toggle');
+      $('#confirm').off('click').on('click', function(event){
+         event.preventDefault();
+         checkbox_status = true;
+         var url = 'http://127.0.0.1:8000/notes/delete_note/'+pk
+         fetch(url)
+         .then((resp) => resp.json())
+         .then(function(data){
+            if(data.id!=0  && typeof data.id != 'undefined'){
+               notificationSuccess('Success message', 'La note est supprimér avec succès' );
+               $('#myDeleteMessage').modal('toggle');
+               $("#content").hide();
+            }
+            else{
+               notification(data['message']);
+            }
          });
-      }
+      });
+   }
 </script>
