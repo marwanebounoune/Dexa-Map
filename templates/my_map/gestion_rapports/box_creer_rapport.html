@@ -100,6 +100,7 @@
       $("#rapport_id_photo").val(id);
       $("#rapport_id_commentaire").val(id);
       $("#rapport_id_repCommentaire").val(id);
+      $("#rapport_id_description").val(id);
       fetch('http://127.0.0.1:8000/rapport/rapport_detail/'+id+'/')
       .then((resp) => resp.json())
       .then(function(data){

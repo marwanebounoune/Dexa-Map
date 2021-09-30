@@ -1,6 +1,5 @@
 from django.urls import path
-from . import views
-from . import viewsCommentaire
+from . import views, viewsCommentaire, viewsDescription
 
 
 urlpatterns = [
@@ -25,4 +24,6 @@ urlpatterns = [
     path('getComment/<pk>', viewsCommentaire.getComment, name='getComment'),
     path('rep_Comment/<pk>', viewsCommentaire.rep_Comment, name='rep_Comment'),
     path('updateComment/', viewsCommentaire.updateComment, name='updateComment'),
+    #Description
+    path('addDescription/<pk>', viewsDescription.addDescription, name='addDescription'),
 ]
