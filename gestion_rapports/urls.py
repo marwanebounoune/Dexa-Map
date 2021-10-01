@@ -26,4 +26,5 @@ urlpatterns = [
     path('updateComment/', viewsCommentaire.updateComment, name='updateComment'),
     #Description
     path('addDescription/<pk>', viewsDescription.addDescription, name='addDescription'),
+    path('getDescriptionRapport/<pk>', viewsDescription.getDescriptionRapport, name='getDescriptionRapport'),
 ]

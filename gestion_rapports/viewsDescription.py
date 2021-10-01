@@ -92,32 +92,32 @@ def addDescription(request,pk):
         hallSalon_mur = data['hallSalon_mur']
         hallSalon_plafond = data['hallSalon_plafond']
 
-        if(chambre_sol == ''):
+        if(chambre_sol == '' or chambre_sol == 'null'):
             chambre_sol = None
-        if(chambre_mur == ''):
+        if(chambre_mur == '' or chambre_mur == 'null'):
             chambre_mur = None
-        if(chambre_plafond == ''):
+        if(chambre_plafond == '' or chambre_plafond == 'null'):
             chambre_plafond = None
         
-        if(cuisine_sol == ''):
+        if(cuisine_sol == '' or cuisine_sol == 'null'):
             cuisine_sol = None
-        if(cuisine_mur == ''):
+        if(cuisine_mur == '' or cuisine_mur == 'null'):
             cuisine_mur = None
-        if(cuisine_plafond == ''):
+        if(cuisine_plafond == '' or cuisine_plafond == 'null'):
             cuisine_plafond = None
             
-        if(wc_sol == ''):
+        if(wc_sol == '' or wc_sol == 'null'):
             wc_sol = None
-        if(wc_mur == ''):
+        if(wc_mur == '' or wc_mur == 'null'):
             wc_mur = None
-        if(wc_plafond == ''):
+        if(wc_plafond == '' or wc_plafond == 'null'):
             wc_plafond = None
             
-        if(hallSalon_sol == ''):
+        if(hallSalon_sol == '' or hallSalon_sol == 'null'):
             hallSalon_sol = None
-        if(hallSalon_mur == ''):
+        if(hallSalon_mur == '' or hallSalon_mur == 'null'):
             hallSalon_mur = None
-        if(hallSalon_plafond == ''):
+        if(hallSalon_plafond == '' or hallSalon_plafond == 'null'):
             hallSalon_plafond = None
         
         radioFenetres = data['radioFenetres']
@@ -228,6 +228,17 @@ def addDescription(request,pk):
         serializer = RapportSerializer(rapport, many=False)
         return Response(serializer.data)
 
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
+        pass
+
+@api_view(['GET'])
+@login_required(login_url='login') 
+def getDescriptionRapport(request, pk):
+    try:
+        rapport = Rapport.objects.get(id = pk)
+        serializer = RapportSerializer(rapport, many=False)
+        return Response(serializer.data)
     except Exception as e:
         logging.getLogger("error_logger").error(repr(e))
         pass

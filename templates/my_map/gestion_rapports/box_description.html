@@ -11,13 +11,13 @@
 							<div class="row">
 								<div class="col-md-4">
 									<div class="form-group">
-										<label>Age de l'immeuble:</label>
-										<select name="ageImm" data-placeholder="Select position" class="select">
+										<label>Âge de l'immeuble:</label>
+										<select id="ageImm" name="ageImm" data-placeholder="Select position" class="select">
 											<option></option>
-											<optgroup label="Age de l'immeuble" >
-												<option value="3"> < 5 ans</option>
-												<option value="2">entre 5 et 10 ans</option>
-												<option value="1">entre 10 et 20 ans</option>
+											<optgroup label="Âge de l'immeuble" >
+												<option value="3">Inférieur à 5 ans</option>
+												<option value="2">Entre 5 et 10 ans</option>
+												<option value="1">Entre 10 et 20 ans</option>
 												<option value="0">Supérieur à 20 ans</option>
 											</optgroup>
 										</select>
@@ -27,13 +27,13 @@
 									<div class="form-group">
 										<label>Nombre de niveaux:</label>
 										<input type="text" class="file-styled" id="rapport_id_description" name="rapport_id_description" style="display:none"/>
-										<input type="number" name="nbrNiv" min="0" max="51" class="form-control" placeholder="Nombre de niveaux">
+										<input type="number" id="nbrNiv" name="nbrNiv" min="0" max="51" class="form-control" placeholder="Nombre de niveaux">
 									</div>
 								</div>
 								<div class="col-md-4">
 									<div class="form-group">
-										<label>Niveau(étage):</label>
-										<input type="number" name="niv" min="0" max="51" class="form-control" placeholder="Niveaux(étage)">
+										<label>Niveau (étage):</label>
+										<input type="number" name="niv" id="niv" min="0" max="51" class="form-control" placeholder="Niveaux(étage)">
 									</div>
 								</div>
 							</div>
@@ -45,12 +45,12 @@
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Nombre d'appartements par étages:</label>
-										<input type="number" name="nbrApptEtg" min="1" max="10" class="form-control" placeholder="Nombre d'appartements par étages">
+										<input type="number" id="nbrApptEtg" name="nbrApptEtg" min="1" max="10" class="form-control" placeholder="Nombre d'appartements par étages">
 									</div>
 								</div>
 								<div class="col-md-4">
 									<label>Stationnement:</label>
-									<select name="stationnement" data-placeholder="Select position" class="select">
+									<select id="stationnement" name="stationnement" data-placeholder="Select position" class="select">
 										<option></option>
 										<optgroup label="Parking" >
 											<option value="1">Pas de Parking</option>
@@ -71,12 +71,12 @@
 										<br>
 										<div class="radio-inline">
 											<label>Non
-											<input type="radio" class="styled"  name="radioAscenceur" value="0" checked/></label>
+											<input type="radio" class="styled"  id="radioAscenceurNon" name="radioAscenceur" value="0" checked /></label>
 										</div>
 										<br>
 										<div class="radio-inline">
 											<label>Oui
-											<input type="radio" class="styled"  name="radioAscenceur" value="1"/></label>
+											<input type="radio" class="styled"  id="radioAscenceurOui" name="radioAscenceur" value="1" /></label>
 										</div>
 									</div>
 								</div>
@@ -86,12 +86,12 @@
 										<br>
 										<div class="radio-inline">
 											<label>Mixte
-											<input type="radio" class="styled"  name="radioExpEtage" value="0" checked/></label>
+											<input type="radio" class="styled" id="radioExpEtageMixte"  name="radioExpEtage" value="0" checked /></label>
 										</div>
 										<br>
 										<div class="radio-inline">
 											<label>Résidentiel
-											<input type="radio" class="styled"  name="radioExpEtage" value="1" /></label>
+											<input type="radio" class="styled" id="radioExpEtageRes"  name="radioExpEtage" value="1"  /></label>
 										</div>
 									</div>
 								</div>
@@ -101,12 +101,12 @@
 										<br>
 										<div class="radio-inline">
 											<label>Commercial
-											<input type="radio" class="styled"  name="radioExpRdc" value="0" checked/></label>
+											<input type="radio" class="styled" id="radioExpRdcCom"  name="radioExpRdc" value="0" checked /></label>
 										</div>
 										<br>
 										<div class="radio-inline">
 											<label>Résidentiel
-											<input type="radio" class="styled"  name="radioExpRdc" value="1" /></label>
+											<input type="radio" class="styled" id="radioExpRdcRes"  name="radioExpRdc" value="1" /></label>
 										</div>
 									</div>
 								</div>
@@ -116,12 +116,12 @@
 										<br>
 										<div class="radio-inline">
 											<label>Non
-											<input type="radio" class="styled"  name="radioAccMobRed" value="0" checked/></label>
+											<input type="radio" class="styled" id="radioAccMobRedNon"  name="radioAccMobRed" value="0" checked/></label>
 										</div>
 										<br>
 										<div class="radio-inline">
 											<label>Oui
-											<input type="radio" class="styled"  name="radioAccMobRed" value="1"/></label>
+											<input type="radio" class="styled" id="radioAccMobRedOui"  name="radioAccMobRed" value="1"/></label>
 										</div>
 									</div>
 								</div>
@@ -141,12 +141,12 @@
 											<br>
 											<div class="radio-inline">
 												<label>Non
-												<input type="radio" class="styled"  name="radioAccInterphone" value="0" checked/></label>
+												<input type="radio" class="styled" id="radioAccInterphoneNon"  name="radioAccInterphone" value="0" checked/></label>
 											</div>
 											<br>
 											<div class="radio-inline">
 												<label>Oui
-												<input type="radio" class="styled"  name="radioAccInterphone" value="1"/></label>
+												<input type="radio" class="styled" id="radioAccInterphoneOui"  name="radioAccInterphone" value="1"/></label>
 											</div>
 										</div>
 									</div>
@@ -156,12 +156,12 @@
 											<br>
 											<div class="radio-inline">
 												<label>Non
-												<input type="radio" class="styled"  name="radioResidenceSecurisee" value="0" checked/></label>
+												<input type="radio" class="styled" id="radioResidenceSecuriseeNon"  name="radioResidenceSecurisee" value="0" checked/></label>
 											</div>
 											<br>
 											<div class="radio-inline">
 												<label>Oui
-												<input type="radio" class="styled"  name="radioResidenceSecurisee" value="1"/></label>
+												<input type="radio" class="styled" id="radioResidenceSecuriseeOui"  name="radioResidenceSecurisee" value="1"/></label>
 											</div>
 										</div>
 									</div>
@@ -180,25 +180,25 @@
 								<div class="col-md-3">
 									<div class="form-group">
 										<label>Nombre de cuisine:</label>
-										<input type="number" name="nbrCuisine" min="0" class="form-control" placeholder="Nombre de cuisine">
+										<input type="number" id="nbrCuisine" name="nbrCuisine" min="0" class="form-control" placeholder="Nombre de cuisine">
 									</div>
 								</div>
 								<div class="col-md-3">
 									<div class="form-group">
 										<label>Nombre de SDB:</label>
-										<input type="number" name="nbrSDB" min="0" class="form-control" placeholder="Nombre de SDB">
+										<input type="number" id="nbrSDB" name="nbrSDB" min="0" class="form-control" placeholder="Nombre de SDB">
 									</div>
 								</div>
 								<div class="col-md-3">
 									<div class="form-group">
 										<label>Nombre de Salon:</label>
-										<input type="number" name="nbrSalon" min="0" class="form-control" placeholder="Nombre de salon">
+										<input type="number" id="nbrSalon" name="nbrSalon" min="0" class="form-control" placeholder="Nombre de salon">
 									</div>
 								</div>
 								<div class="col-md-3">
 									<div class="form-group">
 										<label>Nombre de Chambres:</label>
-										<input type="number" name="nbrChambres" min="0" class="form-control" placeholder="Nombre de chambres">
+										<input type="number" id="nbrChambres" name="nbrChambres" min="0" class="form-control" placeholder="Nombre de chambres">
 									</div>
 								</div>
 							</div>
@@ -214,17 +214,17 @@
 											<br>
 											<div class="radio-inline">
 												<label>
-												<input type="checkbox" class="styled"  name="checkboxDonneSurRue" value="1" />&nbsp; Rue</label>
+												<input type="checkbox" class="styled" id="checkboxDonneSurRue"  name="checkboxDonneSurRue" value="1" autocomplete="off"/>&nbsp; Rue</label>
 											</div>
 											<br>
 											<div class="radio-inline">
 												<label>
-												<input type="checkbox" class="styled"  name="checkboxDonneSurCour" value="1"/>&nbsp; Cour</label>
+												<input type="checkbox" class="styled" id="checkboxDonneSurCour"  name="checkboxDonneSurCour" value="1" autocomplete="off"/>&nbsp; Cour</label>
 											</div>
 											<br>
 											<div class="radio-inline">
 												<label>
-												<input type="checkbox" class="styled"  name="checkboxDonneSurEspCom" value="1"/>&nbsp; Espace commun (jardin)</label>
+												<input type="checkbox" class="styled" id="checkboxDonneSurEspCom"  name="checkboxDonneSurEspCom" value="1" autocomplete="off"/>&nbsp; Espace commun (jardin)</label>
 											</div>
 										</div>
 									</div>
@@ -234,17 +234,17 @@
 											<br>
 											<div class="radio-inline">
 												<label>
-												<input type="checkbox" class="styled"  name="checkboxOrientationNord" value="1"/>&nbsp; Nord</label>
+												<input type="checkbox" class="styled" id="checkboxOrientationNord"  name="checkboxOrientationNord" value="1"/>&nbsp; Nord</label>
 											</div>
 											<br>
 											<div class="radio-inline">
 												<label>
-												<input type="checkbox" class="styled"  name="checkboxOrientationSud" value="1"/>&nbsp; Sud</label>
+												<input type="checkbox" class="styled" id="checkboxOrientationSud"  name="checkboxOrientationSud" value="1"/>&nbsp; Sud</label>
 											</div>
 											<br>
 											<div class="radio-inline">
 												<label>
-												<input type="checkbox" class="styled"  name="checkboxOrientationNeutre" value="1"/>&nbsp; Neutre</label>
+												<input type="checkbox" class="styled" id="checkboxOrientationNeutre"  name="checkboxOrientationNeutre" value="1"/>&nbsp; Neutre</label>
 											</div>
 										</div>
 									</div>
@@ -271,17 +271,17 @@
 										<br>
 										<div class="radio-inline">
 											<label>Menuiserie massif vernis
-											<input type="radio" class="styled"  name="radioFenetres" value="0" checked/></label>
+											<input type="radio" class="styled" id="radioFenetresMMV" name="radioFenetres" value="0" checked/></label>
 										</div>
 										<br>
 										<div class="radio-inline">
 											<label>Menuiserie bois peint
-											<input type="radio" class="styled"  name="radioFenetres" value="1"/></label>
+											<input type="radio" class="styled" id="radioFenetresMBP" name="radioFenetres" value="1"/></label>
 										</div>
 										<br>
 										<div class="radio-inline">
 											<label>Aluminum
-											<input type="radio" class="styled"  name="radioFenetres" value="2"/></label>
+											<input type="radio" class="styled" id="radioFenetresAlum" name="radioFenetres" value="2"/></label>
 										</div>
 									</div>
 								</div>
@@ -291,12 +291,12 @@
 										<br>
 										<div class="radio-inline">
 											<label>PVC
-											<input type="radio" class="styled"  name="radioTypeFenetres" value="0" checked/></label>
+											<input type="radio" class="styled" id="radioTypeFenetresPvc" name="radioTypeFenetres" value="0" checked/></label>
 										</div>
 										<br>
 										<div class="radio-inline">
 											<label>Aluminum
-											<input type="radio" class="styled"  name="radioTypeFenetres" value="1"/></label>
+											<input type="radio" class="styled" id="radioTypeFenetresAlum" name="radioTypeFenetres" value="1"/></label>
 										</div>
 									</div>
 								</div>
@@ -305,26 +305,26 @@
 										<br>
 										<div class="radio-inline">
 											<label>Manuel
-											<input type="radio" class="styled"  name="ManuelElectrique" value="0" checked/></label>
+											<input type="radio" class="styled" id="ManuelElectriqueMan" name="ManuelElectrique" value="0" checked/></label>
 										</div>
 										<br>
 										<div class="radio-inline">
 											<label>Electrique
-											<input type="radio" class="styled"  name="ManuelElectrique" value="1"/></label>
+											<input type="radio" class="styled" id="ManuelElectriqueElect" name="ManuelElectrique" value="1"/></label>
 										</div>
 									</div>
 								</div>
 								<div class="col-md-3">
 									<div class="form-group">
 									<label class="form-label select-label">Portes</label>
-									<select name="portes" class="select" data-placeholder="Select position">
+									<select name="portes" id="portes" class="select" data-placeholder="Select position">
 										<option></option>
 											<optgroup label="Portes" >
 												<option value="1">Bois massif noble vernis</option>
 												<option value="2">Isoplane avec contreplaqué vernis</option>
 												<option value="3">Préfabriqué avec relief</option>
 												<option value="4">Préfabriqué simple</option>
-												<option value="5">sapin rouge peint</option>
+												<option value="5">Sapin rouge peint</option>
 											</optgroup>
 									</select>
 									</div>
@@ -343,19 +343,19 @@
 								<br>
 								<div class="radio-inline">
 									<label>
-									<input type="checkbox" class="styled"  name="checkboxClimatiseurSalon" autocomplete="off" value="1"/>&nbsp; Salon</label>
+									<input type="checkbox" class="styled" id="checkboxClimatiseurSalon" name="checkboxClimatiseurSalon"  value="1"/>&nbsp; Salon</label>
 								</div>
 								
 								<br>
 								<div class="radio-inline">
 									<label>
-									<input type="checkbox" class="styled"  name="checkboxClimatiseurChambre" autocomplete="off" value="1"/>&nbsp; Chambre</label>
+									<input type="checkbox" class="styled" id="checkboxClimatiseurChambre" name="checkboxClimatiseurChambre"  value="1"/>&nbsp; Chambre</label>
 								</div>
 								
 								<br>
 								<div class="radio-inline">
 									<label>
-									<input type="checkbox" class="styled"  name="checkboxClimatiseurNeant" autocomplete="off" value="1"/>&nbsp; Néant</label>
+									<input type="checkbox" class="styled" id="checkboxClimatiseurNeant" name="checkboxClimatiseurNeant"  value="1"/>&nbsp; Néant</label>
 								</div>
 							</div>
 						</div>
@@ -365,13 +365,13 @@
 								<br>
 								<div class="radio-inline">
 									<label>
-									<input type="checkbox" class="styled"  name="checkboxSdbBaignoire" autocomplete="off" value="1"/>&nbsp; Baignoire</label>
+									<input type="checkbox" class="styled" id="checkboxSdbBaignoire" name="checkboxSdbBaignoire"  value="1"/>&nbsp; Baignoire</label>
 								</div>
 								
 								<br>
 								<div class="radio-inline">
 									<label>
-									<input type="checkbox" class="styled"  name="checkboxSdbDouche" autocomplete="off" value="1"/>&nbsp; Douche</label>
+									<input type="checkbox" class="styled" id="checkboxSdbDouche" name="checkboxSdbDouche"  value="1"/>&nbsp; Douche</label>
 								</div>
 							</div>
 						</div>
@@ -381,12 +381,12 @@
 								<br>
 								<div class="radio-inline">
 									<label>
-									<input type="radio" class="styled"  name="radioCuisineEquip" value="0" checked="checked" autocomplete="off"/>&nbsp; Non</label>
+									<input type="radio" class="styled" id="radioCuisineEquipNon" name="radioCuisineEquip" value="0" checked="checked" />&nbsp; Non</label>
 								</div>
 								<br>
 								<div class="radio-inline">
 									<label>
-									<input type="radio" class="styled"  name="radioCuisineEquip" value="1" autocomplete="off"/>&nbsp; Oui</label>
+									<input type="radio" class="styled" id="radioCuisineEquipOui" name="radioCuisineEquip" value="1" />&nbsp; Oui</label>
 								</div>
 							</div>
 						</div>
@@ -401,47 +401,182 @@
 </div>
 
 <script>
-	var data_standing =[
-		['', 'Chambres', 'Cuisine', 'WC', 'Hall-Salon'],
-		['Sol', 'Carreau', 'Marbre', 'Parquet', 'Granito'],
-		['Mur', 'peinture simple', 'peinture décorative', 'carreau', 'carreau à mi hauteur', 'carreau à 100%', 'marbre', 'tadellakt', 'chiffoné', 'paillette', 'khayal','papier peint'],
-		['Plafond', 'staff simple', 'staff déco', 'corniche plate', 'enduit peinture', 'ennduit']
 
+	var chambre_sol='cc'
+	var chambre_mur=''
+	var chambre_plafond=''
+	var cuisine_sol=''
+	var cuisine_mur=''
+	var cuisine_plafond=''
+	var wc_sol=''
+	var wc_mur=''
+	var wc_plafond=''
+	var hallSalon_sol=''
+	var hallSalon_mur=''
+	var hallSalon_plafond=''
+
+	
+	var setData_hot_ac_strict_init =[
+		[ '', '', ''],
+		['', '', ''],
+		['', '', ''],
+		['', '', '']
 	]
 	var container = document.getElementById('example-grid');
 	var hot_ac_strict_init = new Handsontable(container, {
-		data: Handsontable.helper.createSpreadsheetData(4, 3),
-		stretchH: 'all',
-		manualColumnResize: true,
-		width: '100%',
-		
-		colWidths: 100,
-		width: '100%',
-		
-		height: 180,
-		rowHeaderWidth: 180,
-		rowHeaders: ['Chambres', 'Cuisine', 'WC', 'Hall-Salon'],
-		colHeaders: ['Sol', 'Mur', 'Plafond'],
-		columns: [
-			{
-				data: 'Sol',
-				type: 'autocomplete',
-				source: ['Carreau', 'Marbre', 'Parquet', 'Granito'],
-			// strict: true
-			},
-			{
-				data: 'Mur',
-				type: 'autocomplete',
-				source: ['Peinture simple', 'Peinture décorative', 'Carreau', 'Carreau à mi hauteur', 'Carreau à 100%', 'Marbre', 'Tadellakt', 'Chiffoné', 'Paillette', 'Khayal','Papier peint']
-			},
-			{
-				data: 'Plafond',
-				type: 'autocomplete',
-				source: ['staff simple', 'staff déco', 'corniche plate', 'enduit peinture', 'ennduit']
-			}
-		],
 		licenseKey: 'non-commercial-and-evaluation'
-	});
+	})
+
+	function getDescriptionRapport(id){
+		var url = 'http://127.0.0.1:8000/rapport/getDescriptionRapport/'+id
+		fetch(url)
+		.then((resp) => resp.json())
+		.then(function(data){
+		   	if(data.length!=0){
+				console.log("Data desc : ", data)
+				$("#checkboxDonneSurRue").attr("checked", false);
+				$("#checkboxDonneSurCour").attr("checked", false);
+				$("#checkboxDonneSurEspCom").attr("checked", false);
+				$("#checkboxOrientationNord").attr("checked", false);
+				$("#checkboxOrientationSud").attr("checked", false);
+				$("#checkboxOrientationNeutre").attr("checked", false);
+				
+				//Section 1
+				$("#ageImm").val(data.descriptif_age_imm).change();
+				$("#nbrNiv").val(data.descriptif_nbr_niv);
+				$("#niv").val(data.descriptif_niv);
+				$("#nbrApptEtg").val(data.descriptif_nbr_appt_etage);
+				$("#stationnement").val(data.descriptif_stationnement).change();
+				if(data.descriptif_ascenceur===1)
+					$("#radioAscenceurOui").prop("checked", true).trigger("click");
+				else
+					$('#radioAscenceurNon').prop("checked", true).trigger("click");
+				if(data.descriptif_exploitation_etage===1)
+					$("#radioExpEtageRes").prop("checked", true).trigger("click");
+				else
+					$("#radioExpEtageMixte").prop("checked", true).trigger("click");
+				if(data.descriptif_exploitation_rdc===1)
+					$("#radioExpRdcRes").prop("checked", true).trigger("click");
+				else
+					$("#radioExpRdcCom").prop("checked", true).trigger("click");
+				if(data.descriptif_acces_mob_reduite===1)
+					$("#radioAccMobRedOui").prop("checked", true).trigger("click");
+				else
+					$("#radioAccMobRedNon").prop("checked", true).trigger("click");
+				if(data.descriptif_securiteAccInterphone===1)
+					$("#radioAccInterphoneOui").prop("checked", true).trigger("click");
+				else
+					$("#radioAccInterphoneNon").prop("checked", true).trigger("click");
+				if(data.descriptif_securiteRes===1)
+					$("#radioResidenceSecuriseeOui").prop("checked", true).trigger("click");
+				else
+					$("#radioResidenceSecuriseeNon").prop("checked", true).trigger("click");
+				
+				//Section 2
+				$("#nbrCuisine").val(data.descriptif_composistion_cuisine);
+				$("#nbrSDB").val(data.descriptif_composistion_sdb);
+				$("#nbrSalon").val(data.descriptif_composistion_salon);
+				$("#nbrChambres").val(data.descriptif_composistion_chambre);
+				
+				if(data.descriptif_donne_sur[0]===1)
+					$("#checkboxDonneSurRue").prop("selected", true).trigger("click");
+				if(data.descriptif_donne_sur[1]===1)
+					$("#checkboxDonneSurCour").prop("selected", true).trigger("click");
+				if(data.descriptif_donne_sur[2]===1)
+					$("#checkboxDonneSurEspCom").prop("selected", true).trigger("click");
+				if(data.descriptif_orientation[0]===1)
+					$("#checkboxOrientationNord").prop("selected", true).trigger("click");
+				if(data.descriptif_orientation[1]===1)
+					$("#checkboxOrientationSud").prop("selected", true).trigger("click");
+				if(data.descriptif_orientation[2]===1)
+					$("#checkboxOrientationNeutre").prop("selected", true).trigger("click");
+	
+				//Section 3
+				chambre_sol = data.descriptif_chambr_sol
+				chambre_mur = data.descriptif_chambr_mur
+				chambre_plafond = data.descriptif_chambr_plafon
+
+				cuisine_sol = data.descriptif_cuisine_sol
+				cuisine_mur = data.descriptif_cuisine_mur
+				cuisine_plafond = data.descriptif_cuisine_plafon
+				
+				wc_sol = data.descriptif_wc_sol
+				wc_mur = data.descriptif_wc_mur
+				wc_plafond = data.descriptif_wc_plafon
+				
+				hallSalon_sol = data.descriptif_hall_salon_sol
+				hallSalon_mur = data.descriptif_hall_salon_mur
+				hallSalon_plafond = data.descriptif_hall_salon_plafon
+				
+				setData_hot_ac_strict_init = [
+					[chambre_sol, chambre_mur, chambre_plafond],
+					[cuisine_sol, cuisine_mur, cuisine_plafond],
+					[wc_sol, wc_mur, wc_plafond],
+					[hallSalon_sol, hallSalon_mur, hallSalon_plafond]
+				]
+
+				if(data.descriptif_fenetres===2)
+					$("#radioFenetresAlum").prop("checked", true).trigger("click");
+				else if(data.descriptif_fenetres===1)
+					$("#radioFenetresMBP").prop("checked", true).trigger("click");
+				else
+					$("#radioFenetresMMV").prop("checked", true).trigger("click");
+				if(data.descriptif_type_aluminum===1)
+					$("#radioTypeFenetresAlum").prop("checked", true).trigger("click");
+				else
+					$("#radioTypeFenetresPvc").prop("checked", true).trigger("click");
+				if(data.descriptif_fenetres_manuel_electrique===1)
+					$("#ManuelElectriqueElect").prop("checked", true).trigger("click");
+				else
+					$("#ManuelElectriqueMan").prop("checked", true).trigger("click");
+				$("#portes").val(data.descriptif_portes).change();
+			  
+				//Section 4
+				console.log("CC : ", data.descriptif_cuisine_equip)
+				if(data.descriptif_cuisine_equip===1){
+					console.log("Coucou")
+					$("#radioCuisineEquipOui").prop("checked", true).trigger("click");
+				}
+				else
+					$("#radioCuisineEquipNon").prop("checked", true).trigger("click");
+				
+				hot_ac_strict_init = new Handsontable(container, {
+					data: setData_hot_ac_strict_init,
+					stretchH: 'all',
+					manualColumnResize: true,
+					width: '100%',
+					filters: true,
+					colWidths: 100,
+					width: '100%',
+					height: 180,
+					rowHeaderWidth: 180,
+					rowHeaders: ['Chambres', 'Cuisine', 'WC', 'Hall-Salon'],
+					colHeaders: ['Sol', 'Mur', 'Plafond'],
+					columns: [{
+						type: 'autocomplete',
+						source: ['Carreau', 'Marbre', 'Parquet', 'Granito'],
+						strict: false,
+						visibleRows: 4
+					},{
+						type: 'autocomplete',
+						source: ['Peinture simple', 'Peinture décorative', 'Carreau', 'Carreau à mi hauteur', 'Carreau à 100%', 'Marbre', 'Tadellakt', 'Chiffoné', 'Paillette', 'Khayal','Papier peint'],
+						strict: false,
+						visibleRows: 4
+					},{
+						type: 'autocomplete',
+						source: ['staff simple', 'staff déco', 'corniche plate', 'enduit peinture', 'ennduit'],
+						strict: false,
+						visibleRows: 4
+					}],
+					licenseKey: 'non-commercial-and-evaluation'
+				});
+				
+				
+		   }
+		});
+	}
+	 
+	
 	hot_ac_strict_init.refreshDimensions();
 	window.setTimeout(function(){ 
 		hot_ac_strict_init.render();
@@ -454,29 +589,31 @@
 		transitionEffect: "fade",
 		onFinished: function (event, currentIndex) {
 			var data_hot_ac_strict_init = hot_ac_strict_init.getData();
-			console.log("data_hot_ac_strict_init : ", data_hot_ac_strict_init)
-			console.log($("#rapport_id_description").val())
 			event.preventDefault ();
 			const formData = new FormData(this);
+			
 			formData.append('chambre_sol',data_hot_ac_strict_init['0']['0']);
 			formData.append('chambre_mur',data_hot_ac_strict_init['0']['1']);
 			formData.append('chambre_plafond',data_hot_ac_strict_init['0']['2']);
+			
 			formData.append('cuisine_sol',data_hot_ac_strict_init['1']['0']);
 			formData.append('cuisine_mur',data_hot_ac_strict_init['1']['1']);
 			formData.append('cuisine_plafond',data_hot_ac_strict_init['1']['2']);
+			
 			formData.append('wc_sol',data_hot_ac_strict_init['2']['0']);
 			formData.append('wc_mur',data_hot_ac_strict_init['2']['1']);
 			formData.append('wc_plafond',data_hot_ac_strict_init['2']['2']);
+			
 			formData.append('hallSalon_sol',data_hot_ac_strict_init['3']['0']);
 			formData.append('hallSalon_mur',data_hot_ac_strict_init['3']['1']);
 			formData.append('hallSalon_plafond',data_hot_ac_strict_init['3']['2']);
-			console.log("formData : ", formData)
+			
 			var rapport_id = $("#rapport_id_description").val();
 			fetch("http://127.0.0.1:8000/rapport/addDescription/"+rapport_id,{
-				method: 'POST',//définir la method du submit du form
+				method: 'POST',
 				mode : 'same-origin',
 				credentials: 'same-origin' ,
-				body : formData//définir la formulaire pour le url
+				body : formData
 			})
 			.then((resp) => resp.json())
 			.then(function(data) {
@@ -488,25 +625,9 @@
 				}
 			}); 
 		}
-		
 	});
 
-	/*var hot_ac_strict_init = new Handsontable(container, {
-		data: data_standing,
-		rowHeaders: true,
-		colHeaders: true,
-		height: 'auto',
-		licenseKey: 'non-commercial-and-evaluation',
-		manualColumnResize: true,
-		manualRowResize: true
-	});
-	var hot = new Handsontable(container, {
-		data: data_test,
-		rowHeaders: true,
-		colHeaders: true,
-		height: 'auto',
-		licenseKey: 'non-commercial-and-evaluation'
-	});*/
+	
 
 	
 

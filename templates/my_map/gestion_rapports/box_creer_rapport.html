@@ -62,7 +62,6 @@
 </div>
 
 {% include 'my_map/gestion_rapports/box_rapport.html' %}
-
 <script>
 
    $("#editInfoPerso-submit").off('click').on('click', function( event ) {
@@ -111,6 +110,7 @@
             getDocsRapport(data.id);
             getPhotographiesRapport(data.id);
             getCommentRapport(data.id);
+            getDescriptionRapport(data.id);
             $("#creerRapport_form")[0].reset();
             $( '#box_creer_rapport' ).show(function(){
                $(window).scrollTop($('#box_creer_rapport').position().top);
@@ -240,6 +240,5 @@
          });
       });
    }
-
    
 </script>
