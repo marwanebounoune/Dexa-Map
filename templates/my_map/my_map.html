@@ -1091,15 +1091,10 @@
          $(".line_pin").remove();
          $('#ul-pins').DataTable().clear().draw();
          markers=[];
-         if(data.length!=0){
-            if("{{user.type_map}}" === "Leaflet")
-               createMarkersLeaflet(data, null);
-            else
-               createMarkersGoogle(data);
-         }
-         else{
-            notificationInfo("info: ","Il n'y a pas de réferences");
-         }
+         if("{{user.type_map}}" === "Leaflet")
+            createMarkersLeaflet(data, null);
+         else
+            createMarkersGoogle(data);
          time_end = new Date(Date.now());
          s_end =time_end.getSeconds();
          $(block).unblock();

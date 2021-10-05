@@ -371,11 +371,7 @@ def create_my_pin(request):
 @login_required(login_url='login')
 def pinlist(request):
     try:
-        if request.user.my_ip == "127.0.0.1" or request.user.id == 1 or request.user.id == 9:
-            #l'appel de la fonction user_pinlist()
-            pins = user_pinlist(request.user)
-        else:
-            pins = []
+        pins = []
         serializer = PinSerializerLeger(pins, many=True)
         return Response(serializer.data)
     except Exception as e:
@@ -682,40 +678,36 @@ def pinlist_rapport(request):
 @login_required(login_url='login')
 def pinlist_Valide(request):
     try:
-        if request.user.my_ip == "127.0.0.1" or request.user.id == 1 or request.user.id == 9:
-            user_propre_pins = Pin.objects.filter(username=request.user.id).filter(deleted=False).filter(is_validate_by_user=True)
-            system = User.objects.get(id=1)
-            if request.user.id == 1:
-                pins_systeme = Pin.objects.filter(username=system).filter(deleted=False).filter(is_validate_by_user=True)
-            else:
-                pins_systeme = []
-            if request.user.userType == 'principal':
-                sousUsers = User.objects.filter(lien=request.user.id).filter(userType='secondaire')
-                pins_sous_users = []
-                for su in sousUsers:
-                    pins_su = Pin.objects.filter(username_id=su.id).filter(deleted=False).filter(is_validate_by_user=True)
-                    pins_sous_users.extend(pins_su)
-                pins = set(pins_sous_users).union(set(user_propre_pins)).union(set(pins_systeme))
-                serializer = PinSerializerLeger(pins, many=True)
-                return Response(serializer.data)
-            elif request.user.permission == 'validateur' or request.user.permission == 'elaborateur':
-                pere_user = User.objects.get(id=request.user.lien)
-                pere_pins = Pin.objects.filter(username=pere_user).filter(deleted=False).filter(is_validate_by_user=True)
-                sousUsers = User.objects.filter(lien=pere_user.id).filter(userType='secondaire')
-                pins_sous_users = []
-                for su in sousUsers:
-                    pins_su = Pin.objects.filter(username_id=su.id).filter(deleted=False).filter(is_validate_by_user=True)
-                    pins_sous_users.extend(pins_su)
-                pins = set(pins_sous_users).union(set(pere_pins))
-                if request.user.permission == 'validateur':
-                    pins = pins.union(pins_systeme)
-                serializer = PinSerializerLeger(pins, many=True)
-                return Response(serializer.data)
-            elif request.user.permission == 'visiteur':
-                serializer = PinSerializerLeger(user_propre_pins, many=True)
-                return Response(serializer.data)
+        user_propre_pins = Pin.objects.filter(username=request.user.id).filter(deleted=False).filter(is_validate_by_user=True)
+        system = User.objects.get(id=1)
+        if request.user.id == 1:
+            pins_systeme = Pin.objects.filter(username=system).filter(deleted=False).filter(is_validate_by_user=True)
         else:
-            serializer = PinSerializerLeger([], many=True)
+            pins_systeme = []
+        if request.user.userType == 'principal':
+            sousUsers = User.objects.filter(lien=request.user.id).filter(userType='secondaire')
+            pins_sous_users = []
+            for su in sousUsers:
+                pins_su = Pin.objects.filter(username_id=su.id).filter(deleted=False).filter(is_validate_by_user=True)
+                pins_sous_users.extend(pins_su)
+            pins = set(pins_sous_users).union(set(user_propre_pins)).union(set(pins_systeme))
+            serializer = PinSerializerLeger(pins, many=True)
+            return Response(serializer.data)
+        elif request.user.permission == 'validateur' or request.user.permission == 'elaborateur':
+            pere_user = User.objects.get(id=request.user.lien)
+            pere_pins = Pin.objects.filter(username=pere_user).filter(deleted=False).filter(is_validate_by_user=True)
+            sousUsers = User.objects.filter(lien=pere_user.id).filter(userType='secondaire')
+            pins_sous_users = []
+            for su in sousUsers:
+                pins_su = Pin.objects.filter(username_id=su.id).filter(deleted=False).filter(is_validate_by_user=True)
+                pins_sous_users.extend(pins_su)
+            pins = set(pins_sous_users).union(set(pere_pins))
+            if request.user.permission == 'validateur':
+                pins = pins.union(pins_systeme)
+            serializer = PinSerializerLeger(pins, many=True)
+            return Response(serializer.data)
+        elif request.user.permission == 'visiteur':
+            serializer = PinSerializerLeger(user_propre_pins, many=True)
             return Response(serializer.data)
     
     except Exception as e:

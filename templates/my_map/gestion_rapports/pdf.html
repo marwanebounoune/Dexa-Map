@@ -5,6 +5,11 @@
 	<title>Example</title>
 	<link href="{% static 'Valactif_SG/style.css'%}" rel="stylesheet" >
     <link href="{% static 'css/icons/fontawesome/styles.min.css'%}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <!-- Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js" integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw==" crossorigin=""></script>
 </head>
 
 <style>
@@ -13,6 +18,11 @@
             visibility: hidden;
         }
     }
+    #map{
+        margin-top: 15%;
+        height:350px;
+        width:150%;
+     }
 	#leftbox {
 		float:left; 
 		width:25%;
@@ -28,10 +38,20 @@
 		width:20%;
 		height:50px;
 	}
-	
-	
-	
 	#leftbox2 {
+		float:left; 
+		width:50%;
+		height:50px;
+	}
+    #boxMap{
+        justify-self: center;
+		float:left; 
+		width:50%;
+		height:50px;
+        margin-left: 10%;
+    }
+    #leftbox3 {
+        margin-top: 10%;
 		float:left; 
 		width:50%;
 		height:50px;
@@ -42,13 +62,32 @@
 		width:50%;
 		height:50px;
 	}
+    #rightbox3{
+        margin-top: 15%;
+		float:right;
+		width:50%;
+		height:50px;
+	}
 	
-	 #title{
+    #title{
 		float:right;
 		width:100%;
 		height:0px;
-		
 	}
+    #title2{
+        margin-top: 18%;
+		float:right;
+		width:100%;
+		height:0px;
+	}
+    .imgBien{
+        margin-top: 7%;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 5px;
+        width: 150px;
+        margin-left:25px;
+    }
 	table { 
 		width: 360px; 
 		border-collapse: collapse; 
@@ -72,21 +111,42 @@
 		font-size: 10px;
 	}	
     .float_valider{
-          position:fixed;
-          width:60px;
-          height:60px;
-          bottom:110px;
-          right:40px;
-          background-color:#0C9;
-          color:#FFF;
-          border-radius:50px;
-          text-align:center;
-          box-shadow: 2px 2px 3px #999;
-        }
+        position:fixed;
+        width:60px;
+        height:60px;
+        bottom:110px;
+        right:40px;
+        background-color:#0C9;
+        color:#FFF;
+        border-radius:50px;
+        text-align:center;
+        box-shadow: 2px 2px 3px #999;
+    }
     .fa-arrow-circle-down, .fa-lock{
         font-size: 25px;
-    }						
+    }.leaflet-marker-blue{
+        background-image:url(/static/images/marker-icon-2x-blue.png);
+    }
+    .leaflet-marker-red{
+       background-image:url(/static/images/marker-icon-2x-red.png);
+    }
+    .leaflet-marker-label{
+       position: absolute;
+       top:-23px;
+       padding: 5px 0;
+       display: flex;
+       flex-direction: column;
+       text-align: center;
+       width: 25px;
+       height: 41px;
+       background-size: 25px 41px;
+       background-repeat: no-repeat;
+       color: #000000;
+       font-size: 9px;
+       font-weight: 80000;
+    }
 </style> 
+
 <body>  
 	<div> 
 		<page size="A4">
@@ -107,7 +167,7 @@
                 </div>
             </div>
             <div id="title">
-                <h3 style="margin=none; margin-left : 25px; color:#ea001f"> I- Généralités </h3>
+                <h3 style="margin:none; margin-left : 25px; color:#ea001f"> I- Généralités </h3>
             </div>
             <div id = "leftbox2">
                 <table style="margin-left:25px">
@@ -119,11 +179,11 @@
                     <tbody>
                         <tr>
                             <td data-column="First Name"><b>Réf Dossier</b></td>
-                            <td data-column="Last Name">000001</td>
+                            <td data-column="Last Name">{{rapport.id}}</td>
                         </tr>
                         <tr>
-                            <td data-column="First Name"><b>Réf Client</b></td>
-                            <td data-column="Last Name">010101010</td>
+                            <td data-column="First Name"><b>Réf interne Client</b></td>
+                            <td data-column="Last Name">{{rapport.ref_dossier_interne}}</td>
                             </td>
                         </tr>
                         <tr>
@@ -132,7 +192,7 @@
                         </tr>
                         <tr>
                             <td data-column="First Name"><b>Crédit Souhaité</b></td>
-                            <td data-column="Last Name">000 000 000,00 Dhs</td>
+                            <td data-column="Last Name">{{rapport.montant_demande}},00 Dhs</td>
                         </tr>
                     </tbody>
                 </table>
@@ -141,31 +201,125 @@
                 <table style="margin-right:25px">
                     <thead>
                         <tr>
-                            <th colspan="2"> <center>I.1 - Information Dossier</center></th>
+                            <th colspan="2"> <center>I.2 - Information Client</center></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                        <td data-column="First Name"><b>Réf Dossier</b></td>
-                        <td data-column="Last Name">000001</td>
+                        <td data-column="First Name"><b>Réf client</b></td>
+                        <td data-column="Last Name">{{rapport.client.id}}</td>
                         </tr>
                         <tr>
-                            <td data-column="First Name"><b>Réf Client</b></td>
-                            <td data-column="Last Name">010101010</td>
-                            </td>
+                            <td data-column="First Name"><b>Nom et prenom</b></td>
+                            <td data-column="Last Name">{{rapport.client.nom}} {{rapport.client.prenom}}</td>
                         </tr>
                         <tr>
-                            <td data-column="First Name"><b>Affaire</b></td>
-                            <td data-column="Last Name">affaire client 1</td>
+                            <td data-column="First Name"><b>CIN Client</b></td>
+                            <td data-column="Last Name">{{rapport.client.cin}}</td>
                         </tr>
                         <tr>
-                            <td data-column="First Name"><b>Crédit Souhaité</b></td>
-                            <td data-column="Last Name">000 000 000,00 Dhs</td>
+                            <td data-column="First Name"><b>Tel Client</b></td>
+                            <td data-column="Last Name">{{rapport.client.tel}}</td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>Gsm Client</b></td>
+                            <td data-column="Last Name">{{rapport.client.gsm}}</td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>E-mail Client</b></td>
+                            <td data-column="Last Name">{{rapport.client.email}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="footer" style="color:blue; border: dashed red; height: 50px; width: 20.8cm; position: fixed; bottom: 0;">Footer</div>
+            <div id="title2">
+                <h3 style="margin:none; margin-left : 25px; color:#ea001f">II- Situation jurdique </h3>
+            </div>
+            <div id = "leftbox2">
+                <table style="margin-left:25px'">
+                    <thead>
+                        <tr>
+                            <th colspan="2"> <center>II.1 - Situation juridique</center></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-column="First Name"><b>Titre foncier</b></td>
+                            <td data-column="Last Name">{% if rapport.titre_foncier != Null %}{{rapport.titre_foncier}}{% else %} --- {% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>Date cp</b></td>
+                            <td data-column="Last Name">{% if rapport.date_cp != Null %}{{rapport.date_cp}}{% else %} --- {% endif %}</td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>Surface titree</b></td>
+                            <td data-column="Last Name">{% if rapport.surface_titree != Null %}{{rapport.surface_titree}}{% else %} --- {% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td data-column="First Name"><b>Conservation</b></td>
+                            <td data-column="Last Name">{% if rapport.conservation != Null %}{{rapport.conservation}}{% else %} --- {% endif %}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id = "rightbox2">
+                <table style="margin-right: 30px">
+                    <thead>
+                        <tr>
+                            <th colspan="3"> <center>II.2 - Fraction</center></th>
+                        </tr>
+                        <tr>
+                            <td > <center>Fraction</center></td>
+                            <td > <center>Consistance</center></td>
+                            <td > <center>Surface</center></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fraction in rapport.fraction %}
+                        <tr>
+                            {% for fract in fraction %}
+                            <td data-column="Last Name">{{fract}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="title2">
+                <h3 style="margin:none; margin-left : 25px; color:#ea001f"></h3>
+            </div>
+            <div id = "leftbox2">
+                <table style="margin-right:25px">
+                    <thead>
+                        <tr>
+                            <th colspan="3"> <center>II.3 - Hypotheque</center></th>
+                        </tr>
+                        <tr>
+                            <td > <center>Montant</center></td>
+                            <td > <center>Au profit de</center></td>
+                            <td > <center>Date</center></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hypotheque in rapport.hypotheque %}
+                        <tr>
+                            {% for hypo in hypotheque %}
+                            <td data-column="Last Name">{{hypo}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="title2">
+                <h3 style="margin:none; margin-left : 25px; color:#ea001f">III- Localisation</h3>
+            </div>
+            <div id = "boxMap">
+                <div class="map-container" id="map"></div>
+            </div>
+            
+            <div class="footer" style="color:blue; border:  dashed red; height: 50px; width: 20.8cm; position: fixed; bottom: 0;">Footer</div>
         </page> 
     </div>
     <div class="pagebreak"> </div>
@@ -187,7 +341,14 @@
                     TF : 0000/00
                 </div>
             </div>
-            <div>Header</div>
+            <div id="title">
+                <h3 style="margin:none; margin-left : 25px; color:#ea001f">IV- Photographies</h3>
+            </div>
+            
+            {% for photo in photographie %}
+                <img src= "{{photo.photo.url}}" class='imgBien'>
+            {% endfor %}
+
             <div class="footer2" style="color:blue; border: dashed red; height: 50px; width: 20.8cm; position: fixed; bottom: 0;">Footer</div>
         </page>
         <!--button de creation rapport-->
@@ -228,7 +389,50 @@
 <script>
     function downloadPDFWithjsPDF() {
         print();
-  }
+    }
     document.querySelector('#generatePDF').addEventListener('click', downloadPDFWithjsPDF);
+    
+    get_approxim_pins({{rapport.lat}}, {{rapport.lng}})
+
+    function get_approxim_pins(lat,lng){
+        var url = 'http://127.0.0.1:8000/rapport/get_approxim_pins/?lat='+lat+'&lng='+lng;
+        var prix=[]
+        var labels=[]
+        var results = []
+        const mapDiv = document.getElementById("map");
+        var map = new L.map('map').setView([parseFloat(lat), parseFloat(lng)], 15)
+        L.tileLayer('http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        const resizeObserver = new ResizeObserver(() => {map.invalidateSize();});//redIcon
+        resizeObserver.observe(mapDiv);
+        L.marker([parseFloat(lat), parseFloat(lng)],{icon: redIcon()}).addTo(map);
+        fetch(url)
+        .then((resp) => resp.json())
+        .then(function(data){
+           pins=data.pins;
+           pins.forEach(element => {
+              obj ={'label':element.label,'prix':element.prix_unit}
+              results.push(obj);
+              L.marker([parseFloat(element.lat), parseFloat(element.lng)],{icon: blueIcon(element.label)}).addTo(map);
+           });
+           labels_sort = labels;
+        });
+     }
+     function blueIcon(label){
+        return new L.divIcon({
+           className: "leaflet-marker-div",
+           html: '<span class="leaflet-marker-label leaflet-marker-blue">'+label+'</span>',
+           iconSize: [50, 50]
+        });
+     }
+     function redIcon(){
+           return new L.divIcon({
+           className: "leaflet-marker-div",
+           html: '<span class="leaflet-marker-label leaflet-marker-red">'+'</span>',
+           iconSize: [25, 41]
+        });
+     }
+     
 </script>
 </html>

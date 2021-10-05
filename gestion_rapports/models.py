@@ -31,7 +31,7 @@ class Rapport(models.Model):
   type_de_bien = models.IntegerField(null=True, blank=True)
   descreptif = models.IntegerField(null=True, blank=True)
   from_table = models.CharField(max_length=1,null=True, default="R")
-  score = models.IntegerField(null=True, blank=True, default="0.5")
+  score = models.DecimalField(max_digits=10, decimal_places=9, null=True, default="0.5")
   #Descriptifs des facteurs liés à l'immeuble (11)
   descriptif_age_imm = models.IntegerField(null=True, blank=True)
   descriptif_nbr_niv = models.IntegerField(null=True, blank=True)

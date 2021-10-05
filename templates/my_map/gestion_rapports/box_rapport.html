@@ -33,12 +33,8 @@
       {% include 'my_map/gestion_rapports/box_photos.html' %}
       {% include 'my_map/gestion_rapports/tab_evaluer.html' %}
    </div>
-   <!-- /course overview -->
 </div>
-<!-- Course overview -->
 <script>
-
-   
    var rapport = 0;
    var map_approximation = new L.map('map_approximation').setView([51.505, -0.09], 12);;
    function create_rapport(lat, lng){
@@ -96,134 +92,82 @@
       }
    };
    function _echart(prix,labels, dgi_name, dgi_prix, prix_estimer){
-     var length_data = prix.length;
-     var basic_columns_options = {
-     
-     // Setup grid
-     grid: {show: false},
-     
-     // Add tooltip
-     tooltip: {
-         trigger: 'axis',
-     
-     },
-     
-     // Add legend
-     legend: {
-         data: ['DGI', 'Dexa-reference', 'estimation']
-     },
-     
-     // Enable drag recalculate
-     calculable: true,
-     
-     
-     xAxis: {
-             type: "category",
-             data: labels,
-             axisLabel: {
-               //interval: 0,
-               rotate: 30, //If the label names are too long you can manage this by rotating the label.
+      var length_data = prix.length;
+      var basic_columns_options = {
+         grid: {show: false},
+         tooltip: {trigger: 'axis',},
+         legend: {data: ['DGI', 'Dexa-reference', 'estimation']},
+         calculable: true,
+         xAxis: {
+            type: "category",
+            data: labels,
+            axisLabel: {
+               rotate: 30,
                fontSize: 9
-             },
-           },
-     
-           yAxis: {
-             type: "value",
-             //name: "Population 2020 (millions)",
-             nameLocation: "center",
-             
-             nameGap: 30,
-             nameTextStyle: {
+            },
+         },
+         yAxis: {
+            type: "value",
+            nameLocation: "center",
+            nameGap: 30,
+            nameTextStyle: {
                align: "center"
-             },
-             splitNumber: 10
-           },
-     
-     // Horizontal axis
-     /*xAxis: [{
-         type: 'category',
-         data: labels
-     }],
-     
-     // Vertical axis
-     yAxis: [{
-         type: 'value',
-         data: prix,
-         axisLabel: {
-           formatter: "{value} Dh"
-        },
-        scale: true,   
-           splitLine: {
-              show: true
-           },
-     }],*/
-     
-     // Add series
-     series: [
-         {
-             name: 'DGI',
-             type: 'line',
-             data: Array(length_data).fill(dgi_prix),
-             itemStyle: {
-                 normal: {
-                     label: {
-                         show: false,
-                         textStyle: {
-                             fontWeight: 500
-                         }
-                     }
-                 }
-             },
-             markLine: {
-                 data: [{type: 'average', name: 'Average'}]
-             }
+            },
+            splitNumber: 10
          },
-         
-         {
-             name: 'references Dexa',
-             type: 'bar',
-             data: prix,
-             itemStyle: {
-                 normal: {
-                     label: {
-                         show: false,
-                         textStyle: {
-                             fontWeight: 500
-                         }
+         series: [{
+            name: 'DGI',
+            type: 'line',
+            data: Array(length_data).fill(dgi_prix),
+            itemStyle: {
+               normal: {
+                  label: {
+                     show: false,
+                     textStyle: {
+                        fontWeight: 500
                      }
-                 }
-             },
-             showBackground: true,
-                 backgroundStyle: {
-                 //color: 'rgba(180, 180, 180, 0.2)'
-                 }
-             /*markLine: {
-                 data: [{type: 'average', name: 'Average'}]
-             }*/
-         },
-         {
-             name: 'Prix estimé',
-             type: 'line',
-             data: Array(length_data).fill(prix_estimer),
-             itemStyle: {
-                 normal: {
+                  }
+               }
+            },
+            markLine: {data: [{type: 'average', name: 'Average'}]}
+         },{
+            name: 'references Dexa',
+               type: 'bar',
+               data: prix,
+               itemStyle: {
+                  normal: {
                      label: {
-                         show: false,
-                         textStyle: {
-                             fontWeight: 500
-                         }
+                        show: false,
+                        textStyle: {
+                           fontWeight: 500
+                        }
                      }
-                 }
-             },
-             markLine: {
-                 data: [{type: 'average', name: 'Average'}]
-             }
-         }
-     ]
-     };
-     var basic_columns = echarts.init(document.getElementById("basic_columns"));
-     basic_columns.setOption(basic_columns_options);
-     }
+                  }
+               },
+               showBackground: true,
+                  backgroundStyle: {}
+         },{
+            name: 'Prix estimé',
+            type: 'line',
+            data: Array(length_data).fill(prix_estimer),
+            itemStyle: {
+               normal: {
+                  label: {
+                     show: false,
+                     textStyle: {
+                        fontWeight: 500
+                     }
+                  }
+               }
+            },
+            markLine: {
+               data: [{type: 'average', name: 'Average'}]
+            }
+         }]
+      };
+      var basic_columns = echarts.init(document.getElementById("basic_columns"));
+      basic_columns.setOption(basic_columns_options);
+   }
    var myChart = null;
    var labels_sort = []
    function get_approxim_pins(lat,lng){
@@ -259,7 +203,6 @@
             prix.push(results[element].prix);
             labels.push(results[element].label);
          });
-         //prix_sort = prix.sort(function(a, b){labels_sort=labels_sort.sort(function(){console.log("a,b: ", labels_sort.indexOf(a),labels_sort.indexOf(b)); labels_sort.indexOf(b.type) - labels_sort.indexOf(a.type);});return b - a;});
          get_dgi_info(prix, labels, lat, lng, data.prix_estimer);
          $(".prix_estimer").html(data.prix_estimer+" Dh")
       });
@@ -269,7 +212,6 @@
       fetch(url)
       .then((resp) => resp.json())
       .then(function(data){
-         //chartPrix(prix,labels, data.name, data.prix_unit, prix_estimer);
          _echart(prix,labels, data.name, data.prix_unit, prix_estimer);
       });
    }

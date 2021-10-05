@@ -45,7 +45,6 @@ def CreerRapport(request):
 def situationJuridique(request, pk):
     if request.method == 'POST':
         my_rapport = Rapport.objects.get(id=pk)
-        print(my_rapport)
         titre_foncier = request.POST['titre_foncier']
         date_cp = request.POST['date_cp']
         surface_titree = request.POST['surface_titree']
@@ -132,11 +131,11 @@ def estimation_prix(array):
 @api_view(['GET'])
 @login_required(login_url='login')
 def preview_pdf(request):
+    rapport = Rapport.objects.get(id = 4)
+    photographie = PhotographieRapport.objects.filter(rapport_id = 4)
     data = {
-            #'today': datetime.date.today(), 
-        'amount': 39.99,
-        'customer_name': 'Cooper Mann',
-        'order_id': 1233434,
+        'rapport': rapport,
+        'photographie': photographie,
     }
     return render(request,'my_map/gestion_rapports/pdf.html', data)
 
@@ -165,10 +164,8 @@ def addFraction(request, pk):
             my_rapport = Rapport.objects.get(id=pk)
             fract = []
             fract.append(str(fraction))
-            print(fract)
             fract.append(str(consistance))
             fract.append(str(surface))
-            print(fract)
             fract1 = []
             fract1.append(fract)
             my_rapport.fraction.append(fract)
