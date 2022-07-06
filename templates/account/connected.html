@@ -137,7 +137,6 @@
 								</div>
 							</div>
 							<!-- /profile info -->
-							{% if user.userType == "principal" and user.id != 1 %}
 							<div class="panel panel-flat" id="factures-table">
 								<div class="panel-heading">
 									<h5 class="panel-title">Mes factures</h5>
@@ -192,7 +191,6 @@
 								</table>
 								{% endif %}
 							</div>
-							{% endif %}
 							<!-- new div for ajout sous user-->
 							{% if user.userType == "principal"%}
 							<div class="panel panel-flat" id="subUsers-table">

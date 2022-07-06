@@ -32,7 +32,7 @@ def myMap(request):
                 if i.type_abonnement>type_abon:
                     type_abon=i.type_abonnement
             if type_abon == 1 or type_abon == 2 or request.user.id == 1 or request.user.lien == 1:
-                return render(request, 'my_map/my_map.html', context)
+                return render(request, 'account/connected.html', context)
             else:
                 erreur=1
                 messages.error(request, 'Désolé, votre pack ne contient My Map, Veuillez demander le compte PREMIUM ou PREMIUM PLUS')

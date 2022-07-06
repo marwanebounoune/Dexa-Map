@@ -103,13 +103,13 @@ WSGI_APPLICATION = 'realtysoft.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'mydb2',
+        'NAME': 'IIR',
         'USER': 'postgres',
         'PASSWORD' : 'admin',
         'HOST': 'localhost'
-
     }
 }
+AUTH_USER_MODEL="accounts.User"
 
 
 # Password validation

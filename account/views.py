@@ -146,10 +146,10 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
         user.my_ip = get_ip(request)
         user.save()
-        if (user is not None and (user.my_ip == "105.159.248.165" or user.id ==1 or user.id == 9)):
+        if (user is not None and (user.my_ip == "127.0.0.1" or user.id ==3 or user.id == 1)):
             auth.login(request, user)
             return redirect('myMap')
-        elif(user.my_ip != "105.159.248.165" and user.id !=1 and user.id != 9) :
+        elif(user.my_ip != "127.0.0.1" and user.id !=1 and user.id != 9) :
             return HttpResponse("Access denied")
         else:
             erreur=1
