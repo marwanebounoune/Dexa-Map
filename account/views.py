@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from django.http.response import HttpResponse
 from django.contrib import messages, auth
@@ -12,8 +11,6 @@ from django.utils.datastructures import MultiValueDictKeyError
 from api_map.models import HistoriqueExplorer, Pin, HistoriqueMyMap
 import re
 import datetime
-
-
 
 @login_required(login_url='login')
 def connexion(request):
