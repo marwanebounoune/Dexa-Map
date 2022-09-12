@@ -1,0 +1,16 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "version": "1.14.0",
+    "libraryName": "dexa-maps-and-archive",
+    "libraryId": "9483d7f8-cf34-4ea8-9515-4e40608e67ee",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "DexaMapsAndArchive",
+    "solutionShortDescription": "DexaMapsAndArchive description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

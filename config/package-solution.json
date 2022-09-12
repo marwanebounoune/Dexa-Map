@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "dexa-maps-and-archive-client-side-solution",
+    "id": "9483d7f8-cf34-4ea8-9515-4e40608e67ee",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.14.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "DexaMapsAndArchive description"
+      },
+      "longDescription": {
+        "default": "DexaMapsAndArchive description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "dexa-maps-and-archive Feature",
+        "description": "The feature that activates elements of the dexa-maps-and-archive solution.",
+        "id": "2d88ff1b-855c-49eb-996d-74b8a6ab3f7a",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/dexa-maps-and-archive.sppkg"
+  }
+}
