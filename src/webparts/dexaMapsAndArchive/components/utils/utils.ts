@@ -147,7 +147,7 @@ export function extendDistanceFiltrer(itemsDexa:any, start_point:any, start_dis:
             filterd_list_dexa:filterd_list_dexa,
         };
     }
-    return extendDistanceFiltrer(itemsDexa,start_point, start_dis+250, end_dis, type_de_bien, type_de_ref, date_de_ref);//pas 250 m
+    return extendDistanceFiltrer(itemsDexa, start_point, start_dis+250, end_dis, type_de_bien, type_de_ref, date_de_ref);//pas 250 m
 }
 export function extendDistanceFiltrerWithUser(itemsDexa:any, start_point:any, start_dis:number, end_dis:number){
     var query = function(element) {
@@ -167,7 +167,7 @@ export function extendDistanceFiltrerWithUser(itemsDexa:any, start_point:any, st
     }
     return extendDistanceFiltrerWithUser(itemsDexa,start_point, start_dis+250, end_dis);
 }
-export function extendDistanceFiltrerRapport(rapport_classic:any,grand_rapport:any,start_point:any, start_dis:number, end_dis:number,type_de_bien:string[]){
+export function extendDistanceFiltrerRapport(archive:any, start_point:any, start_dis:number, end_dis:number,type_de_bien:string[]){
     var query = function(element) {
         var isIncluded = false;
         if(element.Latitude_Longitude){
@@ -178,28 +178,25 @@ export function extendDistanceFiltrerRapport(rapport_classic:any,grand_rapport:a
                 longitude: lng
             };
             var dis = haversine(start_point, end_point);
+            console.log("Distance", dis)
             var element_type_de_bien = element.Type_x0020_de_x0020_bien;
             if(element_type_de_bien!=null){
                 isIncluded =  type_de_bien.some(value => element_type_de_bien.includes(value));
             }
-            if(type_de_bien.length===0){
+            if(type_de_bien.length===0 && dis <= start_dis/1000){
+                console.log("element.FileSystemObjectType", element.FileSystemObjectType)
                 return element.FileSystemObjectType === 0 && dis <= start_dis/1000;
             }
-            else{
+            else if(type_de_bien.length!==0 && dis <= start_dis/1000){
                 return isIncluded && element.FileSystemObjectType === 0 && dis <= start_dis/1000;
             }
         }
     };
-    const filterd_list_rapport_classic = rapport_classic.filter(query);
-    const filterd_list_grand_rapport = grand_rapport.filter(query);
-    if (start_dis === end_dis || (filterd_list_rapport_classic.length+filterd_list_grand_rapport.length) > 10){
-        return {
-            dis:start_dis/1000,
-            filterd_list_rapport_classic:filterd_list_rapport_classic,
-            filterd_list_grand_rapport:filterd_list_grand_rapport
-        };
+    const filterd_list_archive = archive.filter(query);
+    if (start_dis === end_dis || archive.length > 3){
+        return filterd_list_archive;
     }
-    return extendDistanceFiltrerRapport(rapport_classic, grand_rapport,start_point, start_dis+250, end_dis, type_de_bien);//pas 250 m
+    return extendDistanceFiltrerRapport(archive, start_point, start_dis+250, end_dis, type_de_bien);//pas 250 m
 }
 export async function get_dgi_zone(lat:number, lng:number) {
     await sp.web.lists.getByTitle("l_ref_DGI").items.getAll().then(res=>{
@@ -269,5 +266,3 @@ export function numStr(a, b) {
     }
     return c;
 }
-
-

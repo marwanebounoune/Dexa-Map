@@ -166,7 +166,7 @@ export default function MapContainer(props:IMapContainerProps){
         <span className={styles.CopyToClipboardMsg}>&nbsp;{copySuccess}</span>
       </div>
       <Filtrer dgi={DGI}  buttonTitle="Analyser la zone" latlng={lat+","+lng} handleFilter={ async (items_dexa,distance,type_de_bien) => await displayMarker(items_dexa,distance,type_de_bien)} ></Filtrer>
-      <FiltrerRapport dgi={DGI} buttonTitle="Afficher les rapports" latlng={lat+","+lng} handleFiltrerRapport={ async (rapport_classic,grand_rapport) => await displayRapport(rapport_classic,grand_rapport)} ></FiltrerRapport>
+      <FiltrerRapport dgi={DGI} buttonTitle="Afficher les archives" latlng={lat+","+lng} handleFiltrerRapport={ async (archive) => await displayRapport(archive)} ></FiltrerRapport>
       <Evaluer dgi={DGI} buttonTitle="Evaluer le bien" latlng={lat+","+lng} handleEvaluer={(result) => {if(result!=null) {moreInfo(result);}}} ></Evaluer>
       {/*<DialogEvaluation/>
       <br/>*/}
@@ -272,13 +272,14 @@ export default function MapContainer(props:IMapContainerProps){
     };
     setInformation(result);
   }
-  async function displayRapport (rapport_classic:any, grand_rapport:any) {
+  async function displayRapport (archive: any) {
     setPopupInfo(null);
     setPopupInfoRapport(null);
     setDexa_markers(null)
-    await setRapportClassicMarkers(rapport_classic);
-    await setGrandRapportMarkers(grand_rapport);
+    // await setGrandRapportMarkers(grand_rapport);
+    await setRapportClassicMarkers(archive);
     setUpdatedMarker(true);
+    console.log("archive", archive)
   }
 
   return (

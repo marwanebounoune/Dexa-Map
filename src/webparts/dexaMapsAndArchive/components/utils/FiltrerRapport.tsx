@@ -13,7 +13,7 @@ interface IFiltrerRapportProps {
   buttonTitle: string;
   latlng:string;
   dgi:any;
-  handleFiltrerRapport({},{},{}):any;
+  handleFiltrerRapport({},{}):any;
 }
 
 export default function FiltrerRapport (props:IFiltrerRapportProps){
@@ -25,7 +25,7 @@ export default function FiltrerRapport (props:IFiltrerRapportProps){
   let [alertDgi, setAlertDGi] = React.useState(false);
   let lat = getLat(props.latlng);
   let lng = getLng(props.latlng);
-  
+
   const start = {
     latitude: lat,
     longitude: lng
@@ -88,29 +88,31 @@ export default function FiltrerRapport (props:IFiltrerRapportProps){
       form.type_rapport.push(ev.currentTarget.title);
     }
     if(pos > -1 && !isChecked){
-      let removedItem = form.type_rapport.splice(pos, 1);
+      form.type_rapport.splice(pos, 1);
     }
   };
   async function _onSubmit(){
     let rapport_classic: any[] = [];
     let grand_rapport: any[] = [];
+    let archive: any[] = [];
     var rest_filterd_list = null;
     form.type_rapport.forEach( async (element, index) => {
-      var query = function(elm) {
-          return elm.Ttype_x0020_de_x0020_rapport === element;
+      var queryArchive = function(elm) {
+        return elm.Ann_x00e9_e === Number(element);
       };
       await sp.web.lists.getByTitle("EvalRapports").items.getAll().then(async res=>{
-        if(element === "Rapports 2022"){
-          rapport_classic = await res.filter(query);
+        console.log("element", element)
+        console.log("res", res)
+        if(element === "2022"){
+          archive = archive.concat(res.filter(queryArchive));
         }
-        else if(element === "Grands Projets 2022"){
-          grand_rapport= await res.filter(query);
+        else if(element === "2019" || element === "2018" || element === "2017" || element === "2016" || element === "2015" || element === "2014"){
+          archive = archive.concat(res.filter(queryArchive));
         }
+        console.log("archive", archive)
         if (form.type_rapport.length-1 === index){
-          rest_filterd_list = await extendDistanceFiltrerRapport(rapport_classic, grand_rapport,start,DISTANCE_START_FILTRAGE, DISTANCE_END_FILTRAGE,form.type_de_bien); 
-          rapport_classic = rest_filterd_list.filterd_list_rapport_classic;
-          grand_rapport = rest_filterd_list.filterd_list_grand_rapport;
-          props.handleFiltrerRapport(rapport_classic, grand_rapport, rest_filterd_list.dis);
+          rest_filterd_list = await extendDistanceFiltrerRapport(archive, start,DISTANCE_START_FILTRAGE, DISTANCE_END_FILTRAGE,form.type_de_bien);
+          props.handleFiltrerRapport(rest_filterd_list, rest_filterd_list.dis);
         }
         setForm({...form,type_de_bien:[], type_rapport:[]});
       })
@@ -156,9 +158,20 @@ export default function FiltrerRapport (props:IFiltrerRapportProps){
           <Dropdown placeholder="Selectionner le type de bien" multiSelect label="TYPE DE BIEN" options={options_type_de_bien} styles={dropdownStyles} defaultSelectedKey={form.type_de_bien} onChange={onChange_type_de_bien}/>
           <Stack tokens={{ childrenGap: 10}}>
             <Label>TYPE DE Rapport</Label>
-            <Stack horizontal horizontalAlign="start" tokens={{childrenGap:10}}>
-              <Checkbox  value={1} title="Rapports 2022" label="Rapports 2022" onChange={_onChange_type_rapport } />
-              <Checkbox value={2} title="Grands Projets 2022" label="Grands Projets 2022" onChange={_onChange_type_rapport } />
+            <Stack horizontal horizontalAlign="start" tokens={{childrenGap:1}}>
+              <Checkbox  value={1} title="2022" label="Archive 2022" onChange={_onChange_type_rapport}/>
+            </Stack>
+            <Stack horizontal horizontalAlign="start" tokens={{childrenGap:1}}>
+              <Checkbox  value={3} title="2019" label="Archive 2019" onChange={_onChange_type_rapport}/>
+              <Checkbox  value={3} title="2018" label="Archive 2018" onChange={_onChange_type_rapport}/>
+            </Stack>
+            <Stack horizontal horizontalAlign="start" tokens={{childrenGap:1}}>
+              <Checkbox  value={3} title="2017" label="Archive 2017" onChange={_onChange_type_rapport}/>
+              <Checkbox  value={3} title="2016" label="Archive 2016" onChange={_onChange_type_rapport}/>
+            </Stack>
+            <Stack horizontal horizontalAlign="start" tokens={{childrenGap:1}}>
+              <Checkbox  value={3} title="2015" label="Archive 2015" onChange={_onChange_type_rapport}/>
+              <Checkbox  value={3} title="2014" label="Archive 2014" onChange={_onChange_type_rapport}/>
             </Stack>
           </Stack>
           <Stack horizontal horizontalAlign="end" tokens={{childrenGap:30}}>
