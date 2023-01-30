@@ -18,3 +18,5 @@ npm i @pnp/graph --save
 npm i @pnp/spfx-controls-react
 npm i @uifabric/react-hooks
 npm i @microsoft/sp-dialog
+
+npm install --save-dev @types/jquery

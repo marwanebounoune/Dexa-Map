@@ -147,10 +147,11 @@ export default function MapContainer(props:IMapContainerProps){
     return <div className={styles.popupMarker}>
       <div className={styles.CloseDiv} onClick={()=> setPopupInfoRapport(false)}>X</div>
       <div className={styles.arrowPopUp}></div>
-      <span className={styles.spanInfo}>Type de bien: </span>{popupInfoRapport.Type_x0020_de_x0020_bien}<br/>
-      {popupInfoRapport.Surface_x0020_pond_x00e9_r_x00e9?<><span className={styles.spanInfo}>Surface pondéré: </span>{popupInfoRapport.Surface_x0020_pond_x00e9_r_x00e9} Dhs/m2<br/></>:<></>}
-      {popupInfoRapport.Surface_x0020_construite?<><span className={styles.spanInfo}>Surface construite: </span>{popupInfoRapport.Surface_x0020_construite} Dhs/m2<br/></>:<></>}
-      {popupInfoRapport.Surface_x0020_terrain?<><span className={styles.spanInfo}>Surface terrain: </span>{popupInfoRapport.Surface_x0020_terrain} Dhs/m2<br/></>:<></>}
+      <span className={styles.spanInfo}>Année du référence: </span>{popupInfoRapport.Ann_x00e9_e}<br/>
+      <span className={styles.spanInfo}>Référence du bien: </span>{popupInfoRapport.R_x00e9_f_x00e9_rence}<br/>
+      {popupInfoRapport.Surface_x0020_pond_x00e9_r_x00e9?<><span className={styles.spanInfo}>Surface pondéré: </span>{popupInfoRapport.Surface_x0020_pond_x00e9_r_x00e9} m2<br/></>:<></>}
+      {popupInfoRapport.Surface_x0020_construite?<><span className={styles.spanInfo}>Surface construite: </span>{popupInfoRapport.Surface_x0020_construite} m2<br/></>:<></>}
+      {popupInfoRapport.Surface_x0020_terrain?<><span className={styles.spanInfo}>Surface terrain: </span>{popupInfoRapport.Surface_x0020_terrain} m2<br/></>:<></>}
       <span className={styles.spanInfo}>Prix total de l'expertise: </span>{popupInfoRapport.Prix_x0020_total_x0020_de_x0020_} Dhs
       </div>
   };
@@ -279,7 +280,6 @@ export default function MapContainer(props:IMapContainerProps){
     // await setGrandRapportMarkers(grand_rapport);
     await setRapportClassicMarkers(archive);
     setUpdatedMarker(true);
-    console.log("archive", archive)
   }
 
   return (

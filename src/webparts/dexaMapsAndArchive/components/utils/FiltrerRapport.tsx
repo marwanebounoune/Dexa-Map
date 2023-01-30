@@ -19,26 +19,28 @@ interface IFiltrerRapportProps {
 export default function FiltrerRapport (props:IFiltrerRapportProps){
   let [isOpen, setIsOpen] = React.useState(false);
   let [submitClick, setSubmitClick] = React.useState(false);
-  let [form, setForm] = React.useState({type_de_bien:[], type_rapport:[]});
+  let [form, setForm] = React.useState({type_de_bien:[], type_rapport:[], annees:[]});
   let [alertAutorisation, setAlertAutorisation] = React.useState(false);
-  let [alert, setAlert] = React.useState(false);
   let [alertDgi, setAlertDGi] = React.useState(false);
   let lat = getLat(props.latlng);
   let lng = getLng(props.latlng);
+  let [currentYear, setCurrentYear] = React.useState(Date);
+  let [alertTous, setAlertTous] = React.useState(false);
+  const arch = "Archive ";
 
   const start = {
     latitude: lat,
     longitude: lng
   };
-  const dialogContentProps = {
-    type: DialogType.normal,
-    title: 'Attention',
-    subText: 'Veuillez préciser le type de réference',
-  };
   const dialogContentDGIProps = {
     type: DialogType.normal,
     title: 'Oups',
     subText: 'Désolé la zone choisie n\'est pas prise en charge par le système.',
+  };
+  const dialogContentPropsTous = {
+    type: DialogType.normal,
+    title: 'Attention',
+    subText: "Veuillez deselectionner le champ 'Tous'."
   };
   const FiltrageDialogContentProps = {
     type: DialogType.largeHeader,
@@ -84,37 +86,40 @@ export default function FiltrerRapport (props:IFiltrerRapportProps){
   };
   const _onChange_type_rapport = (ev: React.FormEvent<HTMLInputElement>, isChecked: boolean):void => {
     let pos = form.type_rapport.indexOf(ev.currentTarget.title);
-    if(pos === -1 && isChecked){
+    if(pos === -1 && isChecked && ev.currentTarget.title !== "Tous" && form.type_rapport[0] !== "Tous"){
       form.type_rapport.push(ev.currentTarget.title);
+    }
+    else if(pos === -1 && isChecked && ev.currentTarget.title !== "Tous" && form.type_rapport[0] === "Tous"){
+      setAlertTous(true);
+      form.type_rapport = [];
+    }
+    else if(pos === -1 && isChecked && ev.currentTarget.title === "Tous"){
+      form.type_rapport = ["Tous"];
     }
     if(pos > -1 && !isChecked){
       form.type_rapport.splice(pos, 1);
     }
   };
   async function _onSubmit(){
-    let rapport_classic: any[] = [];
-    let grand_rapport: any[] = [];
     let archive: any[] = [];
-    var rest_filterd_list = null;
-    form.type_rapport.forEach( async (element, index) => {
+    var rest_filterd_list = null;form.annees
+    if(form.type_rapport[0] === "Tous")
+      for (let i = 2010; i <= (new Date()).getFullYear() ; i++) {
+        form.annees.push(i.toString())
+      }
+    else
+    form.annees = form.type_rapport
+    await form.annees.forEach( async (element, index) => {
       var queryArchive = function(elm) {
         return elm.Ann_x00e9_e === Number(element);
       };
-      await sp.web.lists.getByTitle("EvalRapports").items.getAll().then(async res=>{
-        console.log("element", element)
-        console.log("res", res)
-        if(element === "2022"){
-          archive = archive.concat(res.filter(queryArchive));
-        }
-        else if(element === "2019" || element === "2018" || element === "2017" || element === "2016" || element === "2015" || element === "2014"){
-          archive = archive.concat(res.filter(queryArchive));
-        }
-        console.log("archive", archive)
-        if (form.type_rapport.length-1 === index){
-          rest_filterd_list = await extendDistanceFiltrerRapport(archive, start,DISTANCE_START_FILTRAGE, DISTANCE_END_FILTRAGE,form.type_de_bien);
+      await sp.web.lists.getByTitle("Archive").items.getAll().then(async res=>{
+        archive = archive.concat(res.filter(queryArchive));
+        if (form.annees.length-1 === index){
+          rest_filterd_list = await extendDistanceFiltrerRapport(archive, start, DISTANCE_START_FILTRAGE, DISTANCE_END_FILTRAGE);
           props.handleFiltrerRapport(rest_filterd_list, rest_filterd_list.dis);
         }
-        setForm({...form,type_de_bien:[], type_rapport:[]});
+        setForm({...form,type_de_bien:[], annees:[]});
       })
       .catch(error=>{
         if(error.status === 404 || (error.response.status && error.response.status === 404)){
@@ -124,16 +129,12 @@ export default function FiltrerRapport (props:IFiltrerRapportProps){
     });
     setSubmitClick(true);
   }
+  let rows = [];
+  for (let i = 2010; i <= (new Date()).getFullYear() ; i+=2) {
+    rows.push(i)
+  }
   return (
     <div>
-      {alert?       
-        <Dialog hidden={!alert} onDismiss={()=>setAlert(false)} dialogContentProps={dialogContentProps} modalProps={modelProps}>
-          <DialogFooter>
-            <DefaultButton onClick={()=>setAlert(false)} text="Cancel" />
-          </DialogFooter>
-        </Dialog>
-        :<></>
-      }
       {alertAutorisation?       
         <Dialog hidden={!alertAutorisation} onDismiss={()=>setAlertAutorisation(false)} dialogContentProps={FiltrageDialogContentProps} modalProps={modelProps}>
           <DialogFooter>
@@ -142,6 +143,13 @@ export default function FiltrerRapport (props:IFiltrerRapportProps){
         </Dialog>
         :<></>
       }
+      {alertTous?       
+        <Dialog hidden={!alertTous} onDismiss={()=>setAlertTous(false)} dialogContentProps={dialogContentPropsTous} modalProps={modelProps}>
+          <DialogFooter>
+            <DefaultButton onClick={()=>setAlertTous(false)} text="Cancel" />
+          </DialogFooter>
+        </Dialog>
+      :<></>}
       {alertDgi?       
         <Dialog hidden={!alertDgi} onDismiss={()=>setAlertDGi(false)} dialogContentProps={dialogContentDGIProps} modalProps={modelProps}>
           <DialogFooter>
@@ -155,24 +163,24 @@ export default function FiltrerRapport (props:IFiltrerRapportProps){
       </Stack>
       <Panel isOpen={isOpen} onDismiss={()=> setIsOpen(false)} headerText="FILTRAGE" closeButtonAriaLabel="Close">
         <Stack tokens={{childrenGap:10}}>
-          <Dropdown placeholder="Selectionner le type de bien" multiSelect label="TYPE DE BIEN" options={options_type_de_bien} styles={dropdownStyles} defaultSelectedKey={form.type_de_bien} onChange={onChange_type_de_bien}/>
           <Stack tokens={{ childrenGap: 10}}>
-            <Label>TYPE DE Rapport</Label>
-            <Stack horizontal horizontalAlign="start" tokens={{childrenGap:1}}>
-              <Checkbox  value={1} title="2022" label="Archive 2022" onChange={_onChange_type_rapport}/>
-            </Stack>
-            <Stack horizontal horizontalAlign="start" tokens={{childrenGap:1}}>
-              <Checkbox  value={3} title="2019" label="Archive 2019" onChange={_onChange_type_rapport}/>
-              <Checkbox  value={3} title="2018" label="Archive 2018" onChange={_onChange_type_rapport}/>
-            </Stack>
-            <Stack horizontal horizontalAlign="start" tokens={{childrenGap:1}}>
-              <Checkbox  value={3} title="2017" label="Archive 2017" onChange={_onChange_type_rapport}/>
-              <Checkbox  value={3} title="2016" label="Archive 2016" onChange={_onChange_type_rapport}/>
-            </Stack>
-            <Stack horizontal horizontalAlign="start" tokens={{childrenGap:1}}>
-              <Checkbox  value={3} title="2015" label="Archive 2015" onChange={_onChange_type_rapport}/>
-              <Checkbox  value={3} title="2014" label="Archive 2014" onChange={_onChange_type_rapport}/>
-            </Stack>
+            <Label>Année d'archive</Label>
+            {rows.map((item, index) => (
+              <Stack horizontal horizontalAlign="start" tokens={{childrenGap:65}}>
+                <Checkbox  value={1} title={item} label={arch+item} onChange={_onChange_type_rapport}/>
+                {item+1 <= (new Date()).getFullYear()?
+                  <Checkbox  value={1} title={item+1} label={arch+(item+1)} onChange={_onChange_type_rapport}/>
+                  :
+                  <Checkbox  value={1} title="Tous" label="Tous" onChange={_onChange_type_rapport}/>
+                }
+              </Stack>
+            ))}
+            {(new Date()).getFullYear() % 2 !== 0?
+            <Stack horizontal horizontalAlign="start" tokens={{childrenGap:65}}>
+                <Checkbox  value={1} title="Tous" label="Tous" onChange={_onChange_type_rapport}/>
+              </Stack>
+              :<></>
+            }
           </Stack>
           <Stack horizontal horizontalAlign="end" tokens={{childrenGap:30}}>
             <PrimaryButton text="Filtrer" onClick={async() => await _onSubmit()}></PrimaryButton>

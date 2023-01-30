@@ -19,6 +19,8 @@ export default function Filtrer (props:IFiltrerProps){
   let [form, setForm] = React.useState({type_de_bien:"Résidentiel", type_de_ref:[], date_de_ref:[], creer_par:null});
   let [typeDeBien, setTypeDeBien] = React.useState("Résidentiel");
   let [alert, setAlert] = React.useState(false);
+  let [ok, setOk] = React.useState(false);
+  let [alertTous, setAlertTous] = React.useState(false);
   let [alertDgi, setAlertDGi] = React.useState(false);
   let [alertAutorisation, setAlertAutorisation] = React.useState(false);
   let lat = getLat(props.latlng);
@@ -32,6 +34,11 @@ export default function Filtrer (props:IFiltrerProps){
     type: DialogType.normal,
     title: 'Attention',
     subText: "Veuillez remplir tous les champs."
+  };
+  const dialogContentPropsTous = {
+    type: DialogType.normal,
+    title: 'Attention',
+    subText: "Veuillez deselectionner le champ 'Tous'."
   };
   const dialogContentDGIProps = {
     type: DialogType.normal,
@@ -67,17 +74,25 @@ export default function Filtrer (props:IFiltrerProps){
       form.type_de_ref.push(ev.currentTarget.title);
     }
     if(pos > -1 && !isChecked){
-      let removedItem = form.type_de_ref.splice(pos, 1);
+      form.type_de_ref.splice(pos, 1);
     }  
   };
   const _onChange_date_de_ref = (ev: React.FormEvent<HTMLInputElement>, isChecked: boolean):void => {
     let pos = form.date_de_ref.indexOf(ev.currentTarget.title);
-    if(pos === -1 && isChecked){
+    if(pos === -1 && isChecked && ev.currentTarget.title !== "Tous" && form.date_de_ref[0] !== "Tous"){
       form.date_de_ref.push(ev.currentTarget.title);
     }
+    else if(pos === -1 && isChecked && ev.currentTarget.title !== "Tous" && form.date_de_ref[0] === "Tous"){
+      setAlertTous(true);
+      form.date_de_ref = [];
+    }
+    else if(pos === -1 && isChecked && ev.currentTarget.title === "Tous"){
+      form.date_de_ref = ["Tous"];
+    }
     if(pos > -1 && !isChecked){
-      let removedItem = form.date_de_ref.splice(pos, 1);
-    } 
+      form.date_de_ref.splice(pos, 1);
+      
+    }
   };
   async function _onSubmit(){
     var rest_filterd_list = null;
@@ -85,12 +100,8 @@ export default function Filtrer (props:IFiltrerProps){
       setAlert(true);
     }
     else{
-      var time_start = new Date(Date.now());
-      var s_start = time_start.getSeconds();
-      let A = await sp.web.lists.getByTitle("Pins").items.getAll()
       await sp.web.lists.getByTitle("Pins").items.select("QuiasignalerId", "Nombredesignalement", "validateur_refId", "is_deleted","Id","regionsId","Latitude_Longitude","Date_x0020_de_x0020_la_x0020_r_x","Surface_x0020_pond_x00e9_r_x00e9","Surface_x0020_construite","Surface_x0020_terrain","Type_x0020_de_x0020_bien","Type_x0020_de_x0020_R_x00e9_f_x0", "Title", "Prix_x0020_unitaire_x0020__x002F","Prix_x0020_unitaire_x0020_pond_x","Prix_x0020_unitaire_x0020_terrai","Localis_x00e9_")
       .getAll().then(async res=>{
-        console.log("Res avant filter", res)
         rest_filterd_list = extendDistanceFiltrer(res,start,DISTANCE_START_FILTRAGE, DISTANCE_END_FILTRAGE, form.type_de_bien, form.type_de_ref, form.date_de_ref);
         props.handleFilter(rest_filterd_list.filterd_list_dexa, rest_filterd_list.dis,typeDeBien);
       }).catch(error=>{
@@ -101,12 +112,23 @@ export default function Filtrer (props:IFiltrerProps){
       setIsOpen(false);
     }
   }
+  let rows = [];
+  for (let i = 2021; i <= (new Date()).getFullYear() ; i+=2) {
+    rows.push(i)
+  }
   return (
     <div>
       {alert?       
         <Dialog hidden={!alert} onDismiss={()=>setAlert(false)} dialogContentProps={dialogContentProps} modalProps={modelProps}>
           <DialogFooter>
             <DefaultButton onClick={()=>setAlert(false)} text="Cancel" />
+          </DialogFooter>
+        </Dialog>
+      :<></>}
+      {alertTous?       
+        <Dialog hidden={!alertTous} onDismiss={()=>setAlertTous(false)} dialogContentProps={dialogContentPropsTous} modalProps={modelProps}>
+          <DialogFooter>
+            <DefaultButton onClick={()=>setAlertTous(false)} text="Cancel" />
           </DialogFooter>
         </Dialog>
       :<></>}
@@ -139,10 +161,21 @@ export default function Filtrer (props:IFiltrerProps){
           </Stack>
           <Stack tokens={{ childrenGap: 10}}>
             <Label>DATE DE RÉFÉRENCE</Label>
+            {rows.map((item, index) => (
+              <Stack horizontal horizontalAlign="start" tokens={{childrenGap:65}}>
+                <Checkbox  value={1} title={item} label={item} onChange={_onChange_date_de_ref}/>
+                {item+1 <= (new Date()).getFullYear()?
+                  <Checkbox  value={1} title={item+1} label={(item+1)} onChange={_onChange_date_de_ref}/>
+                  :
+                  <Checkbox  value={1} title="Tous" label="Tous" onChange={_onChange_date_de_ref}/>
+                }
+              </Stack>
+            ))}
+            {(new Date()).getFullYear() % 2 !== 0?<></>:
             <Stack horizontal horizontalAlign="start" tokens={{childrenGap:65}}>
-              <Checkbox  value={2021} title="2021" label="2021" onChange={_onChange_date_de_ref } />
-              <Checkbox value={2022} title="2022" label="2022" onChange={_onChange_date_de_ref } />
+              <Checkbox  value={1} title="Tous" label="Tous" onChange={_onChange_date_de_ref}/>
             </Stack>
+            }
           </Stack>
           <Stack horizontal horizontalAlign="end" tokens={{childrenGap:30}}>
             <PrimaryButton text="Filtrer" onClick={async() => {await _onSubmit(); setIsOpen(false)}}></PrimaryButton>

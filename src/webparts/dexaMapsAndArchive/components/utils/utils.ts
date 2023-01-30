@@ -102,6 +102,10 @@ export function extendDistanceEvaluer(itemsDexa:any, start_point:any, start_dis:
     return extendDistanceEvaluer(itemsDexa,start_point, start_dis+100, end_dis,DGI, type_de_bien);
 }
 export function extendDistanceFiltrer(itemsDexa:any, start_point:any, start_dis:number, end_dis:number, type_de_bien:string,type_de_ref:string[], date_de_ref:string[]){
+    if(date_de_ref[0] === "Tous")
+        var anneeDeRef:string[] = ["2021", "2022", "2023"]
+    else
+        var anneeDeRef:string[] = date_de_ref
     if (type_de_bien === "Villa")
         var query = function(element) {
             var lat = getLat(element.Latitude_Longitude);
@@ -112,7 +116,7 @@ export function extendDistanceFiltrer(itemsDexa:any, start_point:any, start_dis:
             };
             var dis = haversine(start_point, end_point);
             var date = new Date(element.Date_x0020_de_x0020_la_x0020_r_x).getFullYear().toString()
-            return element.is_deleted ==="Non" && (element.Type_x0020_de_x0020_bien === "Villa" || element.Type_x0020_de_x0020_bien === "Terrain Villa") && type_de_ref.indexOf(element.Type_x0020_de_x0020_R_x00e9_f_x0)!=-1 && date_de_ref.indexOf(date)!=-1 && dis <= start_dis/1000;
+            return element.is_deleted ==="Non" && (element.Type_x0020_de_x0020_bien === "Villa" || element.Type_x0020_de_x0020_bien === "Terrain Villa") && type_de_ref.indexOf(element.Type_x0020_de_x0020_R_x00e9_f_x0)!=-1 && anneeDeRef.indexOf(date)!=-1 && dis <= start_dis/1000;
         };
     else if (type_de_bien === "Terrain")
         var query = function(element) {
@@ -124,8 +128,7 @@ export function extendDistanceFiltrer(itemsDexa:any, start_point:any, start_dis:
             };
             var dis = haversine(start_point, end_point);
             var date = new Date(element.Date_x0020_de_x0020_la_x0020_r_x).getFullYear().toString()
-            console.log("Type de bien: ", element.Type_x0020_de_x0020_bien)
-            return element.is_deleted ==="Non" && (element.Type_x0020_de_x0020_bien === "Terrain Agricole" || element.Type_x0020_de_x0020_bien === "Terrain Construit" || element.Type_x0020_de_x0020_bien === "Terrain Urbain" || element.Type_x0020_de_x0020_bien === "Terrain Villa") && type_de_ref.indexOf(element.Type_x0020_de_x0020_R_x00e9_f_x0)!=-1 && date_de_ref.indexOf(date)!=-1 && dis <= start_dis/1000;
+            return element.is_deleted ==="Non" && (element.Type_x0020_de_x0020_bien === "Terrain Agricole" || element.Type_x0020_de_x0020_bien === "Terrain Construit" || element.Type_x0020_de_x0020_bien === "Terrain Urbain" || element.Type_x0020_de_x0020_bien === "Terrain Villa") && type_de_ref.indexOf(element.Type_x0020_de_x0020_R_x00e9_f_x0)!=-1 && anneeDeRef.indexOf(date)!=-1 && dis <= start_dis/1000;
         };
     else
         var query = function(element) {
@@ -137,7 +140,7 @@ export function extendDistanceFiltrer(itemsDexa:any, start_point:any, start_dis:
             };
             var dis = haversine(start_point, end_point);
             var date = new Date(element.Date_x0020_de_x0020_la_x0020_r_x).getFullYear().toString()
-            return element.is_deleted ==="Non" && element.Type_x0020_de_x0020_bien === type_de_bien && type_de_ref.indexOf(element.Type_x0020_de_x0020_R_x00e9_f_x0)!=-1 && date_de_ref.indexOf(date)!=-1 && dis <= start_dis/1000;
+            return element.is_deleted ==="Non" && element.Type_x0020_de_x0020_bien === type_de_bien && type_de_ref.indexOf(element.Type_x0020_de_x0020_R_x00e9_f_x0)!=-1 && anneeDeRef.indexOf(date)!=-1 && dis <= start_dis/1000;
 
         };
     const filterd_list_dexa = itemsDexa.filter(query);
@@ -147,7 +150,7 @@ export function extendDistanceFiltrer(itemsDexa:any, start_point:any, start_dis:
             filterd_list_dexa:filterd_list_dexa,
         };
     }
-    return extendDistanceFiltrer(itemsDexa, start_point, start_dis+250, end_dis, type_de_bien, type_de_ref, date_de_ref);//pas 250 m
+    return extendDistanceFiltrer(itemsDexa, start_point, start_dis+250, end_dis, type_de_bien, type_de_ref, anneeDeRef);//pas 250 m
 }
 export function extendDistanceFiltrerWithUser(itemsDexa:any, start_point:any, start_dis:number, end_dis:number){
     var query = function(element) {
@@ -167,7 +170,7 @@ export function extendDistanceFiltrerWithUser(itemsDexa:any, start_point:any, st
     }
     return extendDistanceFiltrerWithUser(itemsDexa,start_point, start_dis+250, end_dis);
 }
-export function extendDistanceFiltrerRapport(archive:any, start_point:any, start_dis:number, end_dis:number,type_de_bien:string[]){
+export function extendDistanceFiltrerRapport(archive:any, start_point:any, start_dis:number, end_dis:number){
     var query = function(element) {
         var isIncluded = false;
         if(element.Latitude_Longitude){
@@ -178,16 +181,10 @@ export function extendDistanceFiltrerRapport(archive:any, start_point:any, start
                 longitude: lng
             };
             var dis = haversine(start_point, end_point);
-            console.log("Distance", dis)
-            var element_type_de_bien = element.Type_x0020_de_x0020_bien;
-            if(element_type_de_bien!=null){
-                isIncluded =  type_de_bien.some(value => element_type_de_bien.includes(value));
-            }
-            if(type_de_bien.length===0 && dis <= start_dis/1000){
-                console.log("element.FileSystemObjectType", element.FileSystemObjectType)
+            if(dis <= start_dis/1000){
                 return element.FileSystemObjectType === 0 && dis <= start_dis/1000;
             }
-            else if(type_de_bien.length!==0 && dis <= start_dis/1000){
+            else if(dis <= start_dis/1000){
                 return isIncluded && element.FileSystemObjectType === 0 && dis <= start_dis/1000;
             }
         }
@@ -196,7 +193,7 @@ export function extendDistanceFiltrerRapport(archive:any, start_point:any, start
     if (start_dis === end_dis || archive.length > 3){
         return filterd_list_archive;
     }
-    return extendDistanceFiltrerRapport(archive, start_point, start_dis+250, end_dis, type_de_bien);//pas 250 m
+    return extendDistanceFiltrerRapport(archive, start_point, start_dis+250, end_dis);//pas 250 m
 }
 export async function get_dgi_zone(lat:number, lng:number) {
     await sp.web.lists.getByTitle("l_ref_DGI").items.getAll().then(res=>{
