@@ -296,6 +296,29 @@
       min-width: 0px;
       //transform: translate3d(-50%,-100%,0);
   }
+  .popupMarkerArchive {
+      background: white;
+      color: #333;
+      //* box-shadow: 0 3px 14px rgb(0 0 0 / 40%);
+      //display: block;
+      position: absolute;
+      //top: -100px;//150
+      bottom: 15px;
+      left: -128px;
+      padding: 12px;
+      text-align: left;
+      border-radius: 8px;
+      width: 300px;
+      font-size: 13px;
+      font-weight: 300;
+      box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 30%);
+      box-sizing: border-box;
+      //overflow: hidden;
+      max-width: 358px;
+      max-height: 369px;
+      min-width: 0px;
+      //transform: translate3d(-50%,-100%,0);
+  }
   .popupMarkerActif {
       background: white;
       color: #333;

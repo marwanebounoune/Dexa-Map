@@ -2,12 +2,9 @@ import "@pnp/sp/items";
 import "@pnp/sp/lists";
 import "@pnp/sp/webs";
 import "@pnp/sp/items/get-all";
-import { ActionButton, DefaultButton, Dialog, DialogFooter, DialogType, Dropdown, IDropdownOption, IDropdownStyles, Panel, PrimaryButton, Stack, TextField } from 'office-ui-fabric-react';
+import { ActionButton, DefaultButton, Dialog, DialogFooter, DialogType, Stack} from 'office-ui-fabric-react';
 import * as React from 'react';
-import { DISTANCE_END_EVALUATION, DISTANCE_START_EVALUATION, sp } from '../../Constants';
-import { calculated_score, estimated_price, extendDistanceEvaluer, getLat, getLng } from './utils';
 import "@pnp/sp/webs";
-import styles from '../DexaMapsAndArchive.module.scss';
 
 interface IEvaluerProps {
   buttonTitle: string;

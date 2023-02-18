@@ -17,3 +17,4 @@ export const DGI_COEFFICIENT_FILTER:number = 0.35;
 export const reducer = (previousValue, currentValue) => previousValue + currentValue;
 export const urlAddRef = "https://agroupma.sharepoint.com/sites/DEXA2022/_layouts/15/listform.aspx?PageType=8&ListId=%7B91F90891-34B7-4F13-9A6C-6C3B797EEDFD%7D&RootFolder=%2Fsites%2FDEXA2022%2FLists%2FPins&Source=https%3A%2F%2Fagroupma.sharepoint.com%2Fsites%2FDEXA2022%2FLists%2FPins%2FAllItems.aspx&ContentTypeId=0x0100372FFDC88828B0479A9E40A2618E7968"
 export const urlPropertieRef = "https://agroupma.sharepoint.com/sites/DEXA2022/Lists/Pins/DispForm.aspx?ID="
+export const urlPropertieArchive = "https://agroupma.sharepoint.com/sites/DEXA2022/Lists/Archive/DispForm.aspx?ID="

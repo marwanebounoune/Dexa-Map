@@ -3,11 +3,10 @@ import "@pnp/sp/lists/web";
 import "@pnp/sp/fields";
 import "@pnp/sp/items";
 import "@pnp/sp/items/get-all";
-import { ActionButton, Checkbox, DefaultButton, Dialog, DialogFooter, DialogType, Dropdown, IDropdownOption, IDropdownStyles, Label, Panel, PrimaryButton, Stack } from 'office-ui-fabric-react';
+import { ActionButton, Checkbox, DefaultButton, Dialog, DialogFooter, DialogType, IDropdownOption, IDropdownStyles, Label, Panel, PrimaryButton, Stack } from 'office-ui-fabric-react';
 import * as React from 'react';
 import { DISTANCE_END_FILTRAGE, DISTANCE_START_FILTRAGE, sp } from '../../Constants';
 import { extendDistanceFiltrerRapport, getLat, getLng } from './utils';
-import * as haversine from "haversine";
 
 interface IFiltrerRapportProps {
   buttonTitle: string;

@@ -5,15 +5,14 @@ import GoogleMapReact from 'google-map-react';
 import { ActionButton, Dialog, DialogType, Stack } from 'office-ui-fabric-react';
 import * as React from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { sp, urlAddRef, urlPropertieRef } from '../Constants';
-import { getLat, getLng, isPointInPolygon, WindowPopUp } from './utils/utils';
+import { sp, urlAddRef, urlPropertieArchive, urlPropertieRef } from '../Constants';
+import { getLat, getLng, isPointInPolygon, numStr, WindowPopUp } from './utils/utils';
 import Evaluer from './utils/Evaluer';
 import Filtrer from './utils/Filtrer';
 import FiltrerRapport from './utils/FiltrerRapport';
 import FiltrerWithUser from "./utils/FiltrerWithUser";
 import styles from './DexaMapsAndArchive.module.scss';
 import PopOutFilter from './fabric-ui/PopOutFilter';
-import ValiderRef from "./utils/ValiderRef";
 import EditerRef from "./utils/EditerRef";
 import SuppRef from "./utils/SuppRef";
 import SignalerRef from "./utils/SignRef";
@@ -129,14 +128,14 @@ export default function MapContainer(props:IMapContainerProps){
         <div className={styles.CloseDiv} onClick={()=> setPopupInfo(false)}>X</div>
         <div className={styles.arrowPopUp}></div>
         <div><span className={styles.spanInfo}>Type de bien:</span><span>{popupInfo.Type_x0020_de_x0020_bien}</span></div>
-        {popupInfo.Surface_x0020_terrain?<div><span className={styles.spanInfo}>Surface Terrain:</span><span>{popupInfo.Surface_x0020_terrain} m²</span></div>:<></>}
-        {popupInfo.Surface_x0020_construite?<div><span className={styles.spanInfo}>Surface Construite:</span><span>{popupInfo.Surface_x0020_construite} m²</span></div>:<></>}
-        {popupInfo.Surface_x0020_pond_x00e9_r_x00e9?<div><span className={styles.spanInfo}>Surface Pondéré:</span><span>{popupInfo.Surface_x0020_pond_x00e9_r_x00e9} m²</span></div>:<></>}
+        {popupInfo.Surface_x0020_terrain?<div><span className={styles.spanInfo}>Surface Terrain:</span><span>{numStr(popupInfo.Surface_x0020_terrain, "")} m²</span></div>:<></>}
+        {popupInfo.Surface_x0020_construite?<div><span className={styles.spanInfo}>Surface Construite:</span><span>{numStr(popupInfo.Surface_x0020_construite, "")} m²</span></div>:<></>}
+        {popupInfo.Surface_x0020_pond_x00e9_r_x00e9?<div><span className={styles.spanInfo}>Surface Pondéré:</span><span>{numStr(popupInfo.Surface_x0020_pond_x00e9_r_x00e9, "")} m²</span></div>:<></>}
         <br/>
         {/* {!popupInfo.validateur_refId?<ValiderRef idRef={popupInfo.Id} buttonTitle="Valider la référence" ctx={props.context}></ValiderRef>:<></>} */}
         {!popupInfo.validateur_refId?<EditerRef  idRef={popupInfo.Id} buttonTitle="Editer la référence" ctx={props.context} ></EditerRef>:<></>}
         {!popupInfo.validateur_refId?<SuppRef idRef ={popupInfo.Id} buttonTitle="Supprimer la référence" ctx={props.context}></SuppRef>:<></>}
-      <SignalerRef idRef ={popupInfo.Id} buttonTitle="Signaler la référence" ctx={props.context} user={popupInfo.QuiasignalerId} nbrSignals={popupInfo.Nombredesignalement} ></SignalerRef>
+        <SignalerRef idRef ={popupInfo.Id} buttonTitle="Signaler la référence" ctx={props.context} user={popupInfo.QuiasignalerId} nbrSignals={popupInfo.Nombredesignalement} ></SignalerRef>
         <a className={styles.rightFloat} href="#" onClick={(event)=> {
           event.preventDefault(); 
           setWindowPopUp(WindowPopUp('', urlPropertieRef+popupInfo.Id, 'Pins'));
@@ -144,15 +143,20 @@ export default function MapContainer(props:IMapContainerProps){
       </div>);
   };
   const PopupRapport = ({ lat, lng}) => {
-    return <div className={styles.popupMarker}>
+    return <div className={styles.popupMarkerArchive}>
       <div className={styles.CloseDiv} onClick={()=> setPopupInfoRapport(false)}>X</div>
       <div className={styles.arrowPopUp}></div>
       <span className={styles.spanInfo}>Année du référence: </span>{popupInfoRapport.Ann_x00e9_e}<br/>
       <span className={styles.spanInfo}>Référence du bien: </span>{popupInfoRapport.R_x00e9_f_x00e9_rence}<br/>
-      {popupInfoRapport.Surface_x0020_pond_x00e9_r_x00e9?<><span className={styles.spanInfo}>Surface pondéré: </span>{popupInfoRapport.Surface_x0020_pond_x00e9_r_x00e9} m2<br/></>:<></>}
-      {popupInfoRapport.Surface_x0020_construite?<><span className={styles.spanInfo}>Surface construite: </span>{popupInfoRapport.Surface_x0020_construite} m2<br/></>:<></>}
-      {popupInfoRapport.Surface_x0020_terrain?<><span className={styles.spanInfo}>Surface terrain: </span>{popupInfoRapport.Surface_x0020_terrain} m2<br/></>:<></>}
-      <span className={styles.spanInfo}>Prix total de l'expertise: </span>{popupInfoRapport.Prix_x0020_total_x0020_de_x0020_} Dhs
+      <span className={styles.spanInfo}>Type de bien: </span>{popupInfoRapport.TypedeBien}<br/>
+      {popupInfoRapport.Surface_x0020_pond_x00e9_r_x00e9?<><span className={styles.spanInfo}>Surface pondéré: </span>{numStr(popupInfoRapport.Surface_x0020_pond_x00e9_r_x00e9, "")} m2<br/></>:<></>}
+      {popupInfoRapport.Surface_x0020_construite?<><span className={styles.spanInfo}>Surface construite: </span>{numStr(popupInfoRapport.Surface_x0020_construite, "")} m2<br/></>:<></>}
+      {popupInfoRapport.Surface_x0020_terrain?<><span className={styles.spanInfo}>Surface terrain: </span>{numStr(popupInfoRapport.Surface_x0020_terrain, "")} m2<br/></>:<></>}
+      <span className={styles.spanInfo}>Prix total de l'expertise: </span>{numStr(popupInfoRapport.Prix_x0020_total_x0020_de_x0020_, "")} Dhs
+      <a className={styles.rightFloat} href="#" onClick={(event)=> {
+          event.preventDefault(); 
+          setWindowPopUp(WindowPopUp('', urlPropertieArchive+popupInfoRapport.Id, 'Pins'));
+        }}>Voir plus...</a>
       </div>
   };
   const PopupRightOrganisme = ({ lat, lng , modaleTitle}) => {
